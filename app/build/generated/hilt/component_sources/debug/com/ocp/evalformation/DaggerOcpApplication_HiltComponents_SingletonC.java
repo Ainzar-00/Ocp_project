@@ -31,10 +31,6 @@ import com.ocp.evalformation.di.AppModule_ProvideThemeDaoFactory;
 import com.ocp.evalformation.ui.auth.LoginActivity;
 import com.ocp.evalformation.ui.auth.LoginViewModel;
 import com.ocp.evalformation.ui.auth.LoginViewModel_HiltModules;
-import com.ocp.evalformation.ui.flm.FlmActivity;
-import com.ocp.evalformation.ui.flm.FlmActivity_MembersInjector;
-import com.ocp.evalformation.ui.flm.FlmViewModel;
-import com.ocp.evalformation.ui.flm.FlmViewModel_HiltModules;
 import com.ocp.evalformation.ui.rh.RhActivity;
 import com.ocp.evalformation.ui.rh.RhActivity_MembersInjector;
 import com.ocp.evalformation.ui.rh.RhViewModel;
@@ -449,11 +445,6 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectFlmActivity(FlmActivity flmActivity) {
-      injectFlmActivity2(flmActivity);
-    }
-
-    @Override
     public void injectRhActivity(RhActivity rhActivity) {
       injectRhActivity2(rhActivity);
     }
@@ -465,7 +456,7 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_ocp_evalformation_ui_flm_FlmViewModel, FlmViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ImportViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, LoginViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, RhViewModel_HiltModules.KeyModule.provide()));
+      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ImportViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, LoginViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, RhViewModel_HiltModules.KeyModule.provide()));
     }
 
     @Override
@@ -484,12 +475,6 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     }
 
     @CanIgnoreReturnValue
-    private FlmActivity injectFlmActivity2(FlmActivity instance) {
-      FlmActivity_MembersInjector.injectAuth(instance, singletonCImpl.provideFirebaseAuthProvider.get());
-      return instance;
-    }
-
-    @CanIgnoreReturnValue
     private RhActivity injectRhActivity2(RhActivity instance) {
       RhActivity_MembersInjector.injectAuth(instance, singletonCImpl.provideFirebaseAuthProvider.get());
       return instance;
@@ -497,25 +482,20 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
+
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
 
       static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
-      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
-
-      static String com_ocp_evalformation_ui_flm_FlmViewModel = "com.ocp.evalformation.ui.flm.FlmViewModel";
+      @KeepFieldType
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
 
       @KeepFieldType
       ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
-
-      @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
-
-      @KeepFieldType
-      FlmViewModel com_ocp_evalformation_ui_flm_FlmViewModel2;
     }
   }
 
@@ -525,8 +505,6 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     private final ActivityRetainedCImpl activityRetainedCImpl;
 
     private final ViewModelCImpl viewModelCImpl = this;
-
-    private Provider<FlmViewModel> flmViewModelProvider;
 
     private Provider<ImportViewModel> importViewModelProvider;
 
@@ -547,15 +525,14 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final SavedStateHandle savedStateHandleParam,
         final ViewModelLifecycle viewModelLifecycleParam) {
-      this.flmViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
-      this.importViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
-      this.loginViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
-      this.rhViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.importViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.loginViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.rhViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_ocp_evalformation_ui_flm_FlmViewModel, ((Provider) flmViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ((Provider) importViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, ((Provider) loginViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, ((Provider) rhViewModelProvider)));
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ((Provider) importViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, ((Provider) loginViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, ((Provider) rhViewModelProvider)));
     }
 
     @Override
@@ -567,23 +544,18 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
 
-      static String com_ocp_evalformation_ui_flm_FlmViewModel = "com.ocp.evalformation.ui.flm.FlmViewModel";
+      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
-
-      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       @KeepFieldType
       LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
 
       @KeepFieldType
-      FlmViewModel com_ocp_evalformation_ui_flm_FlmViewModel2;
+      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
-
-      @KeepFieldType
-      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -607,16 +579,13 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.ocp.evalformation.ui.flm.FlmViewModel 
-          return (T) new FlmViewModel(singletonCImpl.provideMainRepoProvider.get());
-
-          case 1: // com.ocp.evalformation.ui.rh.import_data.ImportViewModel 
+          case 0: // com.ocp.evalformation.ui.rh.import_data.ImportViewModel 
           return (T) new ImportViewModel(singletonCImpl.provideMainRepoProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 2: // com.ocp.evalformation.ui.auth.LoginViewModel 
+          case 1: // com.ocp.evalformation.ui.auth.LoginViewModel 
           return (T) new LoginViewModel(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirestoreProvider.get(), singletonCImpl.syncRepositoryProvider.get());
 
-          case 3: // com.ocp.evalformation.ui.rh.RhViewModel 
+          case 2: // com.ocp.evalformation.ui.rh.RhViewModel 
           return (T) new RhViewModel(singletonCImpl.provideMainRepoProvider.get());
 
           default: throw new AssertionError(id);

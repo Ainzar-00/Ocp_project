@@ -3388,7 +3388,6 @@ int id btn_charger 0x7f080071
 int id btn_charger_bilan 0x7f080072
 int id btn_choisir_bilan 0x7f080073
 int id btn_choisir_fichier 0x7f080074
-int id btn_copier_lien 0x7f080075
 int id btn_envoyer_invitation 0x7f080076
 int id btn_exporter_detaille 0x7f080077
 int id btn_exporter_synthese 0x7f080078
@@ -3397,18 +3396,14 @@ int id btn_import_collab_excel 0x7f08007a
 int id btn_import_flm_excel 0x7f08007b
 int id btn_import_themes_excel 0x7f08007c
 int id btn_login 0x7f08007d
-int id btn_logout_flm 0x7f08007e
 int id btn_logout_rh 0x7f08007f
 int id btn_nombre_enregistrements 0x7f080080
-int id btn_ouvrir_formulaire 0x7f080081
-int id btn_rechercher 0x7f080082
 int id btn_supprimer_tout 0x7f080083
 int id btn_tester_reference 0x7f080084
 int id buttonPanel 0x7f080085
 int id cache_measures 0x7f080086
 int id callMeasure 0x7f080087
 int id cancel_button 0x7f080088
-int id card_collab_info 0x7f080089
 int id card_header 0x7f08008a
 int id card_propositions 0x7f08008b
 int id carryVelocity 0x7f08008c
@@ -3505,7 +3500,6 @@ int id et_flm_prenom 0x7f0800e6
 int id et_flm_service 0x7f0800e7
 int id et_matricule 0x7f0800e8
 int id et_matricule_collab 0x7f0800e9
-int id et_matricule_flm 0x7f0800ea
 int id et_theme_nom 0x7f0800eb
 int id et_theme_objectif 0x7f0800ec
 int id evaluationsFragment 0x7f0800ed
@@ -3863,15 +3857,8 @@ int id tv_bilan_result 0x7f08024c
 int id tv_bilan_selected_file 0x7f08024d
 int id tv_bilan_theme_count 0x7f08024e
 int id tv_collab_count 0x7f08024f
-int id tv_collab_entite 0x7f080250
-int id tv_collab_formateur 0x7f080251
 int id tv_collab_import_result 0x7f080252
-int id tv_collab_matricule 0x7f080253
-int id tv_collab_mois 0x7f080254
 int id tv_collab_nom 0x7f080255
-int id tv_collab_nom_flm 0x7f080256
-int id tv_collab_objectifs 0x7f080257
-int id tv_collab_theme 0x7f080258
 int id tv_count_eval 0x7f080259
 int id tv_date 0x7f08025a
 int id tv_date_envoi 0x7f08025b
@@ -3882,7 +3869,6 @@ int id tv_f_l_m 0x7f08025f
 int id tv_flm_count 0x7f080260
 int id tv_flm_email 0x7f080261
 int id tv_flm_import_result 0x7f080262
-int id tv_form_url 0x7f080263
 int id tv_import_result 0x7f080264
 int id tv_matricule 0x7f080265
 int id tv_moyenne 0x7f080266
@@ -4046,7 +4032,6 @@ int layout abc_search_dropdown_item_icons_2line 0x7f0b0018
 int layout abc_search_view 0x7f0b0019
 int layout abc_select_dialog_material 0x7f0b001a
 int layout abc_tooltip 0x7f0b001b
-int layout activity_flm 0x7f0b001c
 int layout activity_login 0x7f0b001d
 int layout activity_rh 0x7f0b001e
 int layout browser_actions_context_menu_page 0x7f0b001f

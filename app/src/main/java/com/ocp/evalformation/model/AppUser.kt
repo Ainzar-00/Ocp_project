@@ -1,6 +1,6 @@
 package com.ocp.evalformation.model
 
-enum class UserRole { RH, FLM, ADMIN }
+enum class UserRole { RH, ADMIN }
 
 data class AppUser(
     val uid: String,

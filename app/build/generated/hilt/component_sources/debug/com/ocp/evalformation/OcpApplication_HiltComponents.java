@@ -3,8 +3,6 @@ package com.ocp.evalformation;
 import com.ocp.evalformation.di.AppModule;
 import com.ocp.evalformation.ui.auth.LoginActivity_GeneratedInjector;
 import com.ocp.evalformation.ui.auth.LoginViewModel_HiltModules;
-import com.ocp.evalformation.ui.flm.FlmActivity_GeneratedInjector;
-import com.ocp.evalformation.ui.flm.FlmViewModel_HiltModules;
 import com.ocp.evalformation.ui.rh.RhActivity_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.RhViewModel_HiltModules;
 import com.ocp.evalformation.ui.rh.charts.ChartsFragment_GeneratedInjector;
@@ -170,7 +168,6 @@ public final class OcpApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
-          FlmViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           ImportViewModel_HiltModules.KeyModule.class,
@@ -200,7 +197,6 @@ public final class OcpApplication_HiltComponents {
   )
   @ActivityScoped
   public abstract static class ActivityC implements LoginActivity_GeneratedInjector,
-      FlmActivity_GeneratedInjector,
       RhActivity_GeneratedInjector,
       ActivityComponent,
       DefaultViewModelFactories.ActivityEntryPoint,
@@ -215,7 +211,6 @@ public final class OcpApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
-          FlmViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           ImportViewModel_HiltModules.BindsModule.class,
           LoginViewModel_HiltModules.BindsModule.class,

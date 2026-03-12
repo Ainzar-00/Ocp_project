@@ -22,7 +22,6 @@ import com.ocp.evalformation.R
 import com.ocp.evalformation.data.repository.syncRepository
 import com.ocp.evalformation.databinding.ActivityLoginBinding
 import com.ocp.evalformation.model.UserRole
-import com.ocp.evalformation.ui.flm.FlmActivity
 import com.ocp.evalformation.ui.rh.RhActivity
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,10 +78,10 @@ class LoginViewModel @Inject constructor(
 
             if (roleStr == null) {
                 Log.w("DEBUG_FIRESTORE", "'role' field is missing or null in document!")
-                return UserRole.FLM
+                return UserRole.RH
             }
 
-            val role = runCatching { UserRole.valueOf(roleStr) }.getOrDefault(UserRole.FLM)
+            val role = runCatching { UserRole.valueOf(roleStr) }.getOrDefault(UserRole.RH)
             Log.d("DEBUG_FIRESTORE", "Resolved UserRole: $role")
             role
         } catch (e: Exception) {
@@ -166,14 +165,14 @@ class LoginViewModel @Inject constructor(
 
             when {
                 doc == null -> {
-                    Log.w("DEBUG_REGISTER", "Doc is null (fetch threw exception) → defaulting to FLM")
-                    UserRole.FLM
+                    Log.w("DEBUG_REGISTER", "Doc is null (fetch threw exception) → defaulting to RH")
+                    UserRole.RH
                 }
                 !doc.exists() -> {
-                    Log.d("DEBUG_REGISTER", "Doc does NOT exist → creating new user document with role=FLM")
+                    Log.d("DEBUG_REGISTER", "Doc does NOT exist → creating new user document with role=RH")
                     try {
                         val userData = mapOf(
-                            "role" to "FLM",
+                            "role" to "RH",
                             "uid" to uid,
                             "createdAt" to com.google.firebase.Timestamp.now()
                         )
@@ -183,7 +182,7 @@ class LoginViewModel @Inject constructor(
                     } catch (e: Exception) {
                         Log.e("DEBUG_REGISTER", "FAILED to write new user doc: ${e::class.simpleName} → ${e.message}", e)
                     }
-                    UserRole.FLM
+                    UserRole.RH
                 }
                 else -> {
                     val roleStr = doc.getString("role")
@@ -191,9 +190,8 @@ class LoginViewModel @Inject constructor(
                     if (roleStr == null) {
                         Log.w("DEBUG_REGISTER", "'role' field missing in existing doc! data=${doc.data}")
                     }
-                    val role = runCatching { UserRole.valueOf(roleStr ?: "FLM") }.getOrElse {
-                        Log.e("DEBUG_REGISTER", "Failed to parse role '$roleStr': ${it.message} → defaulting to FLM")
-                        UserRole.FLM
+                    val role = runCatching { UserRole.valueOf(roleStr ?: "RH") }.getOrElse {
+                        UserRole.RH
                     }
                     Log.d("DEBUG_REGISTER", "Resolved role: $role")
                     role
@@ -201,7 +199,7 @@ class LoginViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e("DEBUG_REGISTER", "Unexpected error in fetchOrCreateUserRole: ${e::class.simpleName} → ${e.message}", e)
-            UserRole.FLM
+            UserRole.RH
         }
     }
 }
@@ -328,7 +326,6 @@ class LoginActivity : AppCompatActivity() {
         Log.d("DEBUG_NAV", "navigateToRole → $role")
         val intent = when (role) {
             UserRole.RH, UserRole.ADMIN -> Intent(this, RhActivity::class.java)
-            UserRole.FLM                -> Intent(this, FlmActivity::class.java)
         }
         Log.d("DEBUG_NAV", "Starting activity: ${intent.component?.className}")
         startActivity(intent)
