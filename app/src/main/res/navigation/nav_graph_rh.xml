@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_rh"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.ocp.evalformation.ui.rh.dashboard.DashboardFragment"
+        android:label="Tableau de bord" />
+
+    <fragment
+        android:id="@+id/importDataFragment"
+        android:name="com.ocp.evalformation.ui.rh.import_data.ImportDataFragment"
+        android:label="Import" />
+
+    <fragment
+        android:id="@+id/chartsFragment"
+        android:name="com.ocp.evalformation.ui.rh.charts.ChartsFragment"
+        android:label="Graphiques" />
+
+    <fragment
+        android:id="@+id/evaluationsFragment"
+        android:name="com.ocp.evalformation.ui.rh.evaluations.EvaluationsFragment"
+        android:label="Évaluations" />
+
+    <fragment
+        android:id="@+id/invitationsFragment"
+        android:name="com.ocp.evalformation.ui.rh.dashboard.InvitationsFragment"
+        android:label="Invitations FLM" />
+
+</navigation>

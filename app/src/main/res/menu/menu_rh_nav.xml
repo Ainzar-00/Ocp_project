@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/dashboardFragment"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Tableau de bord" />
+    <item
+        android:id="@+id/importDataFragment"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:title="Import" />
+    <item
+        android:id="@+id/chartsFragment"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="Graphiques" />
+    <item
+        android:id="@+id/evaluationsFragment"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Évaluations" />
+    <item
+        android:id="@+id/invitationsFragment"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="Invitations" />
+</menu>

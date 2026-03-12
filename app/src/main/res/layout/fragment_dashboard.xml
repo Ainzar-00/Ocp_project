@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tableau de bord"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/ocp_dark_green"
+            android:layout_marginBottom="16dp" />
+
+        <!-- KPI Grid -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="3"
+            android:layout_marginBottom="16dp">
+
+            <!-- Collaborateurs -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/ocp_dark_green">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tv_total_collabs"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Collaborateurs" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Évaluations -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#1565C0">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tv_total_evals"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Évaluations" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Satisfaction -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#E65100">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tv_moyenne_satisfaction"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="28sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Satisfaction Moy." android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Invitations en attente -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#6A1B9A">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tv_pending_invitations"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="En attente FLM" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Thèmes -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#00695C">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tv_total_themes"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Thèmes" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Best theme -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#37474F">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical" android:padding="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="🏆" android:textSize="22sp" />
+                    <TextView android:id="@+id/tv_best_theme"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="11sp" android:textColor="@android:color/white"
+                        android:gravity="center" android:maxLines="2" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Meilleur thème" android:textSize="11sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </GridLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ocp_dark_green">#00693E</color>
+    <color name="ocp_medium_green">#00A86B</color>
+    <color name="ocp_light_green">#C8E6C9</color>
+    <color name="ocp_orange">#FF6B00</color>
+    <color name="ocp_dark">#1A1A2E</color>
+    <color name="ocp_nav_selected">#00693E</color>
+    <color name="ocp_nav_unselected">#9E9E9E</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="error_red">#D32F2F</color>
+</resources>

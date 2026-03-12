@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OCP Évaluation Formations</string>
+    <string name="login_title">Connexion</string>
+    <string name="btn_login">Se connecter</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Mot de passe</string>
+    <string name="error_fill_all">Veuillez remplir tous les champs</string>
+    <string name="nav_dashboard">Tableau de bord</string>
+    <string name="nav_themes">Thèmes</string>
+    <string name="nav_charts">Graphiques</string>
+    <string name="nav_evals">Évaluations</string>
+    <string name="nav_invitations">Invitations</string>
+    <string name="default_web_client_id">
+    899703699179-klnboj2j81cec8cjc9nn1gckcdmsm85e.apps.googleusercontent.com
+    </string>
+</resources>

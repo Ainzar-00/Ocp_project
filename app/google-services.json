@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "899703699179",
+    "project_id": "ocp-formations-db",
+    "storage_bucket": "ocp-formations-db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899703699179:android:d9c358fb1c69cc5cb0b0ae",
+        "android_client_info": {
+          "package_name": "com.ocp.evalformation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899703699179-75td8ve4fcoi6lqbvs73rfa25r6fsdtq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ocp.evalformation",
+            "certificate_hash": "709b49ab995dd52b4b8298136071be5927110603"
+          }
+        },
+        {
+          "client_id": "899703699179-klnboj2j81cec8cjc9nn1gckcdmsm85e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQPIrug5JyXqScUWuDoRYTLqNdI23ECH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899703699179-4bsra4g3pbk3p84g7g5v1v7vouj0mcvi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
