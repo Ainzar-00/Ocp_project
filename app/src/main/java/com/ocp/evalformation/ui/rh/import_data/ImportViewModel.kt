@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ocp.evalformation.data.local.entity.*
 import com.ocp.evalformation.data.repository.MainRepository
-import com.ocp.evalformation.data.repository.syncRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,15 +30,12 @@ class ImportViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-
-
     val allCollaborateurs = repo.collaborateurDao.getAllLive()
     val allFlms = repo.flmDao.getAllLive()
     val allThemes = repo.themeDao.getAllLive()
     val allFormations = repo.formationDao.getAllLive()
 
     private val _collabState = MutableStateFlow<ImportState>(ImportState.Idle)
-
     val collabState: StateFlow<ImportState> = _collabState
 
     private val _flmState = MutableStateFlow<ImportState>(ImportState.Idle)
@@ -84,35 +80,53 @@ class ImportViewModel @Inject constructor(
         } catch (e: Exception) { "" }
     }
 
+    /**
+     * Validates a row's required fields. Returns a list of missing field names, empty if all present.
+     * rowNum is 0-based (POI), displayed as 1-based to the user.
+     */
+    private fun missingFields(
+        row: org.apache.poi.ss.usermodel.Row,
+        fields: Map<String, Int>   // display name -> column index
+    ): List<String> = fields.entries
+        .filter { (_, colIdx) -> cellStr(row, colIdx).isBlank() }
+        .map { (name, _) -> name }
+
     /* --------------------------------------------------- */
     /* ADD COLLABORATEUR (manual form)                      */
     /* --------------------------------------------------- */
 
     fun addCollaborateur(
-        matricule: String,
-        nom: String,
-        prenom: String,
-        service: String,
-        flmMatricule: String
+        matricule: String?,
+        nom: String?,
+        prenom: String?,
+        service: String?,
+        flmMatricule: String?
     ) {
-        if (matricule.isBlank() || nom.isBlank() || prenom.isBlank() || service.isBlank()) {
-            _collabState.value = ImportState.Error("Veuillez remplir tous les champs obligatoires.")
+        val missing = listOfNotNull(
+            "Matricule".takeIf { matricule.isNullOrBlank() },
+            "Nom".takeIf { nom.isNullOrBlank() },
+            "Prénom".takeIf { prenom.isNullOrBlank() },
+            "Service".takeIf { service.isNullOrBlank() },
+            "Matricule FLM".takeIf { flmMatricule.isNullOrBlank() }
+        )
+        if (missing.isNotEmpty()) {
+            _collabState.value = ImportState.Error("❌ Champ(s) obligatoire(s) manquant(s) : ${missing.joinToString(", ")}")
             return
         }
         viewModelScope.launch {
             _collabState.value = ImportState.Loading
             try {
                 val entity = CollaborateurEntity(
-                    matricule    = matricule.trim(),
-                    nom          = nom.trim(),
-                    prenom       = prenom.trim(),
-                    service      = service.trim(),
-                    flmMatricule = flmMatricule.trim().ifBlank { null }
+                    matricule    = matricule!!.trim(),
+                    nom          = nom!!.trim(),
+                    prenom       = prenom!!.trim(),
+                    service      = service!!.trim(),
+                    flmMatricule = flmMatricule!!.trim()
                 )
-                repo.collaborateurDao.insert(entity)
+                val affected = repo.collaborateurDao.upsertCollaborateurs(listOf(entity))
                 val uploadRes = repo.firebase.uploadCollaborateurs(listOf(entity))
                 if (uploadRes.isSuccess) {
-                    repo.collaborateurDao.markSynced(listOf(entity.matricule))
+                    repo.collaborateurDao.markSynced(affected)
                     _collabState.value = ImportState.Success("✅ Collaborateur ajouté.")
                 } else {
                     _collabState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
@@ -123,36 +137,42 @@ class ImportViewModel @Inject constructor(
         }
     }
 
-
     /* --------------------------------------------------- */
     /* ADD FLM (manual form)                                */
     /* --------------------------------------------------- */
 
     fun addFlm(
-        matricule: String,
-        nom: String,
-        prenom: String,
-        email: String,
-        service: String
+        matricule: String?,
+        nom: String?,
+        prenom: String?,
+        email: String?,
+        service: String?
     ) {
-        if (matricule.isBlank() || nom.isBlank() || prenom.isBlank() || email.isBlank() || service.isBlank()) {
-            _flmState.value = ImportState.Error("Veuillez remplir tous les champs obligatoires.")
+        val missing = listOfNotNull(
+            "Matricule".takeIf { matricule.isNullOrBlank() },
+            "Nom".takeIf { nom.isNullOrBlank() },
+            "Prénom".takeIf { prenom.isNullOrBlank() },
+            "Email".takeIf { email.isNullOrBlank() },
+            "Service".takeIf { service.isNullOrBlank() }
+        )
+        if (missing.isNotEmpty()) {
+            _flmState.value = ImportState.Error("❌ Champ(s) obligatoire(s) manquant(s) : ${missing.joinToString(", ")}")
             return
         }
         viewModelScope.launch {
             _flmState.value = ImportState.Loading
             try {
                 val entity = FlmEntity(
-                    matricule = matricule.trim(),
-                    nom       = nom.trim(),
-                    prenom    = prenom.trim(),
-                    email     = email.trim(),
-                    service   = service.trim()
+                    matricule = matricule!!.trim(),
+                    nom       = nom!!.trim(),
+                    prenom    = prenom!!.trim(),
+                    email     = email!!.trim(),
+                    service   = service!!.trim()
                 )
-                repo.flmDao.insert(entity)
+                val affected = repo.flmDao.upsertFlms(listOf(entity))
                 val uploadRes = repo.firebase.uploadFlms(listOf(entity))
                 if (uploadRes.isSuccess) {
-                    repo.flmDao.markSynced(listOf(entity.matricule))
+                    repo.flmDao.markSynced(affected)
                     _flmState.value = ImportState.Success("✅ FLM ajouté.")
                 } else {
                     _flmState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
@@ -163,38 +183,44 @@ class ImportViewModel @Inject constructor(
         }
     }
 
-
     /* --------------------------------------------------- */
     /* ADD THEME (manual form)                              */
     /* --------------------------------------------------- */
 
-    fun addTheme(nom: String, objectifPedagogique: String) {
-        if (nom.isBlank()) {
-            _themeState.value = ImportState.Error("Le nom du thème est obligatoire.")
+    fun addTheme(nom: String?, objectifPedagogique: String?) {
+        val missing = listOfNotNull(
+            "Nom".takeIf { nom.isNullOrBlank() },
+            "Objectif pédagogique".takeIf { objectifPedagogique.isNullOrBlank() }
+        )
+        if (missing.isNotEmpty()) {
+            _themeState.value = ImportState.Error("❌ Champ(s) obligatoire(s) manquant(s) : ${missing.joinToString(", ")}")
             return
         }
         viewModelScope.launch {
             _themeState.value = ImportState.Loading
             try {
                 val entity = ThemeEntity(
-                    nom = nom.trim(),
-                    objectifPedagogique = objectifPedagogique.trim()
+                    nom                 = nom!!.trim(),
+                    objectifPedagogique = objectifPedagogique!!.trim()
                 )
-                val id = repo.themeDao.insert(entity)
-                val synced = entity.copy(id = id)
-                val uploadRes = repo.firebase.uploadThemes(listOf(synced))
+                val affectedIds = repo.themeDao.upsertThemes(listOf(entity))
+                val syncedThemes = affectedIds.mapNotNull { repo.themeDao.getById(it) }
+                val uploadRes = repo.firebase.uploadThemes(syncedThemes)
                 if (uploadRes.isSuccess) {
-                    repo.themeDao.markSynced(listOf(id))
+                    repo.themeDao.markSynced(affectedIds)
                     _themeState.value = ImportState.Success("✅ Thème ajouté.")
                 } else {
-                    _themeState.value =
-                        ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
+                    _themeState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
                 }
             } catch (e: Exception) {
                 _themeState.value = ImportState.Error("❌ Erreur : ${e.message}")
             }
         }
     }
+
+    /* --------------------------------------------------- */
+    /* IMPORT THEMES (Excel)                                */
+    /* --------------------------------------------------- */
 
     fun importThemesFromExcel(inputStream: InputStream) {
         viewModelScope.launch {
@@ -203,44 +229,71 @@ class ImportViewModel @Inject constructor(
                 val wb = WorkbookFactory.create(inputStream)
                 val sheet = wb.getSheetAt(0)
 
+                var headerRow: Row? = null
                 val headers = mutableMapOf<String, Int>()
-                val headerRow = sheet.getRow(0) ?: run {
-                    _themeState.value = ImportState.Error("Fichier vide.")
+
+                for (rowIdx in 0..minOf(9, sheet.lastRowNum)) {
+                    val row = sheet.getRow(rowIdx) ?: continue
+                    val tempHeaders = mutableMapOf<String, Int>()
+                    for (cell in row) tempHeaders[cell.toString().trim().uppercase()] = cell.columnIndex
+
+                    if (col(tempHeaders, "NOM", "THEME", "INTITULE") != null) {
+                        headerRow = row
+                        headers.putAll(tempHeaders)
+                        break
+                    }
+                }
+
+                if (headerRow == null) {
+                    _themeState.value = ImportState.Error("Colonnes requises manquantes : Nom, ObjectifPedagogique")
                     return@launch
                 }
-                for (cell in headerRow) headers[cell.toString().trim().uppercase()] = cell.columnIndex
 
-                val colNom = col(headers, "NOM", "THEME", "INTITULE")
+                val colNom = col(headers, "NOM", "THEME", "INTITULE")!!
                 val colObj = col(headers, "OBJECTIFPEDAGOGIQUE", "OBJECTIF", "OBJ")
 
-                if (colNom == null) {
-                    _themeState.value = ImportState.Error("Colonne 'Nom' non trouvée.")
+                if (colObj == null) {
+                    _themeState.value = ImportState.Error("Colonne manquante : ObjectifPedagogique")
                     return@launch
                 }
 
+                // required fields map: display name -> column index
+                val requiredFields = mapOf("Nom" to colNom, "ObjectifPedagogique" to colObj)
+
                 val list = mutableListOf<ThemeEntity>()
-                for (i in 1..sheet.lastRowNum) {
+                val rowErrors = mutableListOf<String>()
+                val dataStartRow = headerRow.rowNum + 1
+
+                for (i in dataStartRow..sheet.lastRowNum) {
                     val row = sheet.getRow(i) ?: continue
-                    val nom = cellStr(row, colNom)
-                    if (nom.isBlank()) continue
+                    if ((0 until row.lastCellNum).all { cellStr(row, it).isBlank() }) continue // skip empty rows
+
+                    val missing = missingFields(row, requiredFields)
+                    if (missing.isNotEmpty()) {
+                        rowErrors.add("Ligne ${i + 1} : champ(s) manquant(s) → ${missing.joinToString(", ")}")
+                        continue
+                    }
+
                     list.add(ThemeEntity(
-                        nom                 = nom,
-                        objectifPedagogique = colObj?.let { cellStr(row, it) } ?: ""
+                        nom                 = cellStr(row, colNom),
+                        objectifPedagogique = cellStr(row, colObj)
                     ))
                 }
                 wb.close()
 
+                if (rowErrors.isNotEmpty()) {
+                    _themeState.value = ImportState.Error("❌ Erreurs dans le fichier :\n${rowErrors.joinToString("\n")}")
+                    return@launch
+                }
+
                 if (list.isEmpty()) { _themeState.value = ImportState.Error("Aucune donnée trouvée."); return@launch }
 
-                // insert into Room and get generated ids
-                val ids = repo.themeDao.insertAll(list)
-                val validIds = ids.filter { it != -1L }
-                // map inserted ids back to theme objects
-                val syncedThemes = list.zip(validIds).map { (theme, id) -> theme.copy(id = id) }
+                val affectedIds = repo.themeDao.upsertThemes(list)
+                val syncedThemes = affectedIds.mapNotNull { repo.themeDao.getById(it) }
 
                 val uploadRes = repo.firebase.uploadThemes(syncedThemes)
                 if (uploadRes.isSuccess) {
-                    repo.themeDao.markSynced(validIds)
+                    repo.themeDao.markSynced(affectedIds)
                     _themeState.value = ImportState.Success("✅ ${syncedThemes.size} thème(s) importé(s).")
                 } else {
                     _themeState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
@@ -263,31 +316,61 @@ class ImportViewModel @Inject constructor(
                 val wb = WorkbookFactory.create(inputStream)
                 val sheet = wb.getSheetAt(0)
 
+                var headerRow: Row? = null
                 val headers = mutableMapOf<String, Int>()
-                val headerRow = sheet.getRow(0) ?: run {
-                    _collabState.value = ImportState.Error("Fichier vide ou format invalide.")
+
+                for (rowIdx in 0..minOf(9, sheet.lastRowNum)) {
+                    val row = sheet.getRow(rowIdx) ?: continue
+                    val tempHeaders = mutableMapOf<String, Int>()
+                    for (cell in row) tempHeaders[cell.toString().trim().uppercase()] = cell.columnIndex
+
+                    val hasRequired = col(tempHeaders, "MATRICULE", "MLE", "MAT") != null &&
+                            col(tempHeaders, "NOM", "NAME") != null &&
+                            col(tempHeaders, "PRENOM", "FIRSTNAME") != null &&
+                            col(tempHeaders, "SERVICE", "DIVISION", "DIV", "DEPARTEMENT") != null
+
+                    if (hasRequired) {
+                        headerRow = row
+                        headers.putAll(tempHeaders)
+                        break
+                    }
+                }
+
+                if (headerRow == null) {
+                    _collabState.value = ImportState.Error("Colonnes requises manquantes : Matricule, Nom, Prenom, Service")
                     return@launch
                 }
-                for (cell in headerRow) headers[cell.toString().trim().uppercase()] = cell.columnIndex
 
-                val colMat = col(headers, "MATRICULE", "MLE", "MAT")
-                val colNom = col(headers, "NOM", "NAME")
-                val colPre = col(headers, "PRENOM", "FIRSTNAME")
-                val colSvc = col(headers, "SERVICE", "DIVISION", "DIV", "DEPARTEMENT")
+                val colMat = col(headers, "MATRICULE", "MLE", "MAT")!!
+                val colNom = col(headers, "NOM", "NAME")!!
+                val colPre = col(headers, "PRENOM", "FIRSTNAME")!!
+                val colSvc = col(headers, "SERVICE", "DIVISION", "DIV", "DEPARTEMENT")!!
                 val colFlm = col(headers, "FLM", "FLMMATRICULE", "MATRICULE_FLM")
 
-                if (colMat == null || colNom == null || colPre == null || colSvc == null) {
-                    _collabState.value = ImportState.Error("Colonnes requises non trouvées : Matricule, Nom, Prenom, Service")
-                    return@launch
-                }
+                // all non-optional fields are required
+                val requiredFields = mapOf(
+                    "Matricule" to colMat,
+                    "Nom"       to colNom,
+                    "Prenom"    to colPre,
+                    "Service"   to colSvc
+                )
 
                 val list = mutableListOf<CollaborateurEntity>()
-                for (i in 1..sheet.lastRowNum) {
+                val rowErrors = mutableListOf<String>()
+                val dataStartRow = headerRow.rowNum + 1
+
+                for (i in dataStartRow..sheet.lastRowNum) {
                     val row = sheet.getRow(i) ?: continue
-                    val mat = cellStr(row, colMat)
-                    if (mat.isBlank()) continue
+                    if ((0 until row.lastCellNum).all { cellStr(row, it).isBlank() }) continue // skip empty rows
+
+                    val missing = missingFields(row, requiredFields)
+                    if (missing.isNotEmpty()) {
+                        rowErrors.add("Ligne ${i + 1} : champ(s) manquant(s) → ${missing.joinToString(", ")}")
+                        continue
+                    }
+
                     list.add(CollaborateurEntity(
-                        matricule    = mat,
+                        matricule    = cellStr(row, colMat),
                         nom          = cellStr(row, colNom),
                         prenom       = cellStr(row, colPre),
                         service      = cellStr(row, colSvc),
@@ -296,13 +379,18 @@ class ImportViewModel @Inject constructor(
                 }
                 wb.close()
 
+                if (rowErrors.isNotEmpty()) {
+                    _collabState.value = ImportState.Error("❌ Erreurs dans le fichier :\n${rowErrors.joinToString("\n")}")
+                    return@launch
+                }
+
                 if (list.isEmpty()) { _collabState.value = ImportState.Error("Aucune donnée trouvée."); return@launch }
 
-                repo.collaborateurDao.insertAll(list)
+                val affected = repo.collaborateurDao.upsertCollaborateurs(list)
                 val uploadRes = repo.firebase.uploadCollaborateurs(list)
                 if (uploadRes.isSuccess) {
-                    repo.collaborateurDao.markSynced(list.map { it.matricule })
-                    _collabState.value = ImportState.Success("✅ ${list.size} collaborateur(s) importé(s).")
+                    repo.collaborateurDao.markSynced(affected)
+                    _collabState.value = ImportState.Success("✅ ${affected.size} collaborateur(s) importé(s).")
                 } else {
                     _collabState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
                 }
@@ -324,7 +412,6 @@ class ImportViewModel @Inject constructor(
                 val wb = WorkbookFactory.create(inputStream)
                 val sheet = wb.getSheetAt(0)
 
-                // Search for header row in first 10 rows
                 var headerRow: Row? = null
                 val headers = mutableMapOf<String, Int>()
 
@@ -347,7 +434,7 @@ class ImportViewModel @Inject constructor(
                 }
 
                 if (headerRow == null) {
-                    _flmState.value = ImportState.Error("Colonnes requises non trouvées.")
+                    _flmState.value = ImportState.Error("Colonnes requises manquantes : Matricule, Nom, Prenom, Email, Service")
                     return@launch
                 }
 
@@ -357,15 +444,30 @@ class ImportViewModel @Inject constructor(
                 val colEml = col(headers, "EMAIL", "MAIL", "COURRIEL")!!
                 val colSvc = col(headers, "SERVICE", "DIVISION", "DIV")!!
 
-                val dataStartRow = headerRow.rowNum + 1
+                val requiredFields = mapOf(
+                    "Matricule" to colMat,
+                    "Nom"       to colNom,
+                    "Prenom"    to colPre,
+                    "Email"     to colEml,
+                    "Service"   to colSvc
+                )
+
                 val list = mutableListOf<FlmEntity>()
+                val rowErrors = mutableListOf<String>()
+                val dataStartRow = headerRow.rowNum + 1
 
                 for (i in dataStartRow..sheet.lastRowNum) {
                     val row = sheet.getRow(i) ?: continue
-                    val mat = cellStr(row, colMat)
-                    if (mat.isBlank()) continue
+                    if ((0 until row.lastCellNum).all { cellStr(row, it).isBlank() }) continue // skip empty rows
+
+                    val missing = missingFields(row, requiredFields)
+                    if (missing.isNotEmpty()) {
+                        rowErrors.add("Ligne ${i + 1} : champ(s) manquant(s) → ${missing.joinToString(", ")}")
+                        continue
+                    }
+
                     list.add(FlmEntity(
-                        matricule = mat,
+                        matricule = cellStr(row, colMat),
                         nom       = cellStr(row, colNom),
                         prenom    = cellStr(row, colPre),
                         email     = cellStr(row, colEml),
@@ -374,16 +476,18 @@ class ImportViewModel @Inject constructor(
                 }
                 wb.close()
 
-                if (list.isEmpty()) {
-                    _flmState.value = ImportState.Error("Aucune donnée trouvée.")
+                if (rowErrors.isNotEmpty()) {
+                    _flmState.value = ImportState.Error("❌ Erreurs dans le fichier :\n${rowErrors.joinToString("\n")}")
                     return@launch
                 }
 
-                repo.flmDao.insertAll(list)
+                if (list.isEmpty()) { _flmState.value = ImportState.Error("Aucune donnée trouvée."); return@launch }
+
+                val affected = repo.flmDao.upsertFlms(list)
                 val uploadRes = repo.firebase.uploadFlms(list)
                 if (uploadRes.isSuccess) {
-                    repo.flmDao.markSynced(list.map { it.matricule })
-                    _flmState.value = ImportState.Success("✅ ${list.size} FLM(s) importé(s).")
+                    repo.flmDao.markSynced(affected)
+                    _flmState.value = ImportState.Success("✅ ${affected.size} FLM(s) importé(s).")
                 } else {
                     _flmState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
                 }
@@ -393,7 +497,6 @@ class ImportViewModel @Inject constructor(
             }
         }
     }
-
 
     /* --------------------------------------------------- */
     /* IMPORT BILAN FC (Excel)                              */
@@ -406,9 +509,9 @@ class ImportViewModel @Inject constructor(
                 val wb = WorkbookFactory.create(inputStream)
                 val sheet = wb.getSheetAt(0)
 
-                // dynamic header search (unchanged)
                 var headerRow: org.apache.poi.ss.usermodel.Row? = null
                 val headers = mutableMapOf<String, Int>()
+
                 for (rowIdx in 0..minOf(9, sheet.lastRowNum)) {
                     val row = sheet.getRow(rowIdx) ?: continue
                     val tempHeaders = mutableMapOf<String, Int>()
@@ -427,7 +530,7 @@ class ImportViewModel @Inject constructor(
                 }
 
                 if (headerRow == null) {
-                    _bilanState.value = ImportState.Error("Colonnes requises manquantes.")
+                    _bilanState.value = ImportState.Error("Colonnes requises manquantes : Matricule, Theme, Debut, Fin")
                     return@launch
                 }
 
@@ -436,35 +539,67 @@ class ImportViewModel @Inject constructor(
                 val colDebut = col(headers, "DEBUT")!!
                 val colFin   = col(headers, "FIN")!!
 
-                // Prefetch themes & collaborators (avoid per-row DB access)
+                val requiredFields = mapOf(
+                    "Matricule" to colMat,
+                    "Theme"     to colTheme,
+                    "Debut"     to colDebut,
+                    "Fin"       to colFin
+                )
+
+                // Prefetch themes & collaborators
                 val themes = repo.themeDao.getAll()
                 val themeByNom = themes.associateBy { it.nom.trim().uppercase() }
-                val themeById  = themes.associateBy { it.id }
 
                 val collabs = repo.collaborateurDao.getAll()
                 val collabMatSet = collabs.map { it.matricule }.toSet()
 
+                // Prefetch existing formations to detect duplicates
+                val existingFormations = repo.formationDao.getAll()
+                val existingKeys = existingFormations
+                    .map { Triple(it.collaborateurMatricule, it.themeId, it.debut + "|" + it.fin) }
+                    .toSet()
+
                 val formations = mutableListOf<FormationEntity>()
-                var skipped = 0
+                val rowErrors = mutableListOf<String>()
+                var duplicates = 0
 
                 val dataStartRow = headerRow.rowNum + 1
                 for (i in dataStartRow..sheet.lastRowNum) {
                     val row = sheet.getRow(i) ?: continue
-                    val mat = cellStr(row, colMat)
-                    if (mat.isBlank()) continue
+                    if ((0 until row.lastCellNum).all { cellStr(row, it).isBlank() }) continue // skip empty rows
 
+                    // Check for blank required fields first
+                    val missing = missingFields(row, requiredFields)
+                    if (missing.isNotEmpty()) {
+                        rowErrors.add("Ligne ${i + 1} : champ(s) manquant(s) → ${missing.joinToString(", ")}")
+                        continue
+                    }
+
+                    val mat      = cellStr(row, colMat)
                     val themeRaw = cellStr(row, colTheme).trim()
                     val debut    = cellStr(row, colDebut)
                     val fin      = cellStr(row, colFin)
-                    if (debut.isBlank() || fin.isBlank()) continue
 
-                    // more robust numeric parsing: accept "1", "1.0", numeric cells...
+                    // Validate matricule exists
+                    if (!collabMatSet.contains(mat)) {
+                        rowErrors.add("Ligne ${i + 1} : matricule '$mat' introuvable dans les collaborateurs.")
+                        continue
+                    }
+
+                    // Resolve theme
                     val themeId = themeRaw.toLongOrNull()
                         ?: themeRaw.toDoubleOrNull()?.toLong()
                         ?: themeByNom[themeRaw.uppercase()]?.id
 
-                    if (themeId == null || !collabMatSet.contains(mat)) {
-                        skipped++; continue
+                    if (themeId == null) {
+                        rowErrors.add("Ligne ${i + 1} : thème '$themeRaw' introuvable.")
+                        continue
+                    }
+
+                    // Skip duplicates
+                    val key = Triple(mat, themeId, "$debut|$fin")
+                    if (existingKeys.contains(key)) {
+                        duplicates++; continue
                     }
 
                     formations.add(FormationEntity(
@@ -476,21 +611,28 @@ class ImportViewModel @Inject constructor(
                 }
                 wb.close()
 
-                if (formations.isEmpty()) {
-                    _bilanState.value = ImportState.Error("Aucune formation valide ($skipped ignorées).")
+                if (rowErrors.isNotEmpty()) {
+                    _bilanState.value = ImportState.Error("❌ Erreurs dans le fichier :\n${rowErrors.joinToString("\n")}")
                     return@launch
                 }
 
-                // Insert into Room and get generated ids
-                val insertIds = repo.formationDao.insertAll(formations).filter { it != -1L }
+                if (formations.isEmpty()) {
+                    val reason = if (duplicates > 0) "$duplicates doublon(s) ignoré(s)." else ""
+                    _bilanState.value = ImportState.Error("Aucune nouvelle formation valide. $reason".trim())
+                    return@launch
+                }
 
-                // zip formations with returned ids to set formation.id before uploading
+                val insertIds = repo.formationDao.insertAll(formations).filter { it != -1L }
                 val syncedFormations = formations.zip(insertIds).map { (f, id) -> f.copy(id = id) }
 
                 val uploadRes = repo.firebase.uploadFormations(syncedFormations)
                 if (uploadRes.isSuccess) {
                     repo.formationDao.markSynced(insertIds)
-                    _bilanState.value = ImportState.Success("✅ ${syncedFormations.size} formation(s) importée(s).")
+                    val summary = buildString {
+                        append("✅ ${syncedFormations.size} formation(s) importée(s).")
+                        if (duplicates > 0) append(" $duplicates doublon(s) ignoré(s).")
+                    }
+                    _bilanState.value = ImportState.Success(summary)
                 } else {
                     _bilanState.value = ImportState.Error("❌ Erreur upload: ${uploadRes.exceptionOrNull()?.message}")
                 }

@@ -6,8 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.room.CoroutinesRoom;
+import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
+import androidx.room.RoomDatabaseKt;
 import androidx.room.RoomSQLiteQuery;
 import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
@@ -38,6 +40,8 @@ public final class FlmDao_Impl implements FlmDao {
   private final RoomDatabase __db;
 
   private final EntityInsertionAdapter<FlmEntity> __insertionAdapterOfFlmEntity;
+
+  private final EntityDeletionOrUpdateAdapter<FlmEntity> __updateAdapterOfFlmEntity;
 
   private final SharedSQLiteStatement __preparedStmtOfDeleteAll;
 
@@ -80,6 +84,50 @@ public final class FlmDao_Impl implements FlmDao {
         }
         final int _tmp = entity.getSyncedToFirebase() ? 1 : 0;
         statement.bindLong(6, _tmp);
+      }
+    };
+    this.__updateAdapterOfFlmEntity = new EntityDeletionOrUpdateAdapter<FlmEntity>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `flms` SET `matricule` = ?,`nom` = ?,`prenom` = ?,`email` = ?,`service` = ?,`syncedToFirebase` = ? WHERE `matricule` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final FlmEntity entity) {
+        if (entity.getMatricule() == null) {
+          statement.bindNull(1);
+        } else {
+          statement.bindString(1, entity.getMatricule());
+        }
+        if (entity.getNom() == null) {
+          statement.bindNull(2);
+        } else {
+          statement.bindString(2, entity.getNom());
+        }
+        if (entity.getPrenom() == null) {
+          statement.bindNull(3);
+        } else {
+          statement.bindString(3, entity.getPrenom());
+        }
+        if (entity.getEmail() == null) {
+          statement.bindNull(4);
+        } else {
+          statement.bindString(4, entity.getEmail());
+        }
+        if (entity.getService() == null) {
+          statement.bindNull(5);
+        } else {
+          statement.bindString(5, entity.getService());
+        }
+        final int _tmp = entity.getSyncedToFirebase() ? 1 : 0;
+        statement.bindLong(6, _tmp);
+        if (entity.getMatricule() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindString(7, entity.getMatricule());
+        }
       }
     };
     this.__preparedStmtOfDeleteAll = new SharedSQLiteStatement(__db) {
@@ -127,6 +175,49 @@ public final class FlmDao_Impl implements FlmDao {
         }
       }
     }, $completion);
+  }
+
+  @Override
+  public Object update(final FlmEntity flm, final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfFlmEntity.handle(flm);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updateAll(final List<FlmEntity> flms,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfFlmEntity.handleMultiple(flms);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object upsertFlms(final List<FlmEntity> flms,
+      final Continuation<? super List<String>> $completion) {
+    return RoomDatabaseKt.withTransaction(__db, (__cont) -> FlmDao.DefaultImpls.upsertFlms(FlmDao_Impl.this, flms, __cont), $completion);
   }
 
   @Override
@@ -222,38 +313,6 @@ public final class FlmDao_Impl implements FlmDao {
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> $completion) {
-    final String _sql = "SELECT COUNT(*) FROM flms";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
-    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
-    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Integer>() {
-      @Override
-      @NonNull
-      public Integer call() throws Exception {
-        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-        try {
-          final Integer _result;
-          if (_cursor.moveToFirst()) {
-            final Integer _tmp;
-            if (_cursor.isNull(0)) {
-              _tmp = null;
-            } else {
-              _tmp = _cursor.getInt(0);
-            }
-            _result = _tmp;
-          } else {
-            _result = null;
-          }
-          return _result;
-        } finally {
-          _cursor.close();
-          _statement.release();
-        }
-      }
-    }, $completion);
-  }
-
-  @Override
   public Object getAll(final Continuation<? super List<FlmEntity>> $completion) {
     final String _sql = "SELECT * FROM flms ORDER BY nom ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
@@ -309,6 +368,38 @@ public final class FlmDao_Impl implements FlmDao {
             _tmpSyncedToFirebase = _tmp != 0;
             _item = new FlmEntity(_tmpMatricule,_tmpNom,_tmpPrenom,_tmpEmail,_tmpService,_tmpSyncedToFirebase);
             _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object count(final Continuation<? super Integer> $completion) {
+    final String _sql = "SELECT COUNT(*) FROM flms";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Integer>() {
+      @Override
+      @NonNull
+      public Integer call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Integer _result;
+          if (_cursor.moveToFirst()) {
+            final Integer _tmp;
+            if (_cursor.isNull(0)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getInt(0);
+            }
+            _result = _tmp;
+          } else {
+            _result = null;
           }
           return _result;
         } finally {

@@ -6,8 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.room.CoroutinesRoom;
+import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
+import androidx.room.RoomDatabaseKt;
 import androidx.room.RoomSQLiteQuery;
 import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
@@ -38,6 +40,8 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
   private final RoomDatabase __db;
 
   private final EntityInsertionAdapter<CollaborateurEntity> __insertionAdapterOfCollaborateurEntity;
+
+  private final EntityDeletionOrUpdateAdapter<CollaborateurEntity> __updateAdapterOfCollaborateurEntity;
 
   private final SharedSQLiteStatement __preparedStmtOfDeleteAll;
 
@@ -80,6 +84,50 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
         }
         final int _tmp = entity.getSyncedToFirebase() ? 1 : 0;
         statement.bindLong(6, _tmp);
+      }
+    };
+    this.__updateAdapterOfCollaborateurEntity = new EntityDeletionOrUpdateAdapter<CollaborateurEntity>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `collaborateurs` SET `matricule` = ?,`nom` = ?,`prenom` = ?,`service` = ?,`flmMatricule` = ?,`syncedToFirebase` = ? WHERE `matricule` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final CollaborateurEntity entity) {
+        if (entity.getMatricule() == null) {
+          statement.bindNull(1);
+        } else {
+          statement.bindString(1, entity.getMatricule());
+        }
+        if (entity.getNom() == null) {
+          statement.bindNull(2);
+        } else {
+          statement.bindString(2, entity.getNom());
+        }
+        if (entity.getPrenom() == null) {
+          statement.bindNull(3);
+        } else {
+          statement.bindString(3, entity.getPrenom());
+        }
+        if (entity.getService() == null) {
+          statement.bindNull(4);
+        } else {
+          statement.bindString(4, entity.getService());
+        }
+        if (entity.getFlmMatricule() == null) {
+          statement.bindNull(5);
+        } else {
+          statement.bindString(5, entity.getFlmMatricule());
+        }
+        final int _tmp = entity.getSyncedToFirebase() ? 1 : 0;
+        statement.bindLong(6, _tmp);
+        if (entity.getMatricule() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindString(7, entity.getMatricule());
+        }
       }
     };
     this.__preparedStmtOfDeleteAll = new SharedSQLiteStatement(__db) {
@@ -128,6 +176,50 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
         }
       }
     }, $completion);
+  }
+
+  @Override
+  public Object update(final CollaborateurEntity collaborateur,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfCollaborateurEntity.handle(collaborateur);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updateAll(final List<CollaborateurEntity> collaborateurs,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfCollaborateurEntity.handleMultiple(collaborateurs);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object upsertCollaborateurs(final List<CollaborateurEntity> collabs,
+      final Continuation<? super List<String>> $completion) {
+    return RoomDatabaseKt.withTransaction(__db, (__cont) -> CollaborateurDao.DefaultImpls.upsertCollaborateurs(CollaborateurDao_Impl.this, collabs, __cont), $completion);
   }
 
   @Override
@@ -289,6 +381,68 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
   }
 
   @Override
+  public Object getAllMatricules(final Continuation<? super List<String>> $completion) {
+    final String _sql = "SELECT matricule FROM collaborateurs";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<String>>() {
+      @Override
+      @NonNull
+      public List<String> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final List<String> _result = new ArrayList<String>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final String _item;
+            if (_cursor.isNull(0)) {
+              _item = null;
+            } else {
+              _item = _cursor.getString(0);
+            }
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object count(final Continuation<? super Integer> $completion) {
+    final String _sql = "SELECT COUNT(*) FROM collaborateurs";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Integer>() {
+      @Override
+      @NonNull
+      public Integer call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Integer _result;
+          if (_cursor.moveToFirst()) {
+            final Integer _tmp;
+            if (_cursor.isNull(0)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getInt(0);
+            }
+            _result = _tmp;
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object getByMatricule(final String matricule,
       final Continuation<? super CollaborateurEntity> $completion) {
     final String _sql = "SELECT * FROM collaborateurs WHERE matricule = ? LIMIT 1";
@@ -349,68 +503,6 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
             _tmp = _cursor.getInt(_cursorIndexOfSyncedToFirebase);
             _tmpSyncedToFirebase = _tmp != 0;
             _result = new CollaborateurEntity(_tmpMatricule,_tmpNom,_tmpPrenom,_tmpService,_tmpFlmMatricule,_tmpSyncedToFirebase);
-          } else {
-            _result = null;
-          }
-          return _result;
-        } finally {
-          _cursor.close();
-          _statement.release();
-        }
-      }
-    }, $completion);
-  }
-
-  @Override
-  public Object getAllMatricules(final Continuation<? super List<String>> $completion) {
-    final String _sql = "SELECT matricule FROM collaborateurs";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
-    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
-    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<String>>() {
-      @Override
-      @NonNull
-      public List<String> call() throws Exception {
-        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-        try {
-          final List<String> _result = new ArrayList<String>(_cursor.getCount());
-          while (_cursor.moveToNext()) {
-            final String _item;
-            if (_cursor.isNull(0)) {
-              _item = null;
-            } else {
-              _item = _cursor.getString(0);
-            }
-            _result.add(_item);
-          }
-          return _result;
-        } finally {
-          _cursor.close();
-          _statement.release();
-        }
-      }
-    }, $completion);
-  }
-
-  @Override
-  public Object count(final Continuation<? super Integer> $completion) {
-    final String _sql = "SELECT COUNT(*) FROM collaborateurs";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
-    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
-    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Integer>() {
-      @Override
-      @NonNull
-      public Integer call() throws Exception {
-        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-        try {
-          final Integer _result;
-          if (_cursor.moveToFirst()) {
-            final Integer _tmp;
-            if (_cursor.isNull(0)) {
-              _tmp = null;
-            } else {
-              _tmp = _cursor.getInt(0);
-            }
-            _result = _tmp;
           } else {
             _result = null;
           }

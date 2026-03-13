@@ -40,8 +40,6 @@ public final class FormationDao_Impl implements FormationDao {
 
   private final EntityInsertionAdapter<FormationEntity> __insertionAdapterOfFormationEntity;
 
-  private final EntityInsertionAdapter<FormationEntity> __insertionAdapterOfFormationEntity_1;
-
   private final EntityDeletionOrUpdateAdapter<FormationEntity> __updateAdapterOfFormationEntity;
 
   private final SharedSQLiteStatement __preparedStmtOfDeleteAll;
@@ -55,37 +53,6 @@ public final class FormationDao_Impl implements FormationDao {
       @NonNull
       protected String createQuery() {
         return "INSERT OR IGNORE INTO `formations` (`id`,`collaborateurMatricule`,`themeId`,`debut`,`fin`,`syncedToFirebase`) VALUES (nullif(?, 0),?,?,?,?,?)";
-      }
-
-      @Override
-      protected void bind(@NonNull final SupportSQLiteStatement statement,
-          @NonNull final FormationEntity entity) {
-        statement.bindLong(1, entity.getId());
-        if (entity.getCollaborateurMatricule() == null) {
-          statement.bindNull(2);
-        } else {
-          statement.bindString(2, entity.getCollaborateurMatricule());
-        }
-        statement.bindLong(3, entity.getThemeId());
-        if (entity.getDebut() == null) {
-          statement.bindNull(4);
-        } else {
-          statement.bindString(4, entity.getDebut());
-        }
-        if (entity.getFin() == null) {
-          statement.bindNull(5);
-        } else {
-          statement.bindString(5, entity.getFin());
-        }
-        final int _tmp = entity.getSyncedToFirebase() ? 1 : 0;
-        statement.bindLong(6, _tmp);
-      }
-    };
-    this.__insertionAdapterOfFormationEntity_1 = new EntityInsertionAdapter<FormationEntity>(__db) {
-      @Override
-      @NonNull
-      protected String createQuery() {
-        return "INSERT OR REPLACE INTO `formations` (`id`,`collaborateurMatricule`,`themeId`,`debut`,`fin`,`syncedToFirebase`) VALUES (nullif(?, 0),?,?,?,?,?)";
       }
 
       @Override
@@ -163,15 +130,15 @@ public final class FormationDao_Impl implements FormationDao {
   }
 
   @Override
-  public Object insertAll(final List<FormationEntity> formations,
-      final Continuation<? super List<Long>> $completion) {
-    return CoroutinesRoom.execute(__db, true, new Callable<List<Long>>() {
+  public Object insert(final FormationEntity formation,
+      final Continuation<? super Long> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
-      public List<Long> call() throws Exception {
+      public Long call() throws Exception {
         __db.beginTransaction();
         try {
-          final List<Long> _result = __insertionAdapterOfFormationEntity.insertAndReturnIdsList(formations);
+          final Long _result = __insertionAdapterOfFormationEntity.insertAndReturnId(formation);
           __db.setTransactionSuccessful();
           return _result;
         } finally {
@@ -182,15 +149,15 @@ public final class FormationDao_Impl implements FormationDao {
   }
 
   @Override
-  public Object insert(final FormationEntity formation,
-      final Continuation<? super Long> $completion) {
-    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
+  public Object insertAll(final List<FormationEntity> formations,
+      final Continuation<? super List<Long>> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<List<Long>>() {
       @Override
       @NonNull
-      public Long call() throws Exception {
+      public List<Long> call() throws Exception {
         __db.beginTransaction();
         try {
-          final Long _result = __insertionAdapterOfFormationEntity_1.insertAndReturnId(formation);
+          final List<Long> _result = __insertionAdapterOfFormationEntity.insertAndReturnIdsList(formations);
           __db.setTransactionSuccessful();
           return _result;
         } finally {

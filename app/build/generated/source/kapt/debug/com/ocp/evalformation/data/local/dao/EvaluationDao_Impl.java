@@ -188,8 +188,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
   }
 
   @Override
-  public Object insert(final EvaluationEntity evaluation,
-      final Continuation<? super Long> $completion) {
+  public Object insert(final EvaluationEntity evaluation, final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -203,12 +202,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object update(final EvaluationEntity evaluation,
-      final Continuation<? super Unit> $completion) {
+  public Object update(final EvaluationEntity evaluation, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -222,11 +220,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> $completion) {
+  public Object deleteAll(final Continuation<? super Unit> arg0) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -245,7 +243,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
@@ -372,7 +370,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<EvaluationEntity>> $completion) {
+  public Object getAll(final Continuation<? super List<EvaluationEntity>> arg0) {
     final String _sql = "SELECT * FROM evaluations ORDER BY createdAt DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -488,11 +486,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object getById(final long id, final Continuation<? super EvaluationEntity> $completion) {
+  public Object getById(final long id, final Continuation<? super EvaluationEntity> arg1) {
     final String _sql = "SELECT * FROM evaluations WHERE id = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -610,12 +608,12 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object getByFormationId(final long formationId,
-      final Continuation<? super List<EvaluationEntity>> $completion) {
+      final Continuation<? super List<EvaluationEntity>> arg1) {
     final String _sql = "SELECT * FROM evaluations WHERE formationId = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -733,11 +731,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> $completion) {
+  public Object count(final Continuation<? super Integer> arg0) {
     final String _sql = "SELECT COUNT(*) FROM evaluations";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -765,11 +763,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object getUnsynced(final Continuation<? super List<EvaluationEntity>> $completion) {
+  public Object getUnsynced(final Continuation<? super List<EvaluationEntity>> arg0) {
     final String _sql = "SELECT * FROM evaluations WHERE syncedToFirebase = 0";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -885,11 +883,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object markSynced(final List<Long> ids, final Continuation<? super Unit> $completion) {
+  public Object markSynced(final List<Long> ids, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -919,7 +917,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull

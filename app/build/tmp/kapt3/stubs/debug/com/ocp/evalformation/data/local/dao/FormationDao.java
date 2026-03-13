@@ -6,15 +6,15 @@ public abstract interface FormationDao {
     
     @androidx.room.Insert(onConflict = 5)
     @org.jetbrains.annotations.Nullable()
-    public abstract java.lang.Object insertAll(@org.jetbrains.annotations.NotNull()
-    java.util.List<com.ocp.evalformation.data.local.entity.FormationEntity> formations, @org.jetbrains.annotations.NotNull()
-    kotlin.coroutines.Continuation<? super java.util.List<java.lang.Long>> $completion);
-    
-    @androidx.room.Insert(onConflict = 1)
-    @org.jetbrains.annotations.Nullable()
     public abstract java.lang.Object insert(@org.jetbrains.annotations.NotNull()
     com.ocp.evalformation.data.local.entity.FormationEntity formation, @org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super java.lang.Long> $completion);
+    
+    @androidx.room.Insert(onConflict = 5)
+    @org.jetbrains.annotations.Nullable()
+    public abstract java.lang.Object insertAll(@org.jetbrains.annotations.NotNull()
+    java.util.List<com.ocp.evalformation.data.local.entity.FormationEntity> formations, @org.jetbrains.annotations.NotNull()
+    kotlin.coroutines.Continuation<? super java.util.List<java.lang.Long>> $completion);
     
     @androidx.room.Update()
     @org.jetbrains.annotations.Nullable()
