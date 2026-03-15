@@ -73,4 +73,11 @@ object AppModule {
 
     @Provides
     fun provideFormationDao(db: OcpDatabase) = db.formationDao()
+
+    @Provides
+    fun provideInvitationFlmDao(db: OcpDatabase) = db.invitationFlmDao()
+
+    @Provides
+    fun provideForms(db: OcpDatabase) = db.formDao()
+
 }

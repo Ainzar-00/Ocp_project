@@ -15,6 +15,19 @@ class RhViewModel @Inject constructor(
     private val repo: MainRepository
 ) : ViewModel() {
 
+    init {
+
+        // Listen to Firebase for real-time invitation status updates
+        // especially when Apps Script marks an invitation as REPONDUE
+        repo.firebase.listenToInvitations(viewModelScope) { invitations ->
+            viewModelScope.launch {
+                invitations.forEach { invitation ->
+                    repo.invitationDao.insert(invitation) // upsert
+                }
+            }
+        }
+    }
+
     // ── LiveData ───────────────────────────────────────────────────────────────
     val allThemes         = repo.themeDao.getAllLive()
     val allFlms           = repo.flmDao.getAllLive()

@@ -195,13 +195,13 @@ data class Forms(
 )
 
 data class EntryIds(
-    val formationId: Long,
-    val intituleAction: Long,
-    val nomPrenom: Long,
-    val service: Long,
-    val dates: Long,
-    val formateur: Long,
-    val matricule: Long
+    val formationId    : Long = 0,
+    val intituleAction : Long = 0,
+    val nomPrenom      : Long = 0,
+    val matricule      : Long = 0,
+    val service        : Long = 0,
+    val formateur      : Long = 0,
+    val dates          : Long = 0
 )
 
 
@@ -211,9 +211,11 @@ data class FormCreationRequest(
 )
 
 data class FormCreationResponse(
-    val status: String,
-    val formUrl: String,
-    val formId: String,
-    val responseSheetUrl: String,
-    val entryIds: EntryIds
+    val status          : String,
+    val formUrl         : String?,
+    val formId          : String?,
+    val responseSheetUrl: String?,
+    val entryIds        : EntryIds?,   // ← nullable
+    val message         : String? = null,
+    val stack           : String? = null
 )

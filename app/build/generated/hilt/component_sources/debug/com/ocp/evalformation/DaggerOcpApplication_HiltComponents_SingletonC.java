@@ -14,7 +14,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.ocp.evalformation.data.local.OcpDatabase;
 import com.ocp.evalformation.data.local.dao.CollaborateurDao;
 import com.ocp.evalformation.data.local.dao.FlmDao;
+import com.ocp.evalformation.data.local.dao.FormDao;
 import com.ocp.evalformation.data.local.dao.FormationDao;
+import com.ocp.evalformation.data.local.dao.InvitationFlmDao;
 import com.ocp.evalformation.data.local.dao.ThemeDao;
 import com.ocp.evalformation.data.remote.FirebaseRepository;
 import com.ocp.evalformation.data.repository.MainRepository;
@@ -26,6 +28,8 @@ import com.ocp.evalformation.di.AppModule_ProvideFirebaseRepoFactory;
 import com.ocp.evalformation.di.AppModule_ProvideFirestoreFactory;
 import com.ocp.evalformation.di.AppModule_ProvideFlmDaoFactory;
 import com.ocp.evalformation.di.AppModule_ProvideFormationDaoFactory;
+import com.ocp.evalformation.di.AppModule_ProvideFormsFactory;
+import com.ocp.evalformation.di.AppModule_ProvideInvitationFlmDaoFactory;
 import com.ocp.evalformation.di.AppModule_ProvideMainRepoFactory;
 import com.ocp.evalformation.di.AppModule_ProvideThemeDaoFactory;
 import com.ocp.evalformation.ui.auth.LoginActivity;
@@ -697,6 +701,14 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
       return AppModule_ProvideCollaborateurDaoFactory.provideCollaborateurDao(provideDatabaseProvider.get());
     }
 
+    private InvitationFlmDao invitationFlmDao() {
+      return AppModule_ProvideInvitationFlmDaoFactory.provideInvitationFlmDao(provideDatabaseProvider.get());
+    }
+
+    private FormDao formDao() {
+      return AppModule_ProvideFormsFactory.provideForms(provideDatabaseProvider.get());
+    }
+
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 0));
@@ -756,7 +768,7 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
           return (T) AppModule_ProvideFirestoreFactory.provideFirestore();
 
           case 5: // com.ocp.evalformation.data.repository.syncRepository 
-          return (T) new syncRepository(singletonCImpl.provideFirebaseRepoProvider.get(), singletonCImpl.themeDao(), singletonCImpl.flmDao(), singletonCImpl.collaborateurDao(), singletonCImpl.formationDao());
+          return (T) new syncRepository(singletonCImpl.provideFirebaseRepoProvider.get(), singletonCImpl.themeDao(), singletonCImpl.flmDao(), singletonCImpl.collaborateurDao(), singletonCImpl.formationDao(), singletonCImpl.invitationFlmDao(), singletonCImpl.formDao());
 
           default: throw new AssertionError(id);
         }

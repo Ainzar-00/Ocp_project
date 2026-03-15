@@ -264,6 +264,9 @@ interface InvitationFlmDao {
 
     @Query("DELETE FROM invitations_flm")
     suspend fun deleteAll()
+
+    @Query("SELECT COUNT(*) FROM invitations_flm")
+    suspend fun count(): Int
 }
 
 /* ======================================================
@@ -283,6 +286,10 @@ interface FormDao {
 
     @Query("DELETE FROM forms WHERE themeId = :themeId")
     suspend fun deleteByThemeId(themeId: Long)
+
+    @Query("SELECT COUNT(*) FROM FORMS")
+    suspend fun count(): Int
+
 }
 
 /* ======================================================

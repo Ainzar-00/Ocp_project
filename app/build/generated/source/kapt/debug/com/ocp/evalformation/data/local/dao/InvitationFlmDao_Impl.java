@@ -215,7 +215,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
 
   @Override
   public Object insert(final InvitationFlmEntity invitation,
-      final Continuation<? super Long> $completion) {
+      final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -229,12 +229,12 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object update(final InvitationFlmEntity invitation,
-      final Continuation<? super Unit> $completion) {
+      final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -248,12 +248,12 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object updateStatut(final long id, final InvitationStatus statut,
-      final Continuation<? super Unit> $completion) {
+      final Continuation<? super Unit> arg2) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -281,12 +281,11 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __preparedStmtOfUpdateStatut.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg2);
   }
 
   @Override
-  public Object markAsReplied(final long formationId,
-      final Continuation<? super Unit> $completion) {
+  public Object markAsReplied(final long formationId, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -307,11 +306,11 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __preparedStmtOfMarkAsReplied.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> $completion) {
+  public Object deleteAll(final Continuation<? super Unit> arg0) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -330,7 +329,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
@@ -594,7 +593,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
 
   @Override
   public Object getByFormationId(final long formationId,
-      final Continuation<? super InvitationFlmEntity> $completion) {
+      final Continuation<? super InvitationFlmEntity> arg1) {
     final String _sql = "SELECT * FROM invitations_flm WHERE formationId = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -701,7 +700,39 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
+  }
+
+  @Override
+  public Object count(final Continuation<? super Integer> arg0) {
+    final String _sql = "SELECT COUNT(*) FROM invitations_flm";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<Integer>() {
+      @Override
+      @NonNull
+      public Integer call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Integer _result;
+          if (_cursor.moveToFirst()) {
+            final Integer _tmp;
+            if (_cursor.isNull(0)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getInt(0);
+            }
+            _result = _tmp;
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, arg0);
   }
 
   @NonNull

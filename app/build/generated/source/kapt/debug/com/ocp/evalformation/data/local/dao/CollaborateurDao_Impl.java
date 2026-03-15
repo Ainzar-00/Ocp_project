@@ -142,7 +142,7 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
 
   @Override
   public Object insert(final CollaborateurEntity collaborateur,
-      final Continuation<? super Long> $completion) {
+      final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -156,12 +156,12 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object insertAll(final List<CollaborateurEntity> collaborateurs,
-      final Continuation<? super Unit> $completion) {
+      final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -175,12 +175,12 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object update(final CollaborateurEntity collaborateur,
-      final Continuation<? super Unit> $completion) {
+      final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -194,12 +194,12 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object updateAll(final List<CollaborateurEntity> collaborateurs,
-      final Continuation<? super Unit> $completion) {
+      final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -213,17 +213,17 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object upsertCollaborateurs(final List<CollaborateurEntity> collabs,
-      final Continuation<? super List<String>> $completion) {
-    return RoomDatabaseKt.withTransaction(__db, (__cont) -> CollaborateurDao.DefaultImpls.upsertCollaborateurs(CollaborateurDao_Impl.this, collabs, __cont), $completion);
+      final Continuation<? super List<String>> arg1) {
+    return RoomDatabaseKt.withTransaction(__db, (__cont) -> CollaborateurDao.DefaultImpls.upsertCollaborateurs(CollaborateurDao_Impl.this, collabs, __cont), arg1);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> $completion) {
+  public Object deleteAll(final Continuation<? super Unit> arg0) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -242,7 +242,7 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
@@ -315,7 +315,7 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<CollaborateurEntity>> $completion) {
+  public Object getAll(final Continuation<? super List<CollaborateurEntity>> arg0) {
     final String _sql = "SELECT * FROM collaborateurs ORDER BY nom ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -377,11 +377,11 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object getAllMatricules(final Continuation<? super List<String>> $completion) {
+  public Object getAllMatricules(final Continuation<? super List<String>> arg0) {
     final String _sql = "SELECT matricule FROM collaborateurs";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -407,11 +407,11 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> $completion) {
+  public Object count(final Continuation<? super Integer> arg0) {
     final String _sql = "SELECT COUNT(*) FROM collaborateurs";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -439,12 +439,12 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
   public Object getByMatricule(final String matricule,
-      final Continuation<? super CollaborateurEntity> $completion) {
+      final Continuation<? super CollaborateurEntity> arg1) {
     final String _sql = "SELECT * FROM collaborateurs WHERE matricule = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -512,11 +512,11 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object getUnsynced(final Continuation<? super List<CollaborateurEntity>> $completion) {
+  public Object getUnsynced(final Continuation<? super List<CollaborateurEntity>> arg0) {
     final String _sql = "SELECT * FROM collaborateurs WHERE syncedToFirebase = 0";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -578,12 +578,11 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object markSynced(final List<String> matricules,
-      final Continuation<? super Unit> $completion) {
+  public Object markSynced(final List<String> matricules, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -613,7 +612,7 @@ public final class CollaborateurDao_Impl implements CollaborateurDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull

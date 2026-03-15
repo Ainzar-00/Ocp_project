@@ -141,7 +141,7 @@ public final class FlmDao_Impl implements FlmDao {
   }
 
   @Override
-  public Object insert(final FlmEntity flm, final Continuation<? super Long> $completion) {
+  public Object insert(final FlmEntity flm, final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -155,12 +155,11 @@ public final class FlmDao_Impl implements FlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object insertAll(final List<FlmEntity> flms,
-      final Continuation<? super Unit> $completion) {
+  public Object insertAll(final List<FlmEntity> flms, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -174,11 +173,11 @@ public final class FlmDao_Impl implements FlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object update(final FlmEntity flm, final Continuation<? super Unit> $completion) {
+  public Object update(final FlmEntity flm, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -192,12 +191,11 @@ public final class FlmDao_Impl implements FlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object updateAll(final List<FlmEntity> flms,
-      final Continuation<? super Unit> $completion) {
+  public Object updateAll(final List<FlmEntity> flms, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -211,17 +209,17 @@ public final class FlmDao_Impl implements FlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object upsertFlms(final List<FlmEntity> flms,
-      final Continuation<? super List<String>> $completion) {
-    return RoomDatabaseKt.withTransaction(__db, (__cont) -> FlmDao.DefaultImpls.upsertFlms(FlmDao_Impl.this, flms, __cont), $completion);
+      final Continuation<? super List<String>> arg1) {
+    return RoomDatabaseKt.withTransaction(__db, (__cont) -> FlmDao.DefaultImpls.upsertFlms(FlmDao_Impl.this, flms, __cont), arg1);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> $completion) {
+  public Object deleteAll(final Continuation<? super Unit> arg0) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -240,7 +238,7 @@ public final class FlmDao_Impl implements FlmDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
@@ -313,7 +311,7 @@ public final class FlmDao_Impl implements FlmDao {
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<FlmEntity>> $completion) {
+  public Object getAll(final Continuation<? super List<FlmEntity>> arg0) {
     final String _sql = "SELECT * FROM flms ORDER BY nom ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -375,11 +373,11 @@ public final class FlmDao_Impl implements FlmDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> $completion) {
+  public Object count(final Continuation<? super Integer> arg0) {
     final String _sql = "SELECT COUNT(*) FROM flms";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -407,12 +405,11 @@ public final class FlmDao_Impl implements FlmDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object getByMatricule(final String matricule,
-      final Continuation<? super FlmEntity> $completion) {
+  public Object getByMatricule(final String matricule, final Continuation<? super FlmEntity> arg1) {
     final String _sql = "SELECT * FROM flms WHERE matricule = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -480,11 +477,11 @@ public final class FlmDao_Impl implements FlmDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object getUnsynced(final Continuation<? super List<FlmEntity>> $completion) {
+  public Object getUnsynced(final Continuation<? super List<FlmEntity>> arg0) {
     final String _sql = "SELECT * FROM flms WHERE syncedToFirebase = 0";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -546,12 +543,11 @@ public final class FlmDao_Impl implements FlmDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object markSynced(final List<String> matricules,
-      final Continuation<? super Unit> $completion) {
+  public Object markSynced(final List<String> matricules, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -581,7 +577,7 @@ public final class FlmDao_Impl implements FlmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull

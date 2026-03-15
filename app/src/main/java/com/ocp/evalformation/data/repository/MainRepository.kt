@@ -7,6 +7,7 @@ import com.ocp.evalformation.data.local.entity.*
 import com.ocp.evalformation.data.remote.FirebaseRepository
 import com.ocp.evalformation.data.local.dao.FormDao
 import com.ocp.evalformation.utils.EmailHelper
+import com.ocp.evalformation.utils.dateHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,16 +49,23 @@ class MainRepository @Inject constructor(
 
     // ── Form Creation ──────────────────────────────────────────────────────────
     suspend fun createFormForTheme(theme: ThemeEntity) {
+        val tag = "FormCreate"
         val googleScriptApi = RetrofitInstance.api
         try {
+            Log.d(tag, "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            Log.d(tag, "START createFormForTheme: '${theme.nom}' (id=${theme.id})")
+
+            // ── Step 1: Check if form already exists ──────────────
             val existing = formDao.getByThemeId(theme.id)
             if (existing != null) {
-                Log.i("FormCreate", "Form already exists for theme ${theme.id}")
+                Log.i(tag, "SKIP — form already exists for themeId=${theme.id}, formUrl=${existing.formUrl}")
                 return
             }
+            Log.d(tag, "STEP 1 ✅ — no existing form, proceeding")
 
+            // ── Step 2: Build request ──────────────────────────────
             val competences = theme.objectifPedagogique
-                .split(",")
+                .split("•")
                 .map { it.trim() }
                 .filter { it.isNotBlank() }
 
@@ -65,48 +73,82 @@ class MainRepository @Inject constructor(
                 themeNom    = theme.nom,
                 competences = competences
             )
+            Log.d(tag, "STEP 2 ✅ — themeNom='${theme.nom}', competences(${competences.size})=$competences")
 
-            Log.i("FormCreate", "Calling Apps Script for theme: ${theme.nom}")
-
+            // ── Step 3: Call Apps Script ───────────────────────────
+            Log.d(tag, "STEP 3 — calling Apps Script...")
             val response = googleScriptApi.createForm(request)
-
-            Log.i("FormCreate", "Response code: ${response.code()}")
-            Log.i("FormCreate", "Response body: ${response.body()}")
-            Log.i("FormCreate", "Error body: ${response.errorBody()?.string()}")
+            Log.d(tag, "STEP 3 — response code: ${response.code()}, isSuccessful: ${response.isSuccessful}")
 
             if (!response.isSuccessful) {
-                Log.e("FormCreate", "Apps Script call failed: ${response.code()}")
+                Log.e(tag, "STEP 3 ❌ — failed: code=${response.code()}, error=${response.errorBody()?.string()}")
                 return
             }
 
+            // ── Step 4: Parse body ─────────────────────────────────
             val body = response.body()
+            Log.d(tag, "STEP 4 — raw body: $body")
+
             if (body == null) {
-                Log.e("FormCreate", "Response body is null — likely Gson parsing failed")
+                Log.e(tag, "STEP 4 ❌ — body is null (Gson parsing failed)")
                 return
             }
 
             if (body.status != "success") {
-                Log.e("FormCreate", "Apps Script returned error: ${body.status}")
+                Log.e(tag, "STEP 4 ❌ — Apps Script error: ${body.status} | message: ${body.message} | stack: ${body.stack}")
                 return
             }
 
-            Log.i("FormCreate", "Form created: ${body.formUrl}")
-            Log.i("FormCreate", "EntryIds: ${body.entryIds}")
+            Log.d(tag, "STEP 4 ✅ — status: ${body.status}")
+            Log.d(tag, "STEP 4 ✅ — formUrl: ${body.formUrl}")
+            Log.d(tag, "STEP 4 ✅ — formId: ${body.formId}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.formationId    : ${body.entryIds?.formationId}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.intituleAction : ${body.entryIds?.intituleAction}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.nomPrenom      : ${body.entryIds?.nomPrenom}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.matricule      : ${body.entryIds?.matricule}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.service        : ${body.entryIds?.service}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.formateur      : ${body.entryIds?.formateur}")
+            Log.d(tag, "STEP 4 ✅ — entryIds.dates          : ${body.entryIds?.dates}")
 
+            if (body.entryIds == null) {
+                Log.e(tag, "STEP 4 ❌ — entryIds is null (Gson parsing issue)")
+                return
+            }
+
+            // ── Step 5: Build Forms entity ─────────────────────────
             val form = Forms(
                 themeId  = theme.id,
-                formUrl  = body.formUrl,
+                formUrl  = body.formUrl!!,
                 entryIds = body.entryIds
             )
+            Log.d(tag, "STEP 5 ✅ — Forms entity built: $form")
 
+            // ── Step 6: Save to Room ───────────────────────────────
             val roomId = formDao.insert(form)
-            Log.i("FormCreate", "Form saved to Room with id: $roomId")
+            Log.d(tag, "STEP 6 — Room insert returned id=$roomId")
 
-            firebase.UploadForm(roomId, form)
-            Log.i("FormCreate", "Form uploaded to Firebase")
+            if (roomId == -1L) {
+                Log.e(tag, "STEP 6 ❌ — Room insert returned -1 (conflict or schema mismatch)")
+                return
+            }
+            Log.d(tag, "STEP 6 ✅ — saved to Room with id=$roomId")
+
+            // ── Step 7: Upload to Firebase ─────────────────────────
+            Log.d(tag, "STEP 7 — uploading to Firebase...")
+            try {
+                firebase.UploadForm(roomId, form.copy(id = roomId))
+                Log.d(tag, "STEP 7 ✅ — uploaded to Firebase successfully")
+            } catch (e: Exception) {
+                Log.e(tag, "STEP 7 ❌ — Firebase upload failed: ${e.message}", e)
+            }
+
+            Log.d(tag, "DONE ✅ — form created for '${theme.nom}'")
+            Log.d(tag, "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
         } catch (e: Exception) {
-            Log.e("FormCreate", "createFormForTheme failed: ${e.message}", e)
+            Log.e(tag, "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            Log.e(tag, "FATAL ❌ — crashed for '${theme.nom}': ${e.message}", e)
+            Log.e(tag, "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         }
     }
 
@@ -138,7 +180,7 @@ class MainRepository @Inject constructor(
                 nomCompletCollaborateur = "${collaborateur.prenom} ${collaborateur.nom}",
                 service                 = collaborateur.service,
                 themeNom                = theme?.nom ?: "—",
-                themeObjectives         = theme?.objectifPedagogique?.split(",")?.map { it.trim() }?.filter { it.isNotBlank() } ?: emptyList(),
+                themeObjectives         = theme?.objectifPedagogique?.split("•")?.map { it.trim() }?.filter { it.isNotBlank() } ?: emptyList(),
                 emailFlm                = flmEmail,
                 nomFlm                  = flmNom,
                 statut                  = InvitationStatus.EN_ATTENTE,
@@ -172,21 +214,36 @@ class MainRepository @Inject constructor(
 
     // ── Build Pre-filled URL ───────────────────────────────────────────────────
     fun buildPreFilledUrl(
-        form: Forms,
-        formation: FormationEntity,
+        form         : Forms,
+        formation    : FormationEntity,
         collaborateur: CollaborateurEntity,
-        theme: ThemeEntity?
+        theme        : ThemeEntity?
     ): String {
         fun encode(v: String) = java.net.URLEncoder.encode(v, "UTF-8")
-        return "${form.formUrl}?usp=pp_url" +
-            "&entry.${form.entryIds.formationId}=${formation.id}" +
-            "&entry.${form.entryIds.intituleAction}=${encode(theme?.nom ?: "")}" +
-            "&entry.${form.entryIds.nomPrenom}=${encode("${collaborateur.prenom} ${collaborateur.nom}")}" +
-            "&entry.${form.entryIds.service}=${encode(collaborateur.service)}" +
-            "&entry.${form.entryIds.dates}=${encode("${formation.debut} - ${formation.fin}")}" +
-            "&entry.${form.entryIds.formateur}=${encode(formation.Formateur)}" +
-            "&entry.${form.entryIds.matricule}=${encode(collaborateur.matricule)}"
+
+        val url = "${form.formUrl}?usp=pp_url" +
+                "&entry.${form.entryIds.formationId}=${formation.id}" +
+                "&entry.${form.entryIds.intituleAction}=${encode(theme?.nom ?: "")}" +
+                "&entry.${form.entryIds.nomPrenom}=${encode("${collaborateur.prenom} ${collaborateur.nom}")}" +
+                "&entry.${form.entryIds.matricule}=${encode(collaborateur.matricule)}" +
+                "&entry.${form.entryIds.service}=${encode(collaborateur.service)}" +
+                "&entry.${form.entryIds.formateur}=${encode(formation.Formateur)}" +
+                "&entry.${form.entryIds.dates}=${encode("${dateHelper.excelDateToString(formation.debut.toDouble())} - ${dateHelper.excelDateToString(formation.fin.toDouble())}")}"
+
+        Log.d("PreFilledUrl", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        Log.d("PreFilledUrl", "formUrl              : ${form.formUrl}")
+        Log.d("PreFilledUrl", "entryIds.intituleAction : ${form.entryIds.intituleAction}")
+        Log.d("PreFilledUrl", "entryIds.nomPrenom      : ${form.entryIds.nomPrenom}")
+        Log.d("PreFilledUrl", "entryIds.matricule      : ${form.entryIds.matricule}")
+        Log.d("PreFilledUrl", "entryIds.service        : ${form.entryIds.service}")
+        Log.d("PreFilledUrl", "entryIds.formateur      : ${form.entryIds.formateur}")
+        Log.d("PreFilledUrl", "entryIds.dates          : ${form.entryIds.dates}")
+        Log.d("PreFilledUrl", "final URL            : $url")
+        Log.d("PreFilledUrl", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+        return url
     }
+
 
     // ── Send All Invitations ───────────────────────────────────────────────────
     suspend fun sendAllPendingInvitations(

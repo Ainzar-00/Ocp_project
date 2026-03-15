@@ -3,7 +3,9 @@ package com.ocp.evalformation.data.repository
 import android.util.Log
 import com.ocp.evalformation.data.local.dao.CollaborateurDao
 import com.ocp.evalformation.data.local.dao.FlmDao
+import com.ocp.evalformation.data.local.dao.FormDao
 import com.ocp.evalformation.data.local.dao.FormationDao
+import com.ocp.evalformation.data.local.dao.InvitationFlmDao
 import com.ocp.evalformation.data.local.dao.ThemeDao
 import com.ocp.evalformation.data.remote.FirebaseRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +19,9 @@ class syncRepository @Inject constructor(
     private val themeDao: ThemeDao,
     private val flmDao: FlmDao,
     private val collaborateurDao: CollaborateurDao,
-    private val formationDao: FormationDao
+    private val formationDao: FormationDao,
+    private val InvitationFlmDao:InvitationFlmDao,
+    private val formDao: FormDao
 ) {
 
     suspend fun syncIfEmpty() = withContext(Dispatchers.IO) {
@@ -29,6 +33,8 @@ class syncRepository @Inject constructor(
         val flmsCount = flmDao.count()
         val collabsCount = collaborateurDao.count()
         val formationsCount = formationDao.count()
+        val invitaionsCount= InvitationFlmDao.count()
+        val formsCount=formDao.count()
 
         Log.d("SYNC", "Room DB status:")
         Log.d("SYNC", "Themes: $themesCount")
@@ -151,6 +157,60 @@ class syncRepository @Inject constructor(
 
             } else {
                 Log.w("SYNC", "No formations received from Firebase")
+            }
+        }
+
+        if (invitaionsCount == 0) {
+
+            Log.d("SYNC", "Fetching INVITATIONS from Firebase...")
+
+            val list = firebase.fetchInvitations()
+
+            Log.d("SYNC", "Invitations fetched: ${list.size}")
+
+            if (list.isNotEmpty()) {
+
+                Log.d("SYNC", "Inserting invitations into Room one by one...")
+
+                list.forEach { invitation ->
+                    InvitationFlmDao.insert(invitation)
+                }
+
+                val newCount = InvitationFlmDao.count()
+
+                Log.d("SYNC", "Invitations inserted. New count: $newCount")
+
+            } else {
+                Log.w("SYNC", "No invitations received from Firebase")
+            }
+        }
+
+        if (formsCount == 0) {
+
+            Log.d("SYNC", "Fetching FORMS from Firebase...")
+
+            val list = firebase.fetchForms()
+
+            Log.d("SYNC", "Forms fetched: ${list.size}")
+
+            list.take(3).forEach {
+                Log.d("SYNC", "Form sample: $it")
+            }
+
+            if (list.isNotEmpty()) {
+
+                Log.d("SYNC", "Inserting forms into Room one by one...")
+
+                list.forEach { form ->
+                    formDao.insert(form)
+                }
+
+                val newCount = formDao.count()
+
+                Log.d("SYNC", "Forms inserted. New count: $newCount")
+
+            } else {
+                Log.w("SYNC", "No forms received from Firebase")
             }
         }
 

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.ocp.evalformation.data.local.dao.FormationDao
 import com.ocp.evalformation.data.local.dao.ThemeDao
 import com.ocp.evalformation.data.local.entity.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.tasks.await
@@ -425,6 +426,166 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
+    // In FirebaseRepository
+
+    suspend fun fetchInvitations(): List<InvitationFlmEntity> {
+        return try {
+            firestore.collection("invitations_flm")
+                .get()
+                .await()
+                .documents.mapNotNull { doc ->
+                    try {
+                        InvitationFlmEntity(
+                            id                      = doc.getLong("id") ?: 0L,
+                            formationId             = doc.getLong("formationId") ?: 0L,
+                            datesFormation          = doc.getString("datesFormation") ?: "",
+                            formateur               = doc.getString("formateur") ?: "",
+                            matriculeCollaborateur  = doc.getString("matriculeCollaborateur") ?: "",
+                            nomCompletCollaborateur = doc.getString("nomCompletCollaborateur") ?: "",
+                            service                 = doc.getString("service") ?: "",
+                            themeNom                = doc.getString("themeNom") ?: "",
+                            themeObjectives         = (doc.get("themeObjectives") as? List<*>)
+                                ?.filterIsInstance<String>() ?: emptyList(),
+                            emailFlm                = doc.getString("emailFlm") ?: "",
+                            nomFlm                  = doc.getString("nomFlm") ?: "",
+                            statut                  = try {
+                                InvitationStatus.valueOf(
+                                    doc.getString("statut") ?: "NON_EXPEDIEE"
+                                )
+                            } catch (e: Exception) {
+                                InvitationStatus.NON_EXPEDIEE
+                            },
+                            dateEnvoi               = doc.getLong("dateEnvoi")
+                                ?: System.currentTimeMillis()
+                        )
+                    } catch (e: Exception) {
+                        Log.e("Firebase", "Error parsing invitation doc=${doc.id}: ${e.message}")
+                        null
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("Firebase", "fetchInvitations error: ${e.message}")
+            emptyList()
+        }
+    }
+
+    // Fetch only pending invitations (EN_ATTENTE)
+    suspend fun fetchPendingInvitations(): List<InvitationFlmEntity> {
+        return try {
+            firestore.collection("invitations_flm")
+                .whereEqualTo("statut", "EN_ATTENTE")
+                .get()
+                .await()
+                .documents.mapNotNull { doc ->
+                    try {
+                        InvitationFlmEntity(
+                            id                      = doc.getLong("id") ?: 0L,
+                            formationId             = doc.getLong("formationId") ?: 0L,
+                            datesFormation          = doc.getString("datesFormation") ?: "",
+                            formateur               = doc.getString("formateur") ?: "",
+                            matriculeCollaborateur  = doc.getString("matriculeCollaborateur") ?: "",
+                            nomCompletCollaborateur = doc.getString("nomCompletCollaborateur") ?: "",
+                            service                 = doc.getString("service") ?: "",
+                            themeNom                = doc.getString("themeNom") ?: "",
+                            themeObjectives         = (doc.get("themeObjectives") as? List<*>)
+                                ?.filterIsInstance<String>() ?: emptyList(),
+                            emailFlm                = doc.getString("emailFlm") ?: "",
+                            nomFlm                  = doc.getString("nomFlm") ?: "",
+                            statut                  = InvitationStatus.EN_ATTENTE,
+                            dateEnvoi               = doc.getLong("dateEnvoi")
+                                ?: System.currentTimeMillis()
+                        )
+                    } catch (e: Exception) {
+                        Log.e("Firebase", "Error parsing invitation doc=${doc.id}: ${e.message}")
+                        null
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("Firebase", "fetchPendingInvitations error: ${e.message}")
+            emptyList()
+        }
+    }
+
+    // Real-time listener — updates Room when Firestore changes
+    fun listenToInvitations(
+        scope    : CoroutineScope,
+        onUpdate : (List<InvitationFlmEntity>) -> Unit
+    ) {
+        firestore.collection("invitations_flm")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.e("Firebase", "listenToInvitations error: ${error.message}")
+                    return@addSnapshotListener
+                }
+                val invitations = snapshot?.documents?.mapNotNull { doc ->
+                    try {
+                        InvitationFlmEntity(
+                            id                      = doc.getLong("id") ?: 0L,
+                            formationId             = doc.getLong("formationId") ?: 0L,
+                            datesFormation          = doc.getString("datesFormation") ?: "",
+                            formateur               = doc.getString("formateur") ?: "",
+                            matriculeCollaborateur  = doc.getString("matriculeCollaborateur") ?: "",
+                            nomCompletCollaborateur = doc.getString("nomCompletCollaborateur") ?: "",
+                            service                 = doc.getString("service") ?: "",
+                            themeNom                = doc.getString("themeNom") ?: "",
+                            themeObjectives         = (doc.get("themeObjectives") as? List<*>)
+                                ?.filterIsInstance<String>() ?: emptyList(),
+                            emailFlm                = doc.getString("emailFlm") ?: "",
+                            nomFlm                  = doc.getString("nomFlm") ?: "",
+                            statut                  = try {
+                                InvitationStatus.valueOf(
+                                    doc.getString("statut") ?: "NON_EXPEDIEE"
+                                )
+                            } catch (e: Exception) {
+                                InvitationStatus.NON_EXPEDIEE
+                            },
+                            dateEnvoi               = doc.getLong("dateEnvoi")
+                                ?: System.currentTimeMillis()
+                        )
+                    } catch (e: Exception) {
+                        Log.e("Firebase", "Error parsing doc=${doc.id}: ${e.message}")
+                        null
+                    }
+                } ?: emptyList()
+
+                onUpdate(invitations)
+            }
+    }
+
+    // In FirebaseRepository
+
+    suspend fun fetchForms(): List<Forms> {
+        return try {
+            firestore.collection("forms")
+                .get()
+                .await()
+                .documents.mapNotNull { doc ->
+                    try {
+                        Forms(
+                            id      = doc.getLong("id")      ?: 0L,
+                            themeId = doc.getLong("themeId") ?: 0L,
+                            formUrl = doc.getString("formUrl") ?: "",
+                            entryIds = EntryIds(
+                                formationId    = doc.getLong("formationId")    ?: 0L,
+                                intituleAction = doc.getLong("intituleAction") ?: 0L,
+                                nomPrenom      = doc.getLong("nomPrenom")      ?: 0L,
+                                matricule      = doc.getLong("matricule")      ?: 0L,
+                                service        = doc.getLong("service")        ?: 0L,
+                                formateur      = doc.getLong("formateur")      ?: 0L,
+                                dates          = doc.getLong("dates")          ?: 0L
+                            )
+                        )
+                    } catch (e: Exception) {
+                        Log.e("Firebase", "Error parsing form doc=${doc.id}: ${e.message}")
+                        null
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("Firebase", "fetchForms error: ${e.message}")
+            emptyList()
+        }
+    }
+
     suspend fun UploadForm(roomId:Long,form: Forms){
         try {
             firestore.collection("forms")
@@ -448,12 +609,7 @@ fun Forms.toMap() = mapOf(
     "id"             to id,
     "themeId"        to themeId,
     "formUrl"        to formUrl,
-    "intituleAction" to entryIds.intituleAction,
-    "nomPrenom"      to entryIds.nomPrenom,
-    "service"        to entryIds.service,
-    "dates"          to entryIds.dates,
-    "formateur"      to entryIds.formateur,
-    "matricule"      to entryIds.matricule
+
 )
 
 fun ThemeEntity.toMap() = mapOf(
