@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">899703699179-klnboj2j81cec8cjc9nn1gckcdmsm85e.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">899703699179</string>
+    <string name="google_api_key" translatable="false">AIzaSyDQPIrug5JyXqScUWuDoRYTLqNdI23ECH0</string>
+    <string name="google_app_id" translatable="false">1:899703699179:android:d9c358fb1c69cc5cb0b0ae</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDQPIrug5JyXqScUWuDoRYTLqNdI23ECH0</string>
+    <string name="google_storage_bucket" translatable="false">ocp-formations-db.firebasestorage.app</string>
+    <string name="project_id" translatable="false">ocp-formations-db</string>
+</resources>

@@ -1,0 +1,106 @@
+[
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/xml_data_extraction_rules.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_import_bilan_fc.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_import_bilan_fc.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_item_invitation.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/item_invitation.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_import_bilan.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_import_bilan.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_dialog_add_theme.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/dialog_add_theme.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_import_flm.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_import_flm.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_item_evaluation.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/item_evaluation.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_import_collaborateurs.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_import_collaborateurs.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_dashboard.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_activity_login.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/color_ocp_nav_colors.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/color/ocp_nav_colors.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/menu_menu_rh_nav.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/menu/menu_rh_nav.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_item_theme.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/item_theme.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_activity_rh.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/activity_rh.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/drawable_spinner_bg.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/drawable/spinner_bg.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_charts.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_charts.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_import_data.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_import_data.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_evaluations.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_evaluations.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_themes.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_themes.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_import_themes.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_import_themes.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/xml_backup_rules.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/drawable_ic_notification.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/drawable/ic_notification.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/navigation_nav_graph_rh.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/navigation/nav_graph_rh.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-71:/layout_fragment_invitations.xml.flat",
+        "source": "com.ocp.evalformation.app-main-73:/layout/fragment_invitations.xml"
+    }
+]

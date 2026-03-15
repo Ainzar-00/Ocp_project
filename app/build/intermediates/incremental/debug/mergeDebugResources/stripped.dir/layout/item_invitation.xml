@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginHorizontal="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thème"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textAllCaps="true"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvMatricule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Matricule: #12345"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Service"
+                android:textColor="#757575"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Statut"
+                android:textStyle="italic"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnvoyer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Envoyer"
+                android:backgroundTint="#2E7D32"
+                app:cornerRadius="8dp"
+                android:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnvoyerAutre"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Renvoyer"
+                app:strokeColor="#FFA000"
+                app:cornerRadius="8dp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
