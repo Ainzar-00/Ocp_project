@@ -23,6 +23,36 @@ object EmailHelper {
 
     // ── Send email (must be called from coroutine) ─────────────
 
+    fun buildGroupedInvitationBody(
+        flmNom       : String,
+        collaborateur: String,
+        formations   : List<Pair<String, String>> // themeNom to formUrl
+    ): String {
+        val formationsBlock = formations.joinToString("\n\n") { (theme, url) ->
+            """  Thème : $theme
+            Lien  : $url"""
+        }
+
+        return """
+        Bonjour $flmNom,
+
+        Vous êtes invité(e) à évaluer votre collaborateur suite aux formations suivies.
+
+        ─────────────────────────────
+        Collaborateur : $collaborateur
+        ─────────────────────────────
+
+        Veuillez remplir les formulaires d'évaluation via les liens ci-dessous :
+
+$formationsBlock
+
+        Merci de bien vouloir compléter ces formulaires dans les plus brefs délais.
+
+        Cordialement,
+        Service RH — OCP
+    """.trimIndent()
+    }
+
     suspend fun sendEmail(
         to      : String,
         subject : String,

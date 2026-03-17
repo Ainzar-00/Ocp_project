@@ -30,6 +30,7 @@ object AppModule {
             db.firestoreSettings = FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .setCacheSizeBytes(50L * 1024 * 1024) // ← change UNLIMITED to 50MB
                 .build()
         }
     }

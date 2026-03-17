@@ -2,6 +2,7 @@ package com.ocp.evalformation.ui.rh.dashboard
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +20,24 @@ class InvitationsAdapter(
     private val onRenvoyer: (FormationWithInvitation) -> Unit
 ) : ListAdapter<FormationWithInvitation, InvitationsAdapter.VH>(DIFF) {
 
+    private var themesMap: Map<Long, String> = emptyMap()
+
+    fun submitThemes(themes: Map<Long, String>) {
+        themesMap = themes
+        notifyDataSetChanged()
+    }
+
     inner class VH(private val b: ItemInvitationBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(item: FormationWithInvitation) {
             val formation = item.formation
             val inv       = item.invitation
 
-            b.tvTheme.text     = "Thème: ${inv?.themeNom ?: formation.themeId}"
+            val themeName = inv?.themeNom
+                ?: themesMap[formation.themeId]
+                ?: "Thème #${formation.themeId}"
+
+            b.tvTheme.text     = "Thème: ${themeName ?: formation.themeId}"
+//            Log.d("Theme Appear","${inv?.themeNom}")
             b.tvMatricule.text = "Matricule: ${formation.collaborateurMatricule}"
             b.tvService.text   = "Service: ${inv?.service ?: formation.division}"
 

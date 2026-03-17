@@ -1,7 +1,7 @@
 package com.ocp.evalformation;
 
+import android.app.Application;
 import androidx.annotation.CallSuper;
-import androidx.multidex.MultiDexApplication;
 import dagger.hilt.android.internal.managers.ApplicationComponentManager;
 import dagger.hilt.android.internal.managers.ComponentSupplier;
 import dagger.hilt.android.internal.modules.ApplicationContextModule;
@@ -15,7 +15,7 @@ import javax.annotation.processing.Generated;
  * A generated base class to be extended by the @dagger.hilt.android.HiltAndroidApp annotated class. If using the Gradle plugin, this is swapped as the base class via bytecode transformation.
  */
 @Generated("dagger.hilt.android.processor.internal.androidentrypoint.ApplicationGenerator")
-public abstract class Hilt_OcpApplication extends MultiDexApplication implements GeneratedComponentManagerHolder {
+public abstract class Hilt_OcpApplication extends Application implements GeneratedComponentManagerHolder {
   private boolean injected = false;
 
   private final ApplicationComponentManager componentManager = new ApplicationComponentManager(new ComponentSupplier() {

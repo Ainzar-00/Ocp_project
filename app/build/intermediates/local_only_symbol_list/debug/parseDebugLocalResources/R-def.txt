@@ -19,8 +19,9 @@ id bar_chart
 id bottom_nav_rh
 id btnEnvoyer
 id btnEnvoyerAutre
-id btnFilterService
 id btnSendAll
+id btnSendAllAppreciation
+id btnTestWorker
 id btn_add_collab
 id btn_add_flm
 id btn_add_theme
@@ -42,10 +43,15 @@ id btn_nombre_enregistrements
 id btn_save_manual
 id btn_supprimer_tout
 id btn_tester_reference
+id cardAppreciationDate
 id cardEndOfMonth
 id card_header
 id card_propositions
 id chartsFragment
+id chipClearFilters
+id chipFilterService
+id chipFilterStatut
+id chipFilterTheme
 id dashboardFragment
 id etSearchMatricule
 id et_collab_flm
@@ -105,6 +111,7 @@ id spinner_filter_theme
 id spinner_theme
 id tab_layout_import
 id toolbar_rh
+id tvAppreciationInfo
 id tvEmptyState
 id tvEndOfMonthInfo
 id tvMatricule
@@ -129,6 +136,7 @@ id tv_f_l_m
 id tv_flm_count
 id tv_flm_import_result
 id tv_import_result
+id tv_logo
 id tv_matricule
 id tv_moyenne
 id tv_moyenne_satisfaction
@@ -136,6 +144,7 @@ id tv_pending_invitations
 id tv_propositions
 id tv_resultat_test
 id tv_selected_file
+id tv_subtitle
 id tv_taux
 id tv_theme
 id tv_theme_id
@@ -143,12 +152,14 @@ id tv_theme_nom
 id tv_theme_objectif
 id tv_themes_count
 id tv_themes_import_result
+id tv_title
 id tv_total_collabs
 id tv_total_evals
 id tv_total_themes
 id viewpager_import
 layout activity_login
 layout activity_rh
+layout activity_splash
 layout dialog_add_theme
 layout fragment_charts
 layout fragment_dashboard
@@ -185,5 +196,6 @@ string nav_invitations
 string nav_themes
 string project_id
 style Theme.OCPEvalFormation
+style Theme.YourApp.Splash
 xml backup_rules
 xml data_extraction_rules

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.OCPEvalFormation" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.OCPEvalFormation" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/ocp_dark_green</item>
         <item name="colorPrimaryVariant">@color/ocp_medium_green</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -8,4 +8,10 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">@color/ocp_dark_green</item>
     </style>
+
+    <style name="Theme.YourApp.Splash" parent="Theme.OCPEvalFormation">
+        <item name="android:windowBackground">@color/ocp_dark_green</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>

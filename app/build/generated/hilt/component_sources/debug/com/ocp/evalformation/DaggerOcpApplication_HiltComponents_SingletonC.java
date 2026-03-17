@@ -2,15 +2,25 @@ package com.ocp.evalformation;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.view.View;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.work.HiltWorkerFactory;
+import androidx.hilt.work.WorkerAssistedFactory;
+import androidx.hilt.work.WorkerFactoryModule_ProvideFactoryFactory;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import androidx.work.ListenableWorker;
+import androidx.work.WorkerParameters;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker;
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker_AssistedFactory;
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver;
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver_MembersInjector;
 import com.ocp.evalformation.data.local.OcpDatabase;
 import com.ocp.evalformation.data.local.dao.CollaborateurDao;
 import com.ocp.evalformation.data.local.dao.FlmDao;
@@ -65,6 +75,7 @@ import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_Internal
 import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory;
 import dagger.hilt.android.internal.managers.SavedStateHandleHolder;
 import dagger.hilt.android.internal.modules.ApplicationContextModule;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideApplicationFactory;
 import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
@@ -73,6 +84,7 @@ import dagger.internal.KeepFieldType;
 import dagger.internal.LazyClassKeyMap;
 import dagger.internal.Preconditions;
 import dagger.internal.Provider;
+import dagger.internal.SingleCheck;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
@@ -481,20 +493,20 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
-
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
 
       static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
-      @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
 
       @KeepFieldType
       ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
+
+      @KeepFieldType
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
     }
   }
 
@@ -541,20 +553,20 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
-
       static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
 
-      @KeepFieldType
-      RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
+      static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
 
       @KeepFieldType
       ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
 
       @KeepFieldType
       LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+
+      @KeepFieldType
+      RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -585,7 +597,7 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
           return (T) new LoginViewModel(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirestoreProvider.get(), singletonCImpl.syncRepositoryProvider.get());
 
           case 2: // com.ocp.evalformation.ui.rh.RhViewModel 
-          return (T) new RhViewModel(singletonCImpl.provideMainRepoProvider.get());
+          return (T) new RhViewModel(singletonCImpl.provideMainRepoProvider.get(), ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }
@@ -667,15 +679,17 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     private final SingletonCImpl singletonCImpl = this;
 
-    private Provider<FirebaseAuth> provideFirebaseAuthProvider;
-
     private Provider<OcpDatabase> provideDatabaseProvider;
+
+    private Provider<FirebaseAuth> provideFirebaseAuthProvider;
 
     private Provider<FirebaseFirestore> provideFirestoreProvider;
 
     private Provider<FirebaseRepository> provideFirebaseRepoProvider;
 
     private Provider<MainRepository> provideMainRepoProvider;
+
+    private Provider<AppreciationDateWorker_AssistedFactory> appreciationDateWorker_AssistedFactoryProvider;
 
     private Provider<syncRepository> syncRepositoryProvider;
 
@@ -691,6 +705,15 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     private FormationDao formationDao() {
       return AppModule_ProvideFormationDaoFactory.provideFormationDao(provideDatabaseProvider.get());
+    }
+
+    private Map<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>> mapOfStringAndProviderOfWorkerAssistedFactoryOf(
+        ) {
+      return ImmutableMap.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>of("com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker", ((Provider) appreciationDateWorker_AssistedFactoryProvider));
+    }
+
+    private HiltWorkerFactory hiltWorkerFactory() {
+      return WorkerFactoryModule_ProvideFactoryFactory.provideFactory(mapOfStringAndProviderOfWorkerAssistedFactoryOf());
     }
 
     private FlmDao flmDao() {
@@ -711,16 +734,24 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
-      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 0));
       this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<OcpDatabase>(singletonCImpl, 2));
-      this.provideFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 4));
+      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 4));
+      this.provideFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 5));
       this.provideFirebaseRepoProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseRepository>(singletonCImpl, 3));
       this.provideMainRepoProvider = DoubleCheck.provider(new SwitchingProvider<MainRepository>(singletonCImpl, 1));
-      this.syncRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<syncRepository>(singletonCImpl, 5));
+      this.appreciationDateWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<AppreciationDateWorker_AssistedFactory>(singletonCImpl, 0));
+      this.syncRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<syncRepository>(singletonCImpl, 6));
     }
 
     @Override
     public void injectOcpApplication(OcpApplication ocpApplication) {
+      injectOcpApplication2(ocpApplication);
+    }
+
+    @Override
+    public void injectNotificationActionReceiver(
+        NotificationActionReceiver notificationActionReceiver) {
+      injectNotificationActionReceiver2(notificationActionReceiver);
     }
 
     @Override
@@ -738,6 +769,19 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
       return new ServiceCBuilder(singletonCImpl);
     }
 
+    @CanIgnoreReturnValue
+    private OcpApplication injectOcpApplication2(OcpApplication instance) {
+      OcpApplication_MembersInjector.injectWorkerFactory(instance, hiltWorkerFactory());
+      return instance;
+    }
+
+    @CanIgnoreReturnValue
+    private NotificationActionReceiver injectNotificationActionReceiver2(
+        NotificationActionReceiver instance) {
+      NotificationActionReceiver_MembersInjector.injectRepo(instance, provideMainRepoProvider.get());
+      return instance;
+    }
+
     private static final class SwitchingProvider<T> implements Provider<T> {
       private final SingletonCImpl singletonCImpl;
 
@@ -752,8 +796,13 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.google.firebase.auth.FirebaseAuth 
-          return (T) AppModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
+          case 0: // com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker_AssistedFactory 
+          return (T) new AppreciationDateWorker_AssistedFactory() {
+            @Override
+            public AppreciationDateWorker create(Context context, WorkerParameters params) {
+              return new AppreciationDateWorker(context, params, singletonCImpl.provideMainRepoProvider.get());
+            }
+          };
 
           case 1: // com.ocp.evalformation.data.repository.MainRepository 
           return (T) AppModule_ProvideMainRepoFactory.provideMainRepo(singletonCImpl.provideDatabaseProvider.get(), singletonCImpl.provideFirebaseRepoProvider.get());
@@ -764,10 +813,13 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
           case 3: // com.ocp.evalformation.data.remote.FirebaseRepository 
           return (T) AppModule_ProvideFirebaseRepoFactory.provideFirebaseRepo(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirestoreProvider.get(), singletonCImpl.themeDao(), singletonCImpl.formationDao());
 
-          case 4: // com.google.firebase.firestore.FirebaseFirestore 
+          case 4: // com.google.firebase.auth.FirebaseAuth 
+          return (T) AppModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
+
+          case 5: // com.google.firebase.firestore.FirebaseFirestore 
           return (T) AppModule_ProvideFirestoreFactory.provideFirestore();
 
-          case 5: // com.ocp.evalformation.data.repository.syncRepository 
+          case 6: // com.ocp.evalformation.data.repository.syncRepository 
           return (T) new syncRepository(singletonCImpl.provideFirebaseRepoProvider.get(), singletonCImpl.themeDao(), singletonCImpl.flmDao(), singletonCImpl.collaborateurDao(), singletonCImpl.formationDao(), singletonCImpl.invitationFlmDao(), singletonCImpl.formDao());
 
           default: throw new AssertionError(id);

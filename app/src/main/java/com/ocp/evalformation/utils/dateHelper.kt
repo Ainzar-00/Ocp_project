@@ -1,11 +1,18 @@
 package com.ocp.evalformation.utils
 
+import org.apache.poi.ss.usermodel.DateUtil
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Calendar
 
 object dateHelper {
+
+    fun getTodayExcelDate(): Double {
+        val calendar = Calendar.getInstance()
+        return DateUtil.getExcelDate(calendar.time)
+    }
 
     fun getDateAppreciation(excelDate: Double): Double {
         return try {

@@ -1,5 +1,8 @@
 package com.ocp.evalformation;
 
+import androidx.hilt.work.HiltWrapper_WorkerFactoryModule;
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker_HiltModule;
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver_GeneratedInjector;
 import com.ocp.evalformation.di.AppModule;
 import com.ocp.evalformation.ui.auth.LoginActivity_GeneratedInjector;
 import com.ocp.evalformation.ui.auth.LoginViewModel_HiltModules;
@@ -142,13 +145,16 @@ public final class OcpApplication_HiltComponents {
       modules = {
           AppModule.class,
           ApplicationContextModule.class,
+          AppreciationDateWorker_HiltModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
+          HiltWrapper_WorkerFactoryModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class
       }
   )
   @Singleton
   public abstract static class SingletonC implements OcpApplication_GeneratedInjector,
+      NotificationActionReceiver_GeneratedInjector,
       FragmentGetContextFix.FragmentGetContextFixEntryPoint,
       HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedComponentBuilderEntryPoint,
       ServiceComponentManager.ServiceComponentBuilderEntryPoint,

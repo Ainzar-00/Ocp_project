@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.ocp.evalformation.app-mergeDebugResources-69:/values-ldltr-v21/values-ldltr-v21.xml",
+            "outputFile": "com.ocp.evalformation.app-mergeDebugResources-3:/values-ldltr-v21/values-ldltr-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Younes\\.gradle\\caches\\transforms-4\\cdeb2c973453bc9c31520d7089152165\\transformed\\appcompat-1.7.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\caches\\transforms-4\\802eba6882aab3fc72db67d21cd7a916\\transformed\\appcompat-1.7.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

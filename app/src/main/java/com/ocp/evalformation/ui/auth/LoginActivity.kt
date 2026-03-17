@@ -245,6 +245,8 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setLoading(true, "Vérification de session...")
+
         Log.d("DEBUG_UI", "LoginActivity onCreate")
 
         val webClientId = getString(R.string.default_web_client_id)

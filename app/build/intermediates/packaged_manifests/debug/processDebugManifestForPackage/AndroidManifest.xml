@@ -44,10 +44,14 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/Theme.OCPEvalFormation" >
+        <receiver
+            android:name="com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver"
+            android:exported="false" />
+
         <activity
-            android:name="com.ocp.evalformation.ui.auth.LoginActivity"
+            android:name="com.ocp.evalformation.com.ocp.evalformation.ui.SplashActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize" >
+            android:theme="@style/Theme.YourApp.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,9 +59,29 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.ocp.evalformation.ui.auth.LoginActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
             android:name="com.ocp.evalformation.ui.rh.RhActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.ocp.evalformation.androidx-startup"
+            android:exported="false" >
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+                android:value="androidx.startup" />
+        </provider>
 
         <service
             android:name="com.ocp.evalformation.utils.OcpFirebaseMessagingService"
@@ -226,23 +250,6 @@
             android:directBootAware="true"
             android:exported="false"
             android:initOrder="100" />
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.ocp.evalformation.androidx-startup"
-            android:exported="false" >
-            <meta-data
-                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-                android:value="androidx.startup" />
-        </provider>
 
         <service
             android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"

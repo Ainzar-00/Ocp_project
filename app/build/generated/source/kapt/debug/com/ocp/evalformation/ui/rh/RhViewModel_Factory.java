@@ -1,5 +1,6 @@
 package com.ocp.evalformation.ui.rh;
 
+import android.app.Application;
 import com.ocp.evalformation.data.repository.MainRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -25,20 +26,25 @@ import javax.inject.Provider;
 public final class RhViewModel_Factory implements Factory<RhViewModel> {
   private final Provider<MainRepository> repoProvider;
 
-  public RhViewModel_Factory(Provider<MainRepository> repoProvider) {
+  private final Provider<Application> applicationProvider;
+
+  public RhViewModel_Factory(Provider<MainRepository> repoProvider,
+      Provider<Application> applicationProvider) {
     this.repoProvider = repoProvider;
+    this.applicationProvider = applicationProvider;
   }
 
   @Override
   public RhViewModel get() {
-    return newInstance(repoProvider.get());
+    return newInstance(repoProvider.get(), applicationProvider.get());
   }
 
-  public static RhViewModel_Factory create(Provider<MainRepository> repoProvider) {
-    return new RhViewModel_Factory(repoProvider);
+  public static RhViewModel_Factory create(Provider<MainRepository> repoProvider,
+      Provider<Application> applicationProvider) {
+    return new RhViewModel_Factory(repoProvider, applicationProvider);
   }
 
-  public static RhViewModel newInstance(MainRepository repo) {
-    return new RhViewModel(repo);
+  public static RhViewModel newInstance(MainRepository repo, Application application) {
+    return new RhViewModel(repo, application);
   }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +27,14 @@ class RhActivity : AppCompatActivity() {
         binding = ActivityRhBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Handle notification intent
+        if (intent.getStringExtra("destination") == "pending_formations") {
+            window.decorView.post {
+                navigateToInvitations()
+            }
+        }
+
+
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_rh) as NavHostFragment
         val navController = navHostFragment.navController
@@ -40,4 +49,18 @@ class RhActivity : AppCompatActivity() {
         // Sync pending data on start
         viewModel.syncToFirebase()
     }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent?.getStringExtra("destination") == "pending_formations") {
+            navigateToInvitations()
+        }
+    }
+
+    private fun navigateToInvitations() {
+        // Replace with your actual nav graph action ID
+        findNavController(R.id.nav_host_fragment_rh)
+            .navigate(R.id.invitationsFragment)
+    }
+
 }

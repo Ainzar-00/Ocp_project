@@ -160,16 +160,34 @@ class MainRepository @Inject constructor(
         flmEmail: String,
         flmNom: String
     ): Result<InvitationFlmEntity> {
+
+        Log.d("Repo", "━━━━━━━━━━ START sendEvaluationFormToFlm ━━━━━━━━━━")
+
         return try {
+
+            Log.d("Repo", "📌 Collaborateur: ${collaborateur.matricule} | ${collaborateur.prenom} ${collaborateur.nom}")
+            Log.d("Repo", "📌 Formation ID: ${formation.id}")
+            Log.d("Repo", "📌 Theme ID: ${theme?.id}")
+            Log.d("Repo", "📌 FLM: $flmNom | $flmEmail")
 
             // Get the form for this theme
             val form = theme?.let { formDao.getByThemeId(it.id) }
 
-            // Build pre-filled URL if form exists, otherwise use base URL
-            val formUrl = if (form != null) {
-                buildPreFilledUrl(form, formation, collaborateur, theme)
+            if (form == null) {
+                Log.e("Repo", "❌ No form found for themeId=${theme?.id}")
             } else {
-                "https://forms.google.com/" // fallback
+                Log.d("Repo", "✅ Form found: ${form.formUrl}")
+            }
+
+            // Build pre-filled URL
+            val formUrl = if (form != null) {
+                val builtUrl = buildPreFilledUrl(form, formation, collaborateur, theme)
+                Log.d("Repo", "🔗 Generated prefilled URL: $builtUrl")
+                builtUrl
+            } else {
+                val fallback = "https://forms.google.com/"
+                Log.w("Repo", "⚠️ Using fallback URL: $fallback")
+                fallback
             }
 
             val invitation = InvitationFlmEntity(
@@ -180,37 +198,69 @@ class MainRepository @Inject constructor(
                 nomCompletCollaborateur = "${collaborateur.prenom} ${collaborateur.nom}",
                 service                 = collaborateur.service,
                 themeNom                = theme?.nom ?: "—",
-                themeObjectives         = theme?.objectifPedagogique?.split("•")?.map { it.trim() }?.filter { it.isNotBlank() } ?: emptyList(),
+                themeObjectives         = theme?.objectifPedagogique
+                    ?.split("•")
+                    ?.map { it.trim() }
+                    ?.filter { it.isNotBlank() } ?: emptyList(),
                 emailFlm                = flmEmail,
                 nomFlm                  = flmNom,
                 statut                  = InvitationStatus.EN_ATTENTE,
                 dateEnvoi               = System.currentTimeMillis()
             )
 
+            Log.d("Repo", "📝 Invitation object created")
+
             val id = invitationDao.insert(invitation)
+            Log.d("Repo", "💾 Inserted into DB with ID: $id")
+
             val saved = invitation.copy(id = id)
 
             CoroutineScope(Dispatchers.IO).launch {
+                Log.d("Repo", "🚀 Background task START")
+
                 try {
+                    Log.d("Repo", "☁️ Sending to Firebase...")
                     firebase.saveInvitation(saved)
+                    Log.d("Repo", "✅ Firebase save SUCCESS")
 
                     val subject = "Évaluation Formation — ${theme?.nom ?: ""}"
-                    val body    = EmailHelper.buildInvitationBody(
+                    val body = EmailHelper.buildInvitationBody(
                         flmNom        = flmNom,
                         themeNom      = theme?.nom ?: "—",
                         collaborateur = "${collaborateur.prenom} ${collaborateur.nom}",
                         formUrl       = formUrl
                     )
-                    EmailHelper.sendEmail(to = flmEmail, subject = subject, body = body)
+
+                    Log.d("Repo", "📧 Sending email to: $flmEmail")
+                    Log.d("Repo", "📧 Subject: $subject")
+                    Log.d("Repo", "📧 URL inside email: $formUrl")
+
+                    EmailHelper.sendEmail(
+                        to = flmEmail,
+                        subject = subject,
+                        body = body
+                    )
+
+                    Log.d("Repo", "✅ Email sent SUCCESS")
 
                 } catch (e: Exception) {
-                    Log.e("Repo", "invitation background error", e)
+                    Log.e("Repo", "🔥 Background ERROR: ${e.message}", e)
                 }
+
+                Log.d("Repo", "🚀 Background task END")
             }
 
+            Log.d("Repo", "━━━━━━━━━━ SUCCESS sendEvaluationFormToFlm ━━━━━━━━━━")
+
             Result.success(saved)
-        } catch (e: Exception) { Result.failure(e) }
+
+        } catch (e: Exception) {
+            Log.e("Repo", "🔥 MAIN ERROR: ${e.message}", e)
+            Result.failure(e)
+        }
     }
+
+
 
     // ── Build Pre-filled URL ───────────────────────────────────────────────────
     fun buildPreFilledUrl(
@@ -251,27 +301,78 @@ class MainRepository @Inject constructor(
     ): Result<Int> {
         return try {
             var count = 0
-            formations.forEach { formation ->
-                // Skip if already has an active invitation
-                val existing = invitationDao.getByFormationId(formation.id)
-                if (existing != null && existing.statut == InvitationStatus.EN_ATTENTE) return@forEach
-                if (existing != null && existing.statut == InvitationStatus.REPONDUE) return@forEach
 
-                val collab = collaborateurDao.getByMatricule(formation.collaborateurMatricule) ?: return@forEach
+            // Group formations by collaborateur
+            val groupedByCollab = formations.groupBy { it.collaborateurMatricule }
+
+            groupedByCollab.forEach { (matricule, collabFormations) ->
+                // Skip already sent
+                val toSend = collabFormations.filter { formation ->
+                    val existing = invitationDao.getByFormationId(formation.id)
+                    existing == null || existing.statut == InvitationStatus.NON_EXPEDIEE
+                }
+                if (toSend.isEmpty()) return@forEach
+
+                val collab = collaborateurDao.getByMatricule(matricule) ?: return@forEach
                 val flm    = collab.flmMatricule?.let { flmDao.getByMatricule(it) } ?: return@forEach
-                val theme  = themeDao.getById(formation.themeId)
 
-                val result = sendEvaluationFormToFlm(
-                    collaborateur = collab,
-                    formation     = formation,
-                    theme         = theme,
-                    flmEmail      = flm.email,
-                    flmNom        = "${flm.prenom} ${flm.nom}"
+                // Build all form URLs for this collaborateur
+                val formLinks = toSend.mapNotNull { formation ->
+                    val theme = themeDao.getById(formation.themeId)
+                    val form  = theme?.let { formDao.getByThemeId(it.id) }
+                    if (form != null && theme != null) {
+                        buildPreFilledUrl(form, formation, collab, theme)
+                    } else null
+                }
+
+                if (formLinks.isEmpty()) return@forEach
+
+                // Save invitations to Room + Firebase
+                toSend.forEach { formation ->
+                    val theme = themeDao.getById(formation.themeId)
+                    val invitation = InvitationFlmEntity(
+                        formationId             = formation.id,
+                        datesFormation          = "${formation.debut} - ${formation.fin}",
+                        formateur               = formation.Formateur,
+                        matriculeCollaborateur  = collab.matricule,
+                        nomCompletCollaborateur = "${collab.prenom} ${collab.nom}",
+                        service                 = collab.service,
+                        themeNom                = theme?.nom ?: "—",
+                        themeObjectives         = theme?.objectifPedagogique
+                            ?.split("•")?.map { it.trim() }?.filter { it.isNotBlank() } ?: emptyList(),
+                        emailFlm                = flm.email,
+                        nomFlm                  = "${flm.prenom} ${flm.nom}",
+                        statut                  = InvitationStatus.EN_ATTENTE,
+                        dateEnvoi               = System.currentTimeMillis()
+                    )
+                    val id = invitationDao.insert(invitation)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try { firebase.saveInvitation(invitation.copy(id = id)) }
+                        catch (e: Exception) { Log.e("Repo", "Firebase invitation error", e) }
+                    }
+                }
+
+                // Send ONE grouped email with all links
+                val subject = "Évaluation Formation — ${collab.prenom} ${collab.nom}"
+                val body    = EmailHelper.buildGroupedInvitationBody(
+                    flmNom        = "${flm.prenom} ${flm.nom}",
+                    collaborateur = "${collab.prenom} ${collab.nom}",
+                    formations    = toSend.mapNotNull { f ->
+                        val theme = themeDao.getById(f.themeId)
+                        val form  = theme?.let { formDao.getByThemeId(it.id) }
+                        if (theme != null && form != null) {
+                            Pair(theme.nom, buildPreFilledUrl(form, f, collab, theme))
+                        } else null
+                    }
                 )
-                if (result.isSuccess) count++
+                EmailHelper.sendEmail(to = flm.email, subject = subject, body = body)
+                count += toSend.size
             }
+
             Result.success(count)
-        } catch (e: Exception) { Result.failure(e) }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     // ── FLM ────────────────────────────────────────────────────────────────────

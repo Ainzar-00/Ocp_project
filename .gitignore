@@ -7,6 +7,12 @@ yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
 
+/build/
+app/build/
+.gradle/
+local.properties
+*.iml
+
 # Firebase cache
 .firebase/
 

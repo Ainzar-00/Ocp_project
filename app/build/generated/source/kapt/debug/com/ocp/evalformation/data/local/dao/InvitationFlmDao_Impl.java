@@ -215,7 +215,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
 
   @Override
   public Object insert(final InvitationFlmEntity invitation,
-      final Continuation<? super Long> arg1) {
+      final Continuation<? super Long> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -229,12 +229,12 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object update(final InvitationFlmEntity invitation,
-      final Continuation<? super Unit> arg1) {
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -248,12 +248,12 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object updateStatut(final long id, final InvitationStatus statut,
-      final Continuation<? super Unit> arg2) {
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -281,11 +281,12 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __preparedStmtOfUpdateStatut.release(_stmt);
         }
       }
-    }, arg2);
+    }, $completion);
   }
 
   @Override
-  public Object markAsReplied(final long formationId, final Continuation<? super Unit> arg1) {
+  public Object markAsReplied(final long formationId,
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -306,11 +307,11 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __preparedStmtOfMarkAsReplied.release(_stmt);
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> arg0) {
+  public Object deleteAll(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -329,7 +330,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
@@ -593,7 +594,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
 
   @Override
   public Object getByFormationId(final long formationId,
-      final Continuation<? super InvitationFlmEntity> arg1) {
+      final Continuation<? super InvitationFlmEntity> $completion) {
     final String _sql = "SELECT * FROM invitations_flm WHERE formationId = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -700,11 +701,11 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> arg0) {
+  public Object count(final Continuation<? super Integer> $completion) {
     final String _sql = "SELECT COUNT(*) FROM invitations_flm";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -732,7 +733,7 @@ public final class InvitationFlmDao_Impl implements InvitationFlmDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @NonNull

@@ -240,7 +240,8 @@ public final class FormationDao_Impl implements FormationDao {
   }
 
   @Override
-  public Object insert(final FormationEntity formation, final Continuation<? super Long> arg1) {
+  public Object insert(final FormationEntity formation,
+      final Continuation<? super Long> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -254,12 +255,12 @@ public final class FormationDao_Impl implements FormationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object insertAll(final List<FormationEntity> formations,
-      final Continuation<? super List<Long>> arg1) {
+      final Continuation<? super List<Long>> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<List<Long>>() {
       @Override
       @NonNull
@@ -273,11 +274,12 @@ public final class FormationDao_Impl implements FormationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object update(final FormationEntity formation, final Continuation<? super Unit> arg1) {
+  public Object update(final FormationEntity formation,
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -291,11 +293,11 @@ public final class FormationDao_Impl implements FormationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> arg0) {
+  public Object deleteAll(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -314,11 +316,11 @@ public final class FormationDao_Impl implements FormationDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object resetIds(final Continuation<? super Unit> arg0) {
+  public Object resetIds(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -337,7 +339,7 @@ public final class FormationDao_Impl implements FormationDao {
           __preparedStmtOfResetIds.release(_stmt);
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
@@ -479,7 +481,7 @@ public final class FormationDao_Impl implements FormationDao {
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<FormationEntity>> arg0) {
+  public Object getAll(final Continuation<? super List<FormationEntity>> $completion) {
     final String _sql = "SELECT * FROM formations ORDER BY debut DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -610,11 +612,11 @@ public final class FormationDao_Impl implements FormationDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object getById(final long id, final Continuation<? super FormationEntity> arg1) {
+  public Object getById(final long id, final Continuation<? super FormationEntity> $completion) {
     final String _sql = "SELECT * FROM formations WHERE id = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -747,12 +749,12 @@ public final class FormationDao_Impl implements FormationDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object getByCollaborateur(final String matricule,
-      final Continuation<? super List<FormationEntity>> arg1) {
+      final Continuation<? super List<FormationEntity>> $completion) {
     final String _sql = "SELECT * FROM formations WHERE collaborateurMatricule = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -889,12 +891,12 @@ public final class FormationDao_Impl implements FormationDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object getByTheme(final long themeId,
-      final Continuation<? super List<FormationEntity>> arg1) {
+      final Continuation<? super List<FormationEntity>> $completion) {
     final String _sql = "SELECT * FROM formations WHERE themeId = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -1027,11 +1029,11 @@ public final class FormationDao_Impl implements FormationDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> arg0) {
+  public Object count(final Continuation<? super Integer> $completion) {
     final String _sql = "SELECT COUNT(*) FROM formations";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -1059,11 +1061,11 @@ public final class FormationDao_Impl implements FormationDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object getUnsynced(final Continuation<? super List<FormationEntity>> arg0) {
+  public Object getUnsynced(final Continuation<? super List<FormationEntity>> $completion) {
     final String _sql = "SELECT * FROM formations WHERE syncedToFirebase = 0";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -1194,11 +1196,11 @@ public final class FormationDao_Impl implements FormationDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object markSynced(final List<Long> ids, final Continuation<? super Unit> arg1) {
+  public Object markSynced(final List<Long> ids, final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -1228,7 +1230,7 @@ public final class FormationDao_Impl implements FormationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @NonNull

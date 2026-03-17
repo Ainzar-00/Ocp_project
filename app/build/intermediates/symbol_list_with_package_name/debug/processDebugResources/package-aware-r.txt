@@ -3382,8 +3382,9 @@ id browser_actions_menu_items
 id browser_actions_menu_view
 id btnEnvoyer
 id btnEnvoyerAutre
-id btnFilterService
 id btnSendAll
+id btnSendAllAppreciation
+id btnTestWorker
 id btn_add_collab
 id btn_add_flm
 id btn_add_theme
@@ -3409,6 +3410,7 @@ id buttonPanel
 id cache_measures
 id callMeasure
 id cancel_button
+id cardAppreciationDate
 id cardEndOfMonth
 id card_header
 id card_propositions
@@ -3424,6 +3426,10 @@ id chains
 id chartsFragment
 id checkbox
 id checked
+id chipClearFilters
+id chipFilterService
+id chipFilterStatut
+id chipFilterTheme
 id chronometer
 id circle_center
 id clear_text
@@ -3873,6 +3879,7 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvAppreciationInfo
 id tvEmptyState
 id tvEndOfMonthInfo
 id tvMatricule
@@ -3897,6 +3904,7 @@ id tv_f_l_m
 id tv_flm_count
 id tv_flm_import_result
 id tv_import_result
+id tv_logo
 id tv_matricule
 id tv_moyenne
 id tv_moyenne_satisfaction
@@ -3904,6 +3912,7 @@ id tv_pending_invitations
 id tv_propositions
 id tv_resultat_test
 id tv_selected_file
+id tv_subtitle
 id tv_taux
 id tv_theme
 id tv_theme_id
@@ -3911,6 +3920,7 @@ id tv_theme_nom
 id tv_theme_objectif
 id tv_themes_count
 id tv_themes_import_result
+id tv_title
 id tv_total_collabs
 id tv_total_evals
 id tv_total_themes
@@ -4059,6 +4069,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_login
 layout activity_rh
+layout activity_splash
 layout browser_actions_context_menu_page
 layout browser_actions_context_menu_row
 layout custom_dialog
@@ -5058,6 +5069,7 @@ style Theme_MaterialComponents_Light_NoActionBar_Bridge
 style Theme_MaterialComponents_NoActionBar
 style Theme_MaterialComponents_NoActionBar_Bridge
 style Theme_OCPEvalFormation
+style Theme_YourApp_Splash
 style ThemeOverlay_AppCompat
 style ThemeOverlay_AppCompat_ActionBar
 style ThemeOverlay_AppCompat_Dark

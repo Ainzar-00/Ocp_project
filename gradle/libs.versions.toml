@@ -23,6 +23,7 @@ workmanager = "2.9.0"
 preference = "1.2.1"
 googleServices = "4.4.2"
 navSafeArgs = "2.7.7"
+hiltCommon = "1.3.0"
 
 [libraries]
 # AndroidX
@@ -72,6 +73,7 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

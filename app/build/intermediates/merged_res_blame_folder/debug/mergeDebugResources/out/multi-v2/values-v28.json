@@ -1,29 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.ocp.evalformation.app-mergeDebugResources-69:/values-v28/values-v28.xml",
+            "outputFile": "com.ocp.evalformation.app-mergeDebugResources-3:/values-v28/values-v28.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Younes\\.gradle\\caches\\transforms-4\\cdeb2c973453bc9c31520d7089152165\\transformed\\appcompat-1.7.0\\res\\values-v28\\values-v28.xml",
-                    "from": {
-                        "startLines": "2,3,4,8",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,130,217,397",
-                        "endLines": "2,3,7,11",
-                        "endColumns": "74,86,12,12",
-                        "endOffsets": "125,212,392,584"
-                    },
-                    "to": {
-                        "startLines": "14,15,16,20",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "1141,1216,1303,1483",
-                        "endLines": "14,15,19,23",
-                        "endColumns": "74,86,12,12",
-                        "endOffsets": "1211,1298,1478,1670"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Younes\\.gradle\\caches\\transforms-4\\6749704c3f0641e9f6bb4cd1d2c3bfc0\\transformed\\material-1.12.0\\res\\values-v28\\values-v28.xml",
+                    "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\caches\\transforms-4\\a2d84070c77f04b69b73c930b1099c9e\\transformed\\material-1.12.0\\res\\values-v28\\values-v28.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -39,6 +20,25 @@
                         "endLines": "2,3,4,5,6,7,8,9,10,11,12,13,27",
                         "endColumns": "97,95,94,96,87,87,87,87,86,86,86,86,10",
                         "endOffsets": "148,244,339,436,524,612,700,788,875,962,1049,1136,1957"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\caches\\transforms-4\\802eba6882aab3fc72db67d21cd7a916\\transformed\\appcompat-1.7.0\\res\\values-v28\\values-v28.xml",
+                    "from": {
+                        "startLines": "2,3,4,8",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,130,217,397",
+                        "endLines": "2,3,7,11",
+                        "endColumns": "74,86,12,12",
+                        "endOffsets": "125,212,392,584"
+                    },
+                    "to": {
+                        "startLines": "14,15,16,20",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "1141,1216,1303,1483",
+                        "endLines": "14,15,19,23",
+                        "endColumns": "74,86,12,12",
+                        "endOffsets": "1211,1298,1478,1670"
                     }
                 }
             ]

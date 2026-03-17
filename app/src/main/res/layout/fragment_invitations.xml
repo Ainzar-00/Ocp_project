@@ -7,6 +7,15 @@
     android:background="#F8F9FA"
     android:padding="16dp">
 
+    <Button
+        android:id="@+id/btnTestWorker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click to test"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        />
+
     <!-- Search + Filter row -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,16 +36,96 @@
             android:inputType="text"
             android:maxLines="1" />
 
-        <ImageButton
-            android:id="@+id/btnFilterService"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_sort_by_size"
-            app:tint="#555555"
-            android:contentDescription="Filtrer" />
+
     </LinearLayout>
+
+    <!-- Add this between the search bar and pending count -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterStatut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Statut"
+                app:chipIcon="@android:drawable/arrow_down_float"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_marginEnd="8dp"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thème"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_marginEnd="8dp"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_marginEnd="8dp"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipClearFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Effacer"
+                android:textColor="@color/design_default_color_error"
+                style="@style/Widget.Material3.Chip.Filter"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Appreciation date banner -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardAppreciationDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#E3F2FD"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvAppreciationInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📋 Formations arrivent à date d'appréciation aujourd'hui"
+                android:textColor="#0D47A1"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSendAllAppreciation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Envoyer toutes les appréciations"
+                android:backgroundTint="#1976D2"
+                app:cornerRadius="8dp"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Pending count -->
     <TextView
@@ -95,18 +184,19 @@
         android:layout_marginBottom="8dp" />
 
     <!-- Empty state -->
+
+    <!-- List -->
     <TextView
         android:id="@+id/tvEmptyState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="32dp"
         android:text="🔍 Utilisez la recherche ou les filtres pour afficher les invitations.\nEn fin de mois, toutes les invitations non expédiées apparaissent automatiquement."
         android:textColor="#999999"
         android:textSize="14sp"
-        android:gravity="center"
-        android:padding="32dp"
         android:visibility="visible" />
 
-    <!-- List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvInvitations"
         android:layout_width="match_parent"
@@ -114,5 +204,7 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="16dp" />
+
+
 
 </LinearLayout>

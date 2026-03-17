@@ -99,6 +99,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.hilt.common)
     kapt(libs.room.compiler)
 
     // Firebase (BOM manages all versions)
@@ -142,5 +143,8 @@ dependencies {
 
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
+
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
 
 }

@@ -22,13 +22,13 @@ public final class EvaluationDao_Impl implements EvaluationDao {
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> arg0) {
-    return EvaluationDao.DefaultImpls.deleteAll(EvaluationDao_Impl.this, arg0);
+  public Object deleteAll(final Continuation<? super Unit> $completion) {
+    return EvaluationDao.DefaultImpls.deleteAll(EvaluationDao_Impl.this, $completion);
   }
 
   @Override
-  public Object getUnsynced(final Continuation<? super List<?>> arg0) {
-    return EvaluationDao.DefaultImpls.getUnsynced(EvaluationDao_Impl.this, arg0);
+  public Object getUnsynced(final Continuation<? super List<?>> $completion) {
+    return EvaluationDao.DefaultImpls.getUnsynced(EvaluationDao_Impl.this, $completion);
   }
 
   @NonNull

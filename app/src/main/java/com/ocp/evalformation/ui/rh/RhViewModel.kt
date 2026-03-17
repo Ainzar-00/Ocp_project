@@ -1,28 +1,33 @@
 package com.ocp.evalformation.ui.rh
 
+import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker
 import com.ocp.evalformation.data.local.entity.*
 import com.ocp.evalformation.data.repository.MainRepository
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
-
 @HiltViewModel
 class RhViewModel @Inject constructor(
-    private val repo: MainRepository
-) : ViewModel() {
+    private val repo: MainRepository,
+    private  val application: Application
+
+) : AndroidViewModel(application) {
 
     init {
-
-        // Listen to Firebase for real-time invitation status updates
-        // especially when Apps Script marks an invitation as REPONDUE
         repo.firebase.listenToInvitations(viewModelScope) { invitations ->
             viewModelScope.launch {
                 invitations.forEach { invitation ->
-                    repo.invitationDao.insert(invitation) // upsert
+                    repo.invitationDao.insert(invitation)
                 }
             }
         }
@@ -36,6 +41,33 @@ class RhViewModel @Inject constructor(
     val allInvitations    = repo.invitationDao.getAllLive()
     val pendingInvitations = repo.invitationDao.getPendingLive()
     val pendingCount       = repo.invitationDao.countPendingLive()
+
+    fun sendAllByFormationIds(ids: List<Long>) {
+        viewModelScope.launch {
+            _invitationState.value = InvitationState.Sending
+            val formations = ids.mapNotNull { repo.formationDao.getById(it) }
+            val result = repo.sendAllPendingInvitations(formations)
+            _invitationState.value = if (result.isSuccess)
+                InvitationState.SentAll(result.getOrNull() ?: 0)
+            else
+                InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur")
+        }
+    }
+
+    fun testAppreciationWorker() {
+        viewModelScope.launch {
+            val inputData = workDataOf("IS_TESTING" to true)
+
+            val request = OneTimeWorkRequestBuilder<AppreciationDateWorker>()
+                .setInputData(inputData)
+                .build()
+
+            WorkManager.getInstance(getApplication())
+                .enqueue(request)
+
+            Log.d("WorkerTest", "✅ OneTime worker enqueued with IS_TESTING=true")
+        }
+    }
 
     // ── FormationWithInvitation ────────────────────────────────────────────────
     val formationsWithStatus: LiveData<List<FormationWithInvitation>> =
@@ -58,28 +90,33 @@ class RhViewModel @Inject constructor(
             val cal     = Calendar.getInstance()
             val today   = cal.get(Calendar.DAY_OF_MONTH)
             val lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-            return today >= lastDay - 2 // last 3 days of month
+            return today >= lastDay - 2
         }
 
     // ── Search / Filter state ──────────────────────────────────────────────────
-    private val _searchQuery  = MutableLiveData<String>("")
+    private val _searchQuery   = MutableLiveData<String>("")
     private val _filterService = MutableLiveData<String?>(null)
     private val _filterStatut  = MutableLiveData<InvitationStatus?>(null)
+    private val _filterTheme   = MutableLiveData<String?>(null)
 
-    val searchQuery: LiveData<String>           = _searchQuery
-    val filterService: LiveData<String?>        = _filterService
-    val filterStatut: LiveData<InvitationStatus?> = _filterStatut
+    val searchQuery  : LiveData<String>            = _searchQuery
+    val filterService: LiveData<String?>           = _filterService
+    val filterStatut : LiveData<InvitationStatus?> = _filterStatut
+    val filterTheme  : LiveData<String?>           = _filterTheme
 
-    fun setSearch(query: String)              { _searchQuery.value  = query }
-    fun setFilterService(service: String?)    { _filterService.value = service }
-    fun setFilterStatut(statut: InvitationStatus?) { _filterStatut.value = statut }
+    fun setSearch(query: String)                   { _searchQuery.value   = query   }
+    fun setFilterService(service: String?)         { _filterService.value = service }
+    fun setFilterStatut(statut: InvitationStatus?) { _filterStatut.value  = statut  }
+    fun setFilterTheme(theme: String?)             { _filterTheme.value   = theme   }
+
     fun clearFilters() {
-        _searchQuery.value  = ""
+        _searchQuery.value   = ""
         _filterService.value = null
         _filterStatut.value  = null
+        _filterTheme.value   = null
     }
 
-    // Filtered list — empty filters = show nothing; end-of-month = show all pending
+    // ── Filtered formations ────────────────────────────────────────────────────
     val filteredFormations: LiveData<List<FormationWithInvitation>> =
         MediatorLiveData<List<FormationWithInvitation>>().also { mediator ->
             fun refresh() {
@@ -87,35 +124,95 @@ class RhViewModel @Inject constructor(
                 val query   = _searchQuery.value?.trim()?.lowercase() ?: ""
                 val service = _filterService.value
                 val statut  = _filterStatut.value
+                val theme   = _filterTheme.value
 
-                val filtersEmpty = query.isEmpty() && service == null && statut == null
+                val filtersEmpty = query.isEmpty() &&
+                        service == null &&
+                        statut  == null &&
+                        theme   == null
+
+                Log.d("InvFilter", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                Log.d("InvFilter", "total    : ${all.size}")
+                Log.d("InvFilter", "query    : '$query'")
+                Log.d("InvFilter", "service  : $service")
+                Log.d("InvFilter", "statut   : $statut")
+                Log.d("InvFilter", "theme    : $theme")
+                Log.d("InvFilter", "empty    : $filtersEmpty")
+                Log.d("InvFilter", "eom      : $isEndOfMonth")
 
                 mediator.value = when {
-                    // End of month → show all that are not yet answered
-                    isEndOfMonth -> all.filter { it.status != InvitationStatus.REPONDUE }
+                    isEndOfMonth -> {
+                        val result = all.filter { it.status != InvitationStatus.REPONDUE }
+                        Log.d("InvFilter", "END_OF_MONTH → ${result.size}")
+                        result
+                    }
 
-                    // Filters empty → show nothing (default state)
-                    filtersEmpty -> emptyList()
+                    filtersEmpty -> {
+                        Log.d("InvFilter", "EMPTY → 0")
+                        emptyList()
+                    }
 
-                    // Filters active → apply them
-                    else -> all.filter { item ->
-                        val f = item.formation
-                        val matchesQuery = query.isEmpty() ||
-                            f.collaborateurMatricule.lowercase().contains(query) ||
-                            item.invitation?.nomCompletCollaborateur?.lowercase()?.contains(query) == true ||
-                            item.invitation?.themeNom?.lowercase()?.contains(query) == true
-                        val matchesService = service == null ||
-                            item.invitation?.service?.equals(service, ignoreCase = true) == true ||
-                            f.division.equals(service, ignoreCase = true)
-                        val matchesStatut = statut == null || item.status == statut
-                        matchesQuery && matchesService && matchesStatut
+                    else -> {
+                        val result = all.filter { item ->
+                            val f = item.formation
+
+                            // ── Query ──────────────────────────────────────────
+                            val matchesQuery = query.isEmpty() ||
+                                    f.collaborateurMatricule.lowercase().contains(query) ||
+                                    item.invitation?.nomCompletCollaborateur?.lowercase()
+                                        ?.contains(query) == true ||
+                                    item.invitation?.themeNom?.lowercase()
+                                        ?.contains(query) == true ||
+                                    allThemes.value?.find { it.id == f.themeId }
+                                        ?.nom?.lowercase()?.contains(query) == true
+
+                            // ── Service ────────────────────────────────────────
+                            // Works for NON_EXPEDIEE (no invitation) via formation.division
+                            val matchesService = service == null || run {
+                                val invService      = item.invitation?.service
+                                val formationService = f.division
+                                invService?.equals(service, ignoreCase = true) == true ||
+                                        formationService.equals(service, ignoreCase = true)
+                            }
+
+                            // ── Statut ─────────────────────────────────────────
+                            val matchesStatut = statut == null || item.status == statut
+
+                            // ── Theme ──────────────────────────────────────────
+                            // Works for NON_EXPEDIEE (no invitation) via allThemes lookup
+                            val matchesTheme = theme == null || run {
+                                val invTheme = item.invitation?.themeNom
+                                val formationTheme = allThemes.value
+                                    ?.find { it.id == f.themeId }
+                                    ?.nom
+                                invTheme?.equals(theme, ignoreCase = true) == true ||
+                                        formationTheme?.equals(theme, ignoreCase = true) == true
+                            }
+
+                            Log.d("InvFilter",
+                                "mat=${f.collaborateurMatricule}" +
+                                        " | theme=${item.invitation?.themeNom ?: allThemes.value?.find { it.id == f.themeId }?.nom}" +
+                                        " | status=${item.status}" +
+                                        " | svc=${item.invitation?.service ?: f.division}" +
+                                        " | Q=$matchesQuery S=$matchesService" +
+                                        " | St=$matchesStatut T=$matchesTheme"
+                            )
+
+                            matchesQuery && matchesService && matchesStatut && matchesTheme
+                        }
+                        Log.d("InvFilter", "FILTERED → ${result.size}")
+                        result
                     }
                 }
+                Log.d("InvFilter", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             }
+
             mediator.addSource(formationsWithStatus) { refresh() }
             mediator.addSource(_searchQuery)         { refresh() }
             mediator.addSource(_filterService)       { refresh() }
             mediator.addSource(_filterStatut)        { refresh() }
+            mediator.addSource(_filterTheme)         { refresh() }
+            mediator.addSource(allThemes)            { refresh() } // ← needed for NON_EXPEDIEE theme lookup
         }
 
     // ── Check & update statuses ────────────────────────────────────────────────
@@ -177,19 +274,50 @@ class RhViewModel @Inject constructor(
     fun sendFormToFlm(item: FormationWithInvitation) {
         viewModelScope.launch {
             _invitationState.value = InvitationState.Sending
+
+            Log.d("SendForm", "━━━━━━━━━━ START sendFormToFlm ━━━━━━━━━━")
+
             try {
                 val formation = item.formation
-                val collab    = repo.collaborateurDao.getByMatricule(formation.collaborateurMatricule)
+                Log.d("SendForm", "Formation ID: ${formation.id}")
+                Log.d("SendForm", "Collaborateur Matricule: ${formation.collaborateurMatricule}")
+
+                val collab = repo.collaborateurDao.getByMatricule(
+                    formation.collaborateurMatricule
+                )
+
                 if (collab == null) {
-                    _invitationState.value = InvitationState.Error("Collaborateur introuvable : ${formation.collaborateurMatricule}")
+                    Log.e("SendForm", "❌ Collaborateur NOT FOUND")
+                    _invitationState.value = InvitationState.Error(
+                        "Collaborateur introuvable : ${formation.collaborateurMatricule}"
+                    )
                     return@launch
                 }
-                val flm = collab.flmMatricule?.let { repo.flmDao.getByMatricule(it) }
+
+                Log.d("SendForm", "✅ Collaborateur found: ${collab.prenom} ${collab.nom}")
+                Log.d("SendForm", "FLM Matricule: ${collab.flmMatricule}")
+
+                val flm = collab.flmMatricule?.let {
+                    repo.flmDao.getByMatricule(it)
+                }
+
                 if (flm == null) {
-                    _invitationState.value = InvitationState.Error("FLM introuvable pour : ${collab.matricule}")
+                    Log.e("SendForm", "❌ FLM NOT FOUND")
+                    _invitationState.value = InvitationState.Error(
+                        "FLM introuvable pour : ${collab.matricule}"
+                    )
                     return@launch
                 }
-                val theme  = repo.themeDao.getById(formation.themeId)
+
+                Log.d("SendForm", "✅ FLM found: ${flm.prenom} ${flm.nom}")
+                Log.d("SendForm", "FLM Email: ${flm.email}")
+
+                val theme = repo.themeDao.getById(formation.themeId)
+                Log.d("SendForm", "Theme ID: ${formation.themeId}")
+                Log.d("SendForm", "Theme Name: ${theme?.nom}")
+
+                Log.d("SendForm", "➡️ Sending form to FLM...")
+
                 val result = repo.sendEvaluationFormToFlm(
                     collaborateur = collab,
                     formation     = formation,
@@ -197,33 +325,27 @@ class RhViewModel @Inject constructor(
                     flmEmail      = flm.email,
                     flmNom        = "${flm.prenom} ${flm.nom}"
                 )
-                _invitationState.value = if (result.isSuccess)
-                    InvitationState.Sent(result.getOrNull()!!)
-                else
-                    InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur d'envoi")
+
+                if (result.isSuccess) {
+                    Log.d("SendForm", "✅ SUCCESS: ${result.getOrNull()}")
+                    _invitationState.value = InvitationState.Sent(result.getOrNull()!!)
+                } else {
+                    Log.e("SendForm", "❌ ERROR: ${result.exceptionOrNull()?.message}")
+                    _invitationState.value = InvitationState.Error(
+                        result.exceptionOrNull()?.message ?: "Erreur d'envoi"
+                    )
+                }
+
             } catch (e: Exception) {
+                Log.e("SendForm", "🔥 EXCEPTION: ${e.message}", e)
                 _invitationState.value = InvitationState.Error(e.message ?: "Erreur")
             }
+
+            Log.d("SendForm", "━━━━━━━━━━ END sendFormToFlm ━━━━━━━━━━")
         }
     }
 
-    // Send from collaborateur + formation params (backward compatibility)
-    fun sendFormToFlm(
-        collaborateur: CollaborateurEntity,
-        formation: FormationEntity,
-        flmEmail: String,
-        flmNom: String
-    ) {
-        viewModelScope.launch {
-            _invitationState.value = InvitationState.Sending
-            val theme  = repo.themeDao.getById(formation.themeId)
-            val result = repo.sendEvaluationFormToFlm(collaborateur, formation, theme, flmEmail, flmNom)
-            _invitationState.value = if (result.isSuccess)
-                InvitationState.Sent(result.getOrNull()!!)
-            else
-                InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur d'envoi")
-        }
-    }
+
 
     // Send all pending (end-of-month)
     fun sendAllInvitations() {
@@ -237,7 +359,9 @@ class RhViewModel @Inject constructor(
             _invitationState.value = if (result.isSuccess)
                 InvitationState.SentAll(result.getOrNull() ?: 0)
             else
-                InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur envoi global")
+                InvitationState.Error(
+                    result.exceptionOrNull()?.message ?: "Erreur envoi global"
+                )
         }
     }
 
@@ -247,7 +371,9 @@ class RhViewModel @Inject constructor(
     }
 
     fun getFormationByMatricule(matricule: String, onResult: (FormationEntity?) -> Unit) {
-        viewModelScope.launch { onResult(repo.formationDao.getByCollaborateur(matricule).firstOrNull()) }
+        viewModelScope.launch {
+            onResult(repo.formationDao.getByCollaborateur(matricule).firstOrNull())
+        }
     }
 
     fun deleteAllData() {

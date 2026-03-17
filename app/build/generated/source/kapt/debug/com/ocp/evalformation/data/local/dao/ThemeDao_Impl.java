@@ -147,7 +147,7 @@ public final class ThemeDao_Impl implements ThemeDao {
 
   @Override
   public Object insertAll(final List<ThemeEntity> themes,
-      final Continuation<? super List<Long>> arg1) {
+      final Continuation<? super List<Long>> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<List<Long>>() {
       @Override
       @NonNull
@@ -161,11 +161,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object insert(final ThemeEntity theme, final Continuation<? super Long> arg1) {
+  public Object insert(final ThemeEntity theme, final Continuation<? super Long> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -179,11 +179,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object update(final ThemeEntity theme, final Continuation<? super Unit> arg1) {
+  public Object update(final ThemeEntity theme, final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -197,11 +197,12 @@ public final class ThemeDao_Impl implements ThemeDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object updateAll(final List<ThemeEntity> themes, final Continuation<? super Unit> arg1) {
+  public Object updateAll(final List<ThemeEntity> themes,
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -215,17 +216,17 @@ public final class ThemeDao_Impl implements ThemeDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object upsertThemes(final List<ThemeEntity> themes,
-      final Continuation<? super List<Long>> arg1) {
-    return RoomDatabaseKt.withTransaction(__db, (__cont) -> ThemeDao.DefaultImpls.upsertThemes(ThemeDao_Impl.this, themes, __cont), arg1);
+      final Continuation<? super List<Long>> $completion) {
+    return RoomDatabaseKt.withTransaction(__db, (__cont) -> ThemeDao.DefaultImpls.upsertThemes(ThemeDao_Impl.this, themes, __cont), $completion);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> arg0) {
+  public Object deleteAll(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -244,11 +245,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object resetIds(final Continuation<? super Unit> arg0) {
+  public Object resetIds(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -267,11 +268,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           __preparedStmtOfResetIds.release(_stmt);
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> arg0) {
+  public Object count(final Continuation<? super Integer> $completion) {
     final String _sql = "SELECT COUNT(*) FROM themes";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -299,7 +300,7 @@ public final class ThemeDao_Impl implements ThemeDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
@@ -354,7 +355,7 @@ public final class ThemeDao_Impl implements ThemeDao {
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<ThemeEntity>> arg0) {
+  public Object getAll(final Continuation<? super List<ThemeEntity>> $completion) {
     final String _sql = "SELECT * FROM themes ORDER BY nom ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -398,11 +399,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object getById(final long id, final Continuation<? super ThemeEntity> arg1) {
+  public Object getById(final long id, final Continuation<? super ThemeEntity> $completion) {
     final String _sql = "SELECT * FROM themes WHERE id = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -448,11 +449,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getByName(final String nom, final Continuation<? super ThemeEntity> arg1) {
+  public Object getByName(final String nom, final Continuation<? super ThemeEntity> $completion) {
     final String _sql = "SELECT * FROM themes WHERE nom = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -502,11 +503,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object getUnsynced(final Continuation<? super List<ThemeEntity>> arg0) {
+  public Object getUnsynced(final Continuation<? super List<ThemeEntity>> $completion) {
     final String _sql = "SELECT * FROM themes WHERE syncedToFirebase = 0";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -550,11 +551,11 @@ public final class ThemeDao_Impl implements ThemeDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
-  public Object markSynced(final List<Long> ids, final Continuation<? super Unit> arg1) {
+  public Object markSynced(final List<Long> ids, final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -584,7 +585,7 @@ public final class ThemeDao_Impl implements ThemeDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @NonNull

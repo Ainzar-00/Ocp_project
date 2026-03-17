@@ -1,19 +1,20 @@
 package com.ocp.evalformation.ui.rh.dashboard
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ocp.evalformation.R
+import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker
 import com.ocp.evalformation.data.local.entity.InvitationStatus
 import com.ocp.evalformation.databinding.FragmentInvitationsBinding
 import com.ocp.evalformation.ui.rh.RhViewModel
@@ -28,7 +29,8 @@ class InvitationsFragment : Fragment() {
     private val viewModel: RhViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentInvitationsBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,37 +39,59 @@ class InvitationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Update invitation statuses on load
         viewModel.checkAndUpdateInvitationStatuses()
+
+        // Observe pending formation IDs from worker
+        val prefs = requireContext().getSharedPreferences("worker_prefs", Context.MODE_PRIVATE)
+        val pendingIds = prefs.getString("pending_formation_ids", "")
+            ?.split(",")?.mapNotNull { it.toLongOrNull() } ?: emptyList()
+
+        if (pendingIds.isNotEmpty()) {
+            binding.cardAppreciationDate.visibility = View.VISIBLE
+            binding.tvAppreciationInfo.text =
+                "📋 ${pendingIds.size} formation(s) arrivent à date d'appréciation aujourd'hui."
+
+            binding.btnSendAllAppreciation.setOnClickListener {
+                viewModel.sendAllByFormationIds(pendingIds)
+                // Dismiss notification
+                NotificationManagerCompat.from(requireContext())
+                    .cancel(AppreciationDateWorker.NOTIFICATION_ID)
+                // Clear stored IDs
+                prefs.edit().remove("pending_formation_ids").apply()
+                binding.cardAppreciationDate.visibility = View.GONE
+            }
+        } else {
+            binding.cardAppreciationDate.visibility = View.GONE
+        }
+
 
         // ── Adapter ────────────────────────────────────────────────────────────
         val invAdapter = InvitationsAdapter(
             onEnvoyer  = { item -> viewModel.sendFormToFlm(item) },
             onRenvoyer = { item -> viewModel.sendFormToFlm(item) }
         )
-
         binding.rvInvitations.layoutManager = LinearLayoutManager(requireContext())
         binding.rvInvitations.adapter = invAdapter
 
+        // ── Observe themes for adapter ─────────────────────────────────────────
+        viewModel.allThemes.observe(viewLifecycleOwner) { themes ->
+            invAdapter.submitThemes(themes.associate { it.id to it.nom })
+        }
+
         // ── End-of-month banner ────────────────────────────────────────────────
-        if (viewModel.isEndOfMonth) {
-            binding.cardEndOfMonth.visibility = View.VISIBLE
-            binding.tvEndOfMonthInfo.text =
-                "⚠️ Fin du mois — toutes les invitations non expédiées sont affichées."
-        } else {
-            binding.cardEndOfMonth.visibility = View.GONE
+        binding.cardEndOfMonth.visibility =
+            if (viewModel.isEndOfMonth) View.VISIBLE else View.GONE
+
+        binding.btnTestWorker.setOnClickListener {
+            viewModel.testAppreciationWorker()
+            Toast.makeText(requireContext(), "Worker lancé — vérifiez Logcat", Toast.LENGTH_SHORT).show()
         }
 
         // ── Observe filtered formations ────────────────────────────────────────
         viewModel.filteredFormations.observe(viewLifecycleOwner) { list ->
             invAdapter.submitList(list)
-
             val pendingCount = list.count { it.status == InvitationStatus.EN_ATTENTE }
-            val totalCount   = list.size
-            binding.tvPendingCount.text =
-                "$pendingCount en attente • $totalCount affichée(s)"
-
-            // Show empty state
+            binding.tvPendingCount.text = "$pendingCount en attente • ${list.size} affichée(s)"
             binding.tvEmptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         }
 
@@ -80,40 +104,58 @@ class InvitationsFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        // ── Filter by service / statut ─────────────────────────────────────────
-        binding.btnFilterService.setOnClickListener {
-            showFilterDialog()
+        // ── Filter chips ───────────────────────────────────────────────────────
+        binding.chipFilterStatut.setOnClickListener  { showStatutDialog()  }
+        binding.chipFilterTheme.setOnClickListener   { showThemeDialog()   }
+        binding.chipFilterService.setOnClickListener { showServiceDialog() }
+        binding.chipClearFilters.setOnClickListener  {
+            viewModel.clearFilters()
+            resetChips()
+        }
+
+        // ── Observe filter state to update chip labels ─────────────────────────
+        viewModel.filterStatut.observe(viewLifecycleOwner) { statut ->
+            binding.chipFilterStatut.text = when (statut) {
+                InvitationStatus.NON_EXPEDIEE -> "Statut: Non expédiée"
+                InvitationStatus.EN_ATTENTE   -> "Statut: En attente"
+                InvitationStatus.REPONDUE     -> "Statut: Répondue"
+                null                          -> "Statut"
+            }
+            binding.chipFilterStatut.isChecked = statut != null
+        }
+
+        viewModel.filterTheme.observe(viewLifecycleOwner) { theme ->
+            binding.chipFilterTheme.text = if (theme != null) "Thème: $theme" else "Thème"
+            binding.chipFilterTheme.isChecked = theme != null
+        }
+
+        viewModel.filterService.observe(viewLifecycleOwner) { service ->
+            binding.chipFilterService.text = if (service != null) "Service: $service" else "Service"
+            binding.chipFilterService.isChecked = service != null
         }
 
         // ── Send All button ────────────────────────────────────────────────────
         binding.btnSendAll.setOnClickListener {
-            val pendingCount = viewModel.filteredFormations.value
+            val count = viewModel.filteredFormations.value
                 ?.count { it.status == InvitationStatus.NON_EXPEDIEE } ?: 0
-
-            if (pendingCount == 0) {
-                Toast.makeText(requireContext(),
-                    "Aucune invitation à envoyer.", Toast.LENGTH_SHORT).show()
+            if (count == 0) {
+                Toast.makeText(requireContext(), "Aucune invitation à envoyer.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             AlertDialog.Builder(requireContext())
                 .setTitle("Envoi global")
-                .setMessage("Envoyer $pendingCount invitation(s) non expédiée(s) ?")
+                .setMessage("Envoyer $count invitation(s) non expédiée(s) ?")
                 .setPositiveButton("Envoyer") { _, _ -> viewModel.sendAllInvitations() }
                 .setNegativeButton("Annuler", null)
                 .show()
         }
 
-        // ── Observe invitation state ───────────────────────────────────────────
+        // ── Invitation state ───────────────────────────────────────────────────
         lifecycleScope.launch {
             viewModel.invitationState.collect { state ->
                 when (state) {
-                    is RhViewModel.InvitationState.Idle -> {
-                        binding.progressInvitation.visibility = View.GONE
-                    }
-                    is RhViewModel.InvitationState.Sending -> {
-                        binding.progressInvitation.visibility = View.VISIBLE
-                    }
+                    is RhViewModel.InvitationState.Idle    -> binding.progressInvitation.visibility = View.GONE
+                    is RhViewModel.InvitationState.Sending -> binding.progressInvitation.visibility = View.VISIBLE
                     is RhViewModel.InvitationState.Sent -> {
                         binding.progressInvitation.visibility = View.GONE
                         Toast.makeText(requireContext(),
@@ -136,53 +178,76 @@ class InvitationsFragment : Fragment() {
         }
     }
 
-    // ── Filter dialog ──────────────────────────────────────────────────────────
-    private fun showFilterDialog() {
+    // ── Statut dialog ──────────────────────────────────────────────────────────
+    private fun showStatutDialog() {
+        val options = arrayOf("Non expédiée", "En attente", "Répondue")
+        val statuts = arrayOf(
+            InvitationStatus.NON_EXPEDIEE,
+            InvitationStatus.EN_ATTENTE,
+            InvitationStatus.REPONDUE
+        )
+        AlertDialog.Builder(requireContext())
+            .setTitle("Filtrer par statut")
+            .setItems(options) { _, which ->
+                viewModel.setFilterStatut(statuts[which])
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    // ── Theme dialog ───────────────────────────────────────────────────────────
+    private fun showThemeDialog() {
+        val themes = viewModel.allThemes.value
+            ?.map { it.nom }
+            ?.sorted()
+            ?.toTypedArray()
+            ?: arrayOf()
+
+        if (themes.isEmpty()) {
+            Toast.makeText(requireContext(), "Aucun thème disponible.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Filtrer par thème")
+            .setItems(themes) { _, which ->
+                viewModel.setFilterTheme(themes[which])
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    // ── Service dialog ─────────────────────────────────────────────────────────
+    private fun showServiceDialog() {
         val services = viewModel.allCollaborateurs.value
             ?.mapNotNull { it.service }
             ?.distinct()
             ?.sorted()
-            ?.toMutableList()
-            ?: mutableListOf()
+            ?.toTypedArray()
+            ?: arrayOf()
 
-        val statuts = listOf(
-            "Tous les statuts",
-            "Non expédiées",
-            "En attente",
-            "Répondues"
-        )
-
-        val items = arrayOf(
-            "── Effacer les filtres ──",
-            *statuts.toTypedArray(),
-            "── Services ──",
-            *services.toTypedArray()
-        )
+        if (services.isEmpty()) {
+            Toast.makeText(requireContext(), "Aucun service disponible.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Filtrer par")
-            .setItems(items) { _, which ->
-                when {
-                    which == 0 -> viewModel.clearFilters()
-                    which in 1..4 -> {
-                        val statut = when (which) {
-                            2    -> InvitationStatus.NON_EXPEDIEE
-                            3    -> InvitationStatus.EN_ATTENTE
-                            4    -> InvitationStatus.REPONDUE
-                            else -> null
-                        }
-                        viewModel.setFilterStatut(statut)
-                    }
-                    which >= 6 -> {
-                        val serviceIndex = which - 6
-                        if (serviceIndex < services.size) {
-                            viewModel.setFilterService(services[serviceIndex])
-                        }
-                    }
-                }
+            .setTitle("Filtrer par service")
+            .setItems(services) { _, which ->
+                viewModel.setFilterService(services[which])
             }
-            .setNegativeButton("Fermer", null)
+            .setNegativeButton("Annuler", null)
             .show()
+    }
+
+    // ── Reset chips ────────────────────────────────────────────────────────────
+    private fun resetChips() {
+        binding.chipFilterStatut.text    = "Statut"
+        binding.chipFilterTheme.text     = "Thème"
+        binding.chipFilterService.text   = "Service"
+        binding.chipFilterStatut.isChecked  = false
+        binding.chipFilterTheme.isChecked   = false
+        binding.chipFilterService.isChecked = false
     }
 
     override fun onDestroyView() {
@@ -190,3 +255,4 @@ class InvitationsFragment : Fragment() {
         _binding = null
     }
 }
+
