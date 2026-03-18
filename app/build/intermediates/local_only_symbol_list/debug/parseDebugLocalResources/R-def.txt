@@ -11,11 +11,16 @@ color ocp_nav_selected
 color ocp_nav_unselected
 color ocp_orange
 color white
+drawable bg_wave
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_notification
+drawable ocp
+drawable screen1
 drawable spinner_bg
+drawable splash_background
 id bar_chart
+id bottom_label
 id bottom_nav_rh
 id btnEnvoyer
 id btnEnvoyerAutre
@@ -82,6 +87,8 @@ id et_matricule
 id et_theme_nom
 id et_theme_objectif
 id evaluationsFragment
+id footer_separator
+id guideline_center
 id importDataFragment
 id invitationsFragment
 id iv_expand_icon
@@ -195,7 +202,7 @@ string nav_evals
 string nav_invitations
 string nav_themes
 string project_id
+style Theme.App.Splash
 style Theme.OCPEvalFormation
-style Theme.YourApp.Splash
 xml backup_rules
 xml data_extraction_rules

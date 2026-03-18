@@ -14,12 +14,11 @@
         android:padding="32dp">
 
         <!-- Logo / Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⭐"
-            android:textSize="60sp"
-            android:layout_marginBottom="8dp" />
+
+        <ImageView
+            android:layout_width="183dp"
+            android:layout_height="117dp"
+            android:background="@drawable/ocp" />
 
         <TextView
             android:layout_width="wrap_content"

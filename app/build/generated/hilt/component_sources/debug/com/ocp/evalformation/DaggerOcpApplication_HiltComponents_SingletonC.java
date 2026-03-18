@@ -42,6 +42,9 @@ import com.ocp.evalformation.di.AppModule_ProvideFormsFactory;
 import com.ocp.evalformation.di.AppModule_ProvideInvitationFlmDaoFactory;
 import com.ocp.evalformation.di.AppModule_ProvideMainRepoFactory;
 import com.ocp.evalformation.di.AppModule_ProvideThemeDaoFactory;
+import com.ocp.evalformation.ui.SplashActivity;
+import com.ocp.evalformation.ui.SplashViewModel;
+import com.ocp.evalformation.ui.SplashViewModel_HiltModules;
 import com.ocp.evalformation.ui.auth.LoginActivity;
 import com.ocp.evalformation.ui.auth.LoginViewModel;
 import com.ocp.evalformation.ui.auth.LoginViewModel_HiltModules;
@@ -452,6 +455,10 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     }
 
     @Override
+    public void injectSplashActivity(SplashActivity splashActivity) {
+    }
+
+    @Override
     public void injectLoginActivity(LoginActivity loginActivity) {
     }
 
@@ -467,7 +474,7 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ImportViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, LoginViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, RhViewModel_HiltModules.KeyModule.provide()));
+      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ImportViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, LoginViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, RhViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_ocp_evalformation_ui_SplashViewModel, SplashViewModel_HiltModules.KeyModule.provide()));
     }
 
     @Override
@@ -493,20 +500,25 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
+
+      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
+
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
 
       static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
-      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
+      @KeepFieldType
+      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
+
+      @KeepFieldType
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
 
       @KeepFieldType
       ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
-
-      @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
     }
   }
 
@@ -522,6 +534,8 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     private Provider<LoginViewModel> loginViewModelProvider;
 
     private Provider<RhViewModel> rhViewModelProvider;
+
+    private Provider<SplashViewModel> splashViewModelProvider;
 
     private ViewModelCImpl(SingletonCImpl singletonCImpl,
         ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
@@ -539,11 +553,12 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
       this.importViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
       this.loginViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
       this.rhViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.splashViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ((Provider) importViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, ((Provider) loginViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, ((Provider) rhViewModelProvider)));
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_ocp_evalformation_ui_rh_import_data_ImportViewModel, ((Provider) importViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_auth_LoginViewModel, ((Provider) loginViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_rh_RhViewModel, ((Provider) rhViewModelProvider), LazyClassKeyProvider.com_ocp_evalformation_ui_SplashViewModel, ((Provider) splashViewModelProvider)));
     }
 
     @Override
@@ -553,17 +568,22 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
-
       static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
 
+      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
+
+      static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
+
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
+
+      @KeepFieldType
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
 
       @KeepFieldType
       ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
 
       @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
@@ -598,6 +618,9 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
           case 2: // com.ocp.evalformation.ui.rh.RhViewModel 
           return (T) new RhViewModel(singletonCImpl.provideMainRepoProvider.get(), ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonCImpl.applicationContextModule));
+
+          case 3: // com.ocp.evalformation.ui.SplashViewModel 
+          return (T) new SplashViewModel(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.syncRepositoryProvider.get());
 
           default: throw new AssertionError(id);
         }

@@ -21,11 +21,16 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="49dp"
+                    android:background="@drawable/ocp" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="⭐ OCP — Espace RH"
+                    android:text="OCP — Espace RH"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />

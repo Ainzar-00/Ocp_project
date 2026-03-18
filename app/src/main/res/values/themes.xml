@@ -9,8 +9,19 @@
         <item name="android:statusBarColor">@color/ocp_dark_green</item>
     </style>
 
-    <style name="Theme.YourApp.Splash" parent="Theme.OCPEvalFormation">
-        <item name="android:windowBackground">@color/ocp_dark_green</item>
+<!--    <style name="Theme.YourApp.Splash" parent="Theme.OCPEvalFormation">-->
+<!--        <item name="android:windowBackground">@color/ocp_dark_green</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--    </style>-->
+
+    <!-- NEW: Add this Splash Theme -->
+    <style name="Theme.App.Splash" parent="Theme.OCPEvalFormation">
+        <!-- This tells the OS to show your drawable instead of a blank white screen -->
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <!-- Ensure the status bar matches or is transparent -->
+        <item name="android:statusBarColor">#F8F9FA</item>
+        <!-- Ensure there's no action bar -->
+        <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 

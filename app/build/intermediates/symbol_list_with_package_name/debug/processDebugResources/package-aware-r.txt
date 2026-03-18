@@ -3135,6 +3135,7 @@ drawable abc_textfield_search_material
 drawable abc_vector_test
 drawable avd_hide_password
 drawable avd_show_password
+drawable bg_wave
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -3267,8 +3268,11 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable ocp
 drawable preference_list_divider_material
+drawable screen1
 drawable spinner_bg
+drawable splash_background
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -3370,6 +3374,7 @@ id beginning
 id bestChoice
 id blocking
 id bottom
+id bottom_label
 id bottom_nav_rh
 id bounce
 id bounceBoth
@@ -3545,6 +3550,7 @@ id fitXY
 id fixed
 id flip
 id floating
+id footer_separator
 id forever
 id fragment_container_view_tag
 id frost
@@ -3558,6 +3564,7 @@ id graph_wrap
 id group_divider
 id grouping
 id groups
+id guideline_center
 id header_title
 id hide_ime_id
 id hideable
@@ -4962,6 +4969,7 @@ style TextAppearance_MaterialComponents_Tooltip
 style TextAppearance_Widget_AppCompat_ExpandedMenu_Item
 style TextAppearance_Widget_AppCompat_Toolbar_Subtitle
 style TextAppearance_Widget_AppCompat_Toolbar_Title
+style Theme_App_Splash
 style Theme_AppCompat
 style Theme_AppCompat_CompactMenu
 style Theme_AppCompat_DayNight
@@ -5069,7 +5077,6 @@ style Theme_MaterialComponents_Light_NoActionBar_Bridge
 style Theme_MaterialComponents_NoActionBar
 style Theme_MaterialComponents_NoActionBar_Bridge
 style Theme_OCPEvalFormation
-style Theme_YourApp_Splash
 style ThemeOverlay_AppCompat
 style ThemeOverlay_AppCompat_ActionBar
 style ThemeOverlay_AppCompat_Dark

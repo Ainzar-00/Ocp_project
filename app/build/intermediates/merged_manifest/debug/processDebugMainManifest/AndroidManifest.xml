@@ -49,9 +49,9 @@
             android:exported="false" />
 
         <activity
-            android:name="com.ocp.evalformation.com.ocp.evalformation.ui.SplashActivity"
+            android:name="com.ocp.evalformation.ui.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.YourApp.Splash" >
+            android:theme="@style/Theme.App.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

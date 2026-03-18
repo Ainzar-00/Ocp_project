@@ -262,22 +262,7 @@ class LoginActivity : AppCompatActivity() {
 
         setupUI()
 
-        if (viewModel.isAlreadyLoggedIn()) {
-            val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
-            Log.d("DEBUG_FIREBASE", "User already logged in → UID=$uid, fetching role...")
-            lifecycleScope.launch {
-                val role = viewModel.getCurrentUserRole()
-                if (role != null) {
-                    Log.d("DEBUG_FIREBASE", "Existing session role=$role → syncing and navigating")
-                    viewModel.syncAndNavigate(role)
-                } else {
-                    Log.w("DEBUG_FIREBASE", "Role returned null for existing session → staying on login screen")
-                    setLoading(false)
-                }
-            }
-        } else {
-            Log.d("DEBUG_FIREBASE", "No existing session → showing login screen")
-        }
+
     }
 
     private fun setupUI() {

@@ -52,8 +52,8 @@
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_evaluations.xml"
     },
     {
-        "merged": "com.ocp.evalformation.app-debug-5:/layout_activity_splash.xml.flat",
-        "source": "com.ocp.evalformation.app-main-7:/layout/activity_splash.xml"
+        "merged": "com.ocp.evalformation.app-debug-5:/layout_activity_rh.xml.flat",
+        "source": "com.ocp.evalformation.app-main-7:/layout/activity_rh.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_dialog_add_theme.xml.flat",
@@ -64,6 +64,10 @@
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_import_bilan.xml"
     },
     {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\drawable_screen1.jpg.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\drawable\\screen1.jpg"
+    },
+    {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\xml_backup_rules.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\xml\\backup_rules.xml"
     },
@@ -72,8 +76,20 @@
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\activity_rh.xml"
     },
     {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\drawable_ocp.png.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\drawable\\ocp.png"
+    },
+    {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_fragment_dashboard.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\drawable_bg_wave.xml.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\drawable\\bg_wave.xml"
+    },
+    {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_activity_splash.xml.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\activity_splash.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_fragment_import_data.xml.flat",
@@ -98,6 +114,10 @@
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_item_theme.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\item_theme.xml"
+    },
+    {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\drawable_splash_background.xml.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\drawable\\splash_background.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\color_ocp_nav_colors.xml.flat",

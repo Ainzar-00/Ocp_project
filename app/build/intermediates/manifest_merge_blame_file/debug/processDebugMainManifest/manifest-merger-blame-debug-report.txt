@@ -93,12 +93,12 @@
 50
 51        <activity
 51-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:30:9-38:20
-52            android:name="com.ocp.evalformation.com.ocp.evalformation.ui.SplashActivity"
-52-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:31:13-68
+52            android:name="com.ocp.evalformation.ui.SplashActivity"
+52-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:31:13-67
 53            android:exported="true"
 53-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:32:13-36
-54            android:theme="@style/Theme.YourApp.Splash" >
-54-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:33:13-56
+54            android:theme="@style/Theme.App.Splash" >
+54-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:33:13-52
 55            <intent-filter>
 55-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:34:13-37:29
 56                <action android:name="android.intent.action.MAIN" />

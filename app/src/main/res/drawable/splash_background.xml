@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background color -->
+    <item>
+        <color android:color="#F8F9FA"/>
+    </item>
+
+    <!-- Adjust width and height to control the size -->
+    <item
+        android:gravity="center"
+        android:width="355dp"
+        android:height="717dp">
+
+        <bitmap
+            android:src="@drawable/screen1"
+            android:tileMode="disabled"
+            android:filter="true"
+            android:antialias="true"/>
+    </item>
+
+</layer-list>
