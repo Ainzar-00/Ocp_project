@@ -9,6 +9,8 @@ import com.ocp.evalformation.data.repository.MainRepository
 import com.ocp.evalformation.utils.dateHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -309,12 +311,17 @@ class ImportViewModel @Inject constructor(
                     repo.themeDao.markSynced(affectedIds)
 
                     // ── Auto-create Google Form for this theme (ignore failure) ──
-                    syncedThemes.forEach { theme ->
-                        try {
-                            repo.createFormForTheme(theme) // failure ignored
-                        } catch (e: Exception) {
-                            // form creation failed → silently ignored
-                        }
+                    // Use this — 10 at a time:
+                    syncedThemes.chunked(10).forEach { chunk ->
+                        chunk.map { theme ->
+                            async {
+                                try {
+                                    repo.createFormForTheme(theme)
+                                } catch (e: Exception) {
+                                    // silently ignored
+                                }
+                            }
+                        }.awaitAll()
                     }
 
                     _themeState.value = ImportState.Success("✅ ${syncedThemes.size} thème(s) importé(s).")
