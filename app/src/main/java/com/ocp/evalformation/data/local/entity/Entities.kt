@@ -211,11 +211,11 @@ data class FormCreationRequest(
 )
 
 data class FormCreationResponse(
-    val status          : String,
-    val formUrl         : String?,
-    val formId          : String?,
-    val responseSheetUrl: String?,
-    val entryIds        : EntryIds?,   // ← nullable
-    val message         : String? = null,
-    val stack           : String? = null
+    val status: String?,
+    val formUrl: String?,
+    val formId: String?,
+    val responseSheetId: String?,
+    val entryIds: EntryIds?,
+    val message: String?,
+    val stack: String?
 )

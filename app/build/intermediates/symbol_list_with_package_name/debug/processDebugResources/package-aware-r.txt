@@ -3516,6 +3516,7 @@ id et_flm_matricule
 id et_flm_nom
 id et_flm_prenom
 id et_flm_service
+id et_import_csv
 id et_manual_categorie
 id et_manual_convocation
 id et_manual_debut
@@ -4096,6 +4097,7 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dialog_add_theme
+layout dialog_import_themes
 layout expand_button
 layout fragment_charts
 layout fragment_dashboard
@@ -5763,5 +5765,5 @@ styleable ViewStubCompat android_id android_layout android_inflatedId
 styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration ifTagNotSet ifTagSet motionInterpolator motionTarget onStateTransition pathMotionArc setsTag transitionDisable upDuration viewTransitionMode
 styleable include constraintSet
 xml backup_rules
-xml data_extraction_rules
 xml image_share_filepaths
+xml network_security_config

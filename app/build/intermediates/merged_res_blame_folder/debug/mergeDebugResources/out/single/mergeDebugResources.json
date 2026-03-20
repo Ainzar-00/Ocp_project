@@ -36,8 +36,16 @@
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_invitations.xml"
     },
     {
+        "merged": "com.ocp.evalformation.app-debug-5:/xml_backup_rules.xml.flat",
+        "source": "com.ocp.evalformation.app-main-7:/xml/backup_rules.xml"
+    },
+    {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_fragment_charts.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_charts.xml"
+    },
+    {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_dialog_import_themes.xml.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\dialog_import_themes.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\navigation_nav_graph_rh.xml.flat",
@@ -50,10 +58,6 @@
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_fragment_evaluations.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_evaluations.xml"
-    },
-    {
-        "merged": "com.ocp.evalformation.app-debug-5:/layout_activity_rh.xml.flat",
-        "source": "com.ocp.evalformation.app-main-7:/layout/activity_rh.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_dialog_add_theme.xml.flat",
@@ -126,5 +130,9 @@
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_fragment_import_themes.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_import_themes.xml"
+    },
+    {
+        "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\xml_network_security_config.xml.flat",
+        "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\xml\\network_security_config.xml"
     }
 ]

@@ -67,16 +67,16 @@
 35-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:16:9-35
 36        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 36-->[androidx.core:core:1.13.1] C:\Users\Younes\Downloads\gradle-9.0.0\caches\transforms-4\dc8efd6db67ef62947364dd9a7a2c82d\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
-37        android:dataExtractionRules="@xml/data_extraction_rules"
-37-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:17:9-65
-38        android:debuggable="true"
-39        android:extractNativeLibs="false"
-40        android:fullBackupContent="@xml/backup_rules"
-40-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:18:9-54
-41        android:icon="@drawable/ic_launcher_foreground"
-41-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:19:9-56
-42        android:label="@string/app_name"
-42-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:20:9-41
+37        android:debuggable="true"
+38        android:extractNativeLibs="false"
+39        android:fullBackupContent="@xml/backup_rules"
+39-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:18:9-54
+40        android:icon="@drawable/ic_launcher_foreground"
+40-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:19:9-56
+41        android:label="@string/app_name"
+41-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:20:9-41
+42        android:networkSecurityConfig="@xml/network_security_config"
+42-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:17:9-69
 43        android:roundIcon="@drawable/ic_launcher_background"
 43-->C:\Users\Younes\Downloads\OCP_EvalFormation_Updated\OCP_EvalApp\app\src\main\AndroidManifest.xml:21:9-61
 44        android:supportsRtl="true"

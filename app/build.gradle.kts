@@ -147,4 +147,6 @@ dependencies {
     implementation("androidx.hilt:hilt-work:1.2.0")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
 
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
 }

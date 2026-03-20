@@ -560,19 +560,21 @@ class FirebaseRepository @Inject constructor(
                 .get()
                 .await()
                 .documents.mapNotNull { doc ->
+                    val entryIdsMap = doc.get("entryIds") as? Map<*, *>
+
                     try {
                         Forms(
-                            id      = doc.getLong("id")      ?: 0L,
+                            id = doc.getLong("id")      ?: 0L,
                             themeId = doc.getLong("themeId") ?: 0L,
                             formUrl = doc.getString("formUrl") ?: "",
                             entryIds = EntryIds(
-                                formationId    = doc.getLong("formationId")    ?: 0L,
-                                intituleAction = doc.getLong("intituleAction") ?: 0L,
-                                nomPrenom      = doc.getLong("nomPrenom")      ?: 0L,
-                                matricule      = doc.getLong("matricule")      ?: 0L,
-                                service        = doc.getLong("service")        ?: 0L,
-                                formateur      = doc.getLong("formateur")      ?: 0L,
-                                dates          = doc.getLong("dates")          ?: 0L
+                                formationId    = (entryIdsMap?.get("formationId") as? Long)    ?: 0L,
+                                intituleAction = (entryIdsMap?.get("intituleAction") as? Long) ?: 0L,
+                                nomPrenom      = (entryIdsMap?.get("nomPrenom") as? Long)      ?: 0L,
+                                matricule      = (entryIdsMap?.get("matricule") as? Long)      ?: 0L,
+                                service        = (entryIdsMap?.get("service") as? Long)        ?: 0L,
+                                formateur      = (entryIdsMap?.get("formateur") as? Long)      ?: 0L,
+                                dates          = (entryIdsMap?.get("dates") as? Long)          ?: 0L
                             )
                         )
                     } catch (e: Exception) {
@@ -609,6 +611,7 @@ fun Forms.toMap() = mapOf(
     "id"             to id,
     "themeId"        to themeId,
     "formUrl"        to formUrl,
+    "entryIds"       to entryIds
 
 )
 
