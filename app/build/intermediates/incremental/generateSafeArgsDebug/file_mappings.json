@@ -1,1 +1,1 @@
-[{"navFile":"src\\main\\res\\navigation\\nav_graph_rh.xml","javaFiles":[]}]
+[{"navFile":"src\\main\\res\\navigation\\nav_graph_rh.xml","javaFiles":["com.ocp.evalformation.ui.rh.evaluations.EvaluationsFragmentDirections"]}]

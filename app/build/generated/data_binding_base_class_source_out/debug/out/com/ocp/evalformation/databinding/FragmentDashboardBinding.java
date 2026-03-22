@@ -20,34 +20,38 @@ public final class FragmentDashboardBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final TextView tvBestTheme;
-
-  @NonNull
-  public final TextView tvMoyenneSatisfaction;
+  public final TextView tvJsp;
 
   @NonNull
   public final TextView tvPendingInvitations;
 
   @NonNull
-  public final TextView tvTotalCollabs;
+  public final TextView tvTauxCouverturePct;
+
+  @NonNull
+  public final TextView tvTauxCouvertureRatio;
+
+  @NonNull
+  public final TextView tvThemePlusRecent;
+
+  @NonNull
+  public final TextView tvThemesRealises;
 
   @NonNull
   public final TextView tvTotalEvals;
 
-  @NonNull
-  public final TextView tvTotalThemes;
-
-  private FragmentDashboardBinding(@NonNull ScrollView rootView, @NonNull TextView tvBestTheme,
-      @NonNull TextView tvMoyenneSatisfaction, @NonNull TextView tvPendingInvitations,
-      @NonNull TextView tvTotalCollabs, @NonNull TextView tvTotalEvals,
-      @NonNull TextView tvTotalThemes) {
+  private FragmentDashboardBinding(@NonNull ScrollView rootView, @NonNull TextView tvJsp,
+      @NonNull TextView tvPendingInvitations, @NonNull TextView tvTauxCouverturePct,
+      @NonNull TextView tvTauxCouvertureRatio, @NonNull TextView tvThemePlusRecent,
+      @NonNull TextView tvThemesRealises, @NonNull TextView tvTotalEvals) {
     this.rootView = rootView;
-    this.tvBestTheme = tvBestTheme;
-    this.tvMoyenneSatisfaction = tvMoyenneSatisfaction;
+    this.tvJsp = tvJsp;
     this.tvPendingInvitations = tvPendingInvitations;
-    this.tvTotalCollabs = tvTotalCollabs;
+    this.tvTauxCouverturePct = tvTauxCouverturePct;
+    this.tvTauxCouvertureRatio = tvTauxCouvertureRatio;
+    this.tvThemePlusRecent = tvThemePlusRecent;
+    this.tvThemesRealises = tvThemesRealises;
     this.tvTotalEvals = tvTotalEvals;
-    this.tvTotalThemes = tvTotalThemes;
   }
 
   @Override
@@ -77,15 +81,9 @@ public final class FragmentDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.tv_best_theme;
-      TextView tvBestTheme = ViewBindings.findChildViewById(rootView, id);
-      if (tvBestTheme == null) {
-        break missingId;
-      }
-
-      id = R.id.tv_moyenne_satisfaction;
-      TextView tvMoyenneSatisfaction = ViewBindings.findChildViewById(rootView, id);
-      if (tvMoyenneSatisfaction == null) {
+      id = R.id.tv_jsp;
+      TextView tvJsp = ViewBindings.findChildViewById(rootView, id);
+      if (tvJsp == null) {
         break missingId;
       }
 
@@ -95,9 +93,27 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tv_total_collabs;
-      TextView tvTotalCollabs = ViewBindings.findChildViewById(rootView, id);
-      if (tvTotalCollabs == null) {
+      id = R.id.tv_taux_couverture_pct;
+      TextView tvTauxCouverturePct = ViewBindings.findChildViewById(rootView, id);
+      if (tvTauxCouverturePct == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_taux_couverture_ratio;
+      TextView tvTauxCouvertureRatio = ViewBindings.findChildViewById(rootView, id);
+      if (tvTauxCouvertureRatio == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_theme_plus_recent;
+      TextView tvThemePlusRecent = ViewBindings.findChildViewById(rootView, id);
+      if (tvThemePlusRecent == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_themes_realises;
+      TextView tvThemesRealises = ViewBindings.findChildViewById(rootView, id);
+      if (tvThemesRealises == null) {
         break missingId;
       }
 
@@ -107,14 +123,9 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tv_total_themes;
-      TextView tvTotalThemes = ViewBindings.findChildViewById(rootView, id);
-      if (tvTotalThemes == null) {
-        break missingId;
-      }
-
-      return new FragmentDashboardBinding((ScrollView) rootView, tvBestTheme, tvMoyenneSatisfaction,
-          tvPendingInvitations, tvTotalCollabs, tvTotalEvals, tvTotalThemes);
+      return new FragmentDashboardBinding((ScrollView) rootView, tvJsp, tvPendingInvitations,
+          tvTauxCouverturePct, tvTauxCouvertureRatio, tvThemePlusRecent, tvThemesRealises,
+          tvTotalEvals);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

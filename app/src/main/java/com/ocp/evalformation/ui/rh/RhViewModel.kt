@@ -5,10 +5,14 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.work.workDataOf
 import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker
 import com.ocp.evalformation.data.local.entity.*
+import com.ocp.evalformation.data.repository.EvaluationRepository
 import com.ocp.evalformation.data.repository.MainRepository
+import com.ocp.evalformation.utils.dateHelper
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,20 +22,43 @@ import java.util.Calendar
 import javax.inject.Inject
 @HiltViewModel
 class RhViewModel @Inject constructor(
-    private val repo: MainRepository,
+    val repo: MainRepository,
+    private val evaluationRepo: EvaluationRepository,
     private  val application: Application
 
 ) : AndroidViewModel(application) {
 
     init {
+
         repo.firebase.listenToInvitations(viewModelScope) { invitations ->
             viewModelScope.launch {
                 invitations.forEach { invitation ->
-                    repo.invitationDao.insert(invitation)
+                    val existing = repo.invitationDao.getByFormationId(invitation.formationId)
+                    if (existing != null) {
+                        // Update status if changed
+                        if (existing.statut != invitation.statut) {
+                            repo.invitationDao.update(existing.copy(statut = invitation.statut))
+                        }
+                    }
                 }
             }
         }
+
+        // ── Sync evaluations from Firestore on app start ──────────────
+        viewModelScope.launch {
+            evaluationRepo.listenToEvaluations(
+                onAdded = { eval ->
+                    viewModelScope.launch { evaluationRepo.syncToRoom(eval) }
+                },
+                onModified = { eval ->
+                    viewModelScope.launch { evaluationRepo.syncToRoom(eval) }
+                }
+            )
+        }
+
     }
+
+
 
     // ── LiveData ───────────────────────────────────────────────────────────────
     val allThemes         = repo.themeDao.getAllLive()
@@ -41,6 +68,43 @@ class RhViewModel @Inject constructor(
     val allInvitations    = repo.invitationDao.getAllLive()
     val pendingInvitations = repo.invitationDao.getPendingLive()
     val pendingCount       = repo.invitationDao.countPendingLive()
+
+    private val yearRange = dateHelper.currentYearExcelRange()
+
+//     Total collaborateurs (all time)
+    val totalCollaborateurs: LiveData<Int> =
+        repo.collaborateurDao.countLive()
+
+    // Collaborateurs with at least one formation in current year
+    val collaborateursWithFormation: LiveData<Int> =
+        repo.formationDao.countCollaborateursWithFormationByYear(yearRange.first, yearRange.second)
+
+    // Distinct themes in formations in current year
+    val distinctThemesCount: LiveData<Int> =
+        repo.formationDao.countDistinctThemesByYear(yearRange.first, yearRange.second)
+
+    // Total evaluations (all time)
+    val totalEvaluations: LiveData<Int> =
+        repo.evaluationDao.countLive()
+
+    // En attente invitations count
+    val enAttenteCount: LiveData<Int> =
+        repo.invitationDao.countEnAttenteLive()
+
+    // JSP sum where presence = true in current year
+    val totalJsp: LiveData<Double?> =
+        repo.formationDao.sumJspByYear(yearRange.first, yearRange.second)
+
+    // Most recurrent theme name in current year
+    val mostRecurrentTheme: LiveData<String?> =
+        repo.formationDao.getMostRecurrentThemeIdByYear(yearRange.first, yearRange.second)
+            .switchMap { themeId ->
+                if (themeId != null) {
+                    repo.themeDao.getByIdLive(themeId).map { it?.nom }
+                } else {
+                    MutableLiveData<String?>(null)
+                }
+            }
 
     fun sendAllByFormationIds(ids: List<Long>) {
         viewModelScope.launch {

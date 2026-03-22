@@ -56,4 +56,21 @@ object dateHelper {
         }
     }
 
+    fun currentYearExcelRange(): Pair<Int, Int> {
+        val cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
+        val year = cal.get(Calendar.YEAR)
+
+        cal.set(year, 0, 1, 0, 0, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        val start = ((cal.timeInMillis / 86400000) + 25568).toInt()
+
+        cal.set(year, 11, 31, 23, 59, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+        val end = ((cal.timeInMillis / 86400000) + 25568).toInt()
+
+        android.util.Log.d("Dashboard", "yearRange=$start to $end (year=$year)")
+
+        return Pair(start, end)
+    }
+
 }

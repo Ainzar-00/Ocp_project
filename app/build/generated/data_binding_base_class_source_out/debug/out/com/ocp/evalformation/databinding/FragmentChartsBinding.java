@@ -4,19 +4,17 @@ package com.ocp.evalformation.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
+import com.google.android.material.button.MaterialButton;
 import com.ocp.evalformation.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -24,25 +22,13 @@ import java.lang.String;
 
 public final class FragmentChartsBinding implements ViewBinding {
   @NonNull
-  private final ScrollView rootView;
+  private final CoordinatorLayout rootView;
 
   @NonNull
-  public final BarChart barChart;
+  public final MaterialButton fabExport;
 
   @NonNull
-  public final Button btnCalculerMoyenne;
-
-  @NonNull
-  public final Button btnExporterSynthese;
-
-  @NonNull
-  public final Button btnGenererGraphiques;
-
-  @NonNull
-  public final CardView cardPropositions;
-
-  @NonNull
-  public final LineChart lineChart;
+  public final LinearLayout layoutLegend;
 
   @NonNull
   public final PieChart pieChart;
@@ -51,37 +37,54 @@ public final class FragmentChartsBinding implements ViewBinding {
   public final RadarChart radarChart;
 
   @NonNull
-  public final Spinner spinnerTheme;
+  public final Spinner spinnerYearFilter;
 
   @NonNull
-  public final TextView tvMoyenne;
+  public final TextView tvAnalyticsTitle;
 
   @NonNull
-  public final TextView tvPropositions;
+  public final TextView tvLegendInsatisfaisant;
 
-  private FragmentChartsBinding(@NonNull ScrollView rootView, @NonNull BarChart barChart,
-      @NonNull Button btnCalculerMoyenne, @NonNull Button btnExporterSynthese,
-      @NonNull Button btnGenererGraphiques, @NonNull CardView cardPropositions,
-      @NonNull LineChart lineChart, @NonNull PieChart pieChart, @NonNull RadarChart radarChart,
-      @NonNull Spinner spinnerTheme, @NonNull TextView tvMoyenne,
-      @NonNull TextView tvPropositions) {
+  @NonNull
+  public final TextView tvLegendSatisfaisant;
+
+  @NonNull
+  public final TextView tvPieChartTitle;
+
+  @NonNull
+  public final TextView tvSatisfiedCount;
+
+  @NonNull
+  public final TextView tvSubtitle;
+
+  @NonNull
+  public final TextView tvUnsatisfiedCount;
+
+  private FragmentChartsBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull MaterialButton fabExport, @NonNull LinearLayout layoutLegend,
+      @NonNull PieChart pieChart, @NonNull RadarChart radarChart,
+      @NonNull Spinner spinnerYearFilter, @NonNull TextView tvAnalyticsTitle,
+      @NonNull TextView tvLegendInsatisfaisant, @NonNull TextView tvLegendSatisfaisant,
+      @NonNull TextView tvPieChartTitle, @NonNull TextView tvSatisfiedCount,
+      @NonNull TextView tvSubtitle, @NonNull TextView tvUnsatisfiedCount) {
     this.rootView = rootView;
-    this.barChart = barChart;
-    this.btnCalculerMoyenne = btnCalculerMoyenne;
-    this.btnExporterSynthese = btnExporterSynthese;
-    this.btnGenererGraphiques = btnGenererGraphiques;
-    this.cardPropositions = cardPropositions;
-    this.lineChart = lineChart;
+    this.fabExport = fabExport;
+    this.layoutLegend = layoutLegend;
     this.pieChart = pieChart;
     this.radarChart = radarChart;
-    this.spinnerTheme = spinnerTheme;
-    this.tvMoyenne = tvMoyenne;
-    this.tvPropositions = tvPropositions;
+    this.spinnerYearFilter = spinnerYearFilter;
+    this.tvAnalyticsTitle = tvAnalyticsTitle;
+    this.tvLegendInsatisfaisant = tvLegendInsatisfaisant;
+    this.tvLegendSatisfaisant = tvLegendSatisfaisant;
+    this.tvPieChartTitle = tvPieChartTitle;
+    this.tvSatisfiedCount = tvSatisfiedCount;
+    this.tvSubtitle = tvSubtitle;
+    this.tvUnsatisfiedCount = tvUnsatisfiedCount;
   }
 
   @Override
   @NonNull
-  public ScrollView getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -106,75 +109,81 @@ public final class FragmentChartsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.bar_chart;
-      BarChart barChart = ViewBindings.findChildViewById(rootView, id);
-      if (barChart == null) {
+      id = R.id.fabExport;
+      MaterialButton fabExport = ViewBindings.findChildViewById(rootView, id);
+      if (fabExport == null) {
         break missingId;
       }
 
-      id = R.id.btn_calculer_moyenne;
-      Button btnCalculerMoyenne = ViewBindings.findChildViewById(rootView, id);
-      if (btnCalculerMoyenne == null) {
+      id = R.id.layoutLegend;
+      LinearLayout layoutLegend = ViewBindings.findChildViewById(rootView, id);
+      if (layoutLegend == null) {
         break missingId;
       }
 
-      id = R.id.btn_exporter_synthese;
-      Button btnExporterSynthese = ViewBindings.findChildViewById(rootView, id);
-      if (btnExporterSynthese == null) {
-        break missingId;
-      }
-
-      id = R.id.btn_generer_graphiques;
-      Button btnGenererGraphiques = ViewBindings.findChildViewById(rootView, id);
-      if (btnGenererGraphiques == null) {
-        break missingId;
-      }
-
-      id = R.id.card_propositions;
-      CardView cardPropositions = ViewBindings.findChildViewById(rootView, id);
-      if (cardPropositions == null) {
-        break missingId;
-      }
-
-      id = R.id.line_chart;
-      LineChart lineChart = ViewBindings.findChildViewById(rootView, id);
-      if (lineChart == null) {
-        break missingId;
-      }
-
-      id = R.id.pie_chart;
+      id = R.id.pieChart;
       PieChart pieChart = ViewBindings.findChildViewById(rootView, id);
       if (pieChart == null) {
         break missingId;
       }
 
-      id = R.id.radar_chart;
+      id = R.id.radarChart;
       RadarChart radarChart = ViewBindings.findChildViewById(rootView, id);
       if (radarChart == null) {
         break missingId;
       }
 
-      id = R.id.spinner_theme;
-      Spinner spinnerTheme = ViewBindings.findChildViewById(rootView, id);
-      if (spinnerTheme == null) {
+      id = R.id.spinnerYearFilter;
+      Spinner spinnerYearFilter = ViewBindings.findChildViewById(rootView, id);
+      if (spinnerYearFilter == null) {
         break missingId;
       }
 
-      id = R.id.tv_moyenne;
-      TextView tvMoyenne = ViewBindings.findChildViewById(rootView, id);
-      if (tvMoyenne == null) {
+      id = R.id.tvAnalyticsTitle;
+      TextView tvAnalyticsTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvAnalyticsTitle == null) {
         break missingId;
       }
 
-      id = R.id.tv_propositions;
-      TextView tvPropositions = ViewBindings.findChildViewById(rootView, id);
-      if (tvPropositions == null) {
+      id = R.id.tvLegendInsatisfaisant;
+      TextView tvLegendInsatisfaisant = ViewBindings.findChildViewById(rootView, id);
+      if (tvLegendInsatisfaisant == null) {
         break missingId;
       }
 
-      return new FragmentChartsBinding((ScrollView) rootView, barChart, btnCalculerMoyenne,
-          btnExporterSynthese, btnGenererGraphiques, cardPropositions, lineChart, pieChart,
-          radarChart, spinnerTheme, tvMoyenne, tvPropositions);
+      id = R.id.tvLegendSatisfaisant;
+      TextView tvLegendSatisfaisant = ViewBindings.findChildViewById(rootView, id);
+      if (tvLegendSatisfaisant == null) {
+        break missingId;
+      }
+
+      id = R.id.tvPieChartTitle;
+      TextView tvPieChartTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvPieChartTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tvSatisfiedCount;
+      TextView tvSatisfiedCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvSatisfiedCount == null) {
+        break missingId;
+      }
+
+      id = R.id.tvSubtitle;
+      TextView tvSubtitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvSubtitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tvUnsatisfiedCount;
+      TextView tvUnsatisfiedCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvUnsatisfiedCount == null) {
+        break missingId;
+      }
+
+      return new FragmentChartsBinding((CoordinatorLayout) rootView, fabExport, layoutLegend,
+          pieChart, radarChart, spinnerYearFilter, tvAnalyticsTitle, tvLegendInsatisfaisant,
+          tvLegendSatisfaisant, tvPieChartTitle, tvSatisfiedCount, tvSubtitle, tvUnsatisfiedCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

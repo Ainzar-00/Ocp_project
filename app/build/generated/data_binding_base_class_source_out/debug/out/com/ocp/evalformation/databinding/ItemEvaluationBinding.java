@@ -4,10 +4,10 @@ package com.ocp.evalformation.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.card.MaterialCardView;
@@ -21,33 +21,43 @@ public final class ItemEvaluationBinding implements ViewBinding {
   private final MaterialCardView rootView;
 
   @NonNull
-  public final ProgressBar progressSatisfaction;
+  public final MaterialCardView badgeEntite;
 
   @NonNull
-  public final TextView tvDate;
+  public final MaterialCardView cardItem;
 
   @NonNull
-  public final TextView tvFLM;
+  public final ConstraintLayout layoutContent;
 
   @NonNull
-  public final TextView tvMatricule;
+  public final TextView tvItemDate;
 
   @NonNull
-  public final TextView tvTaux;
+  public final TextView tvItemEntite;
 
   @NonNull
-  public final TextView tvTheme;
+  public final TextView tvItemMatricule;
+
+  @NonNull
+  public final TextView tvItemTheme;
+
+  @NonNull
+  public final TextView tvSeparator;
 
   private ItemEvaluationBinding(@NonNull MaterialCardView rootView,
-      @NonNull ProgressBar progressSatisfaction, @NonNull TextView tvDate, @NonNull TextView tvFLM,
-      @NonNull TextView tvMatricule, @NonNull TextView tvTaux, @NonNull TextView tvTheme) {
+      @NonNull MaterialCardView badgeEntite, @NonNull MaterialCardView cardItem,
+      @NonNull ConstraintLayout layoutContent, @NonNull TextView tvItemDate,
+      @NonNull TextView tvItemEntite, @NonNull TextView tvItemMatricule,
+      @NonNull TextView tvItemTheme, @NonNull TextView tvSeparator) {
     this.rootView = rootView;
-    this.progressSatisfaction = progressSatisfaction;
-    this.tvDate = tvDate;
-    this.tvFLM = tvFLM;
-    this.tvMatricule = tvMatricule;
-    this.tvTaux = tvTaux;
-    this.tvTheme = tvTheme;
+    this.badgeEntite = badgeEntite;
+    this.cardItem = cardItem;
+    this.layoutContent = layoutContent;
+    this.tvItemDate = tvItemDate;
+    this.tvItemEntite = tvItemEntite;
+    this.tvItemMatricule = tvItemMatricule;
+    this.tvItemTheme = tvItemTheme;
+    this.tvSeparator = tvSeparator;
   }
 
   @Override
@@ -77,44 +87,52 @@ public final class ItemEvaluationBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.progress_satisfaction;
-      ProgressBar progressSatisfaction = ViewBindings.findChildViewById(rootView, id);
-      if (progressSatisfaction == null) {
+      id = R.id.badge_entite;
+      MaterialCardView badgeEntite = ViewBindings.findChildViewById(rootView, id);
+      if (badgeEntite == null) {
         break missingId;
       }
 
-      id = R.id.tv_date;
-      TextView tvDate = ViewBindings.findChildViewById(rootView, id);
-      if (tvDate == null) {
+      MaterialCardView cardItem = (MaterialCardView) rootView;
+
+      id = R.id.layout_content;
+      ConstraintLayout layoutContent = ViewBindings.findChildViewById(rootView, id);
+      if (layoutContent == null) {
         break missingId;
       }
 
-      id = R.id.tv_f_l_m;
-      TextView tvFLM = ViewBindings.findChildViewById(rootView, id);
-      if (tvFLM == null) {
+      id = R.id.tv_item_date;
+      TextView tvItemDate = ViewBindings.findChildViewById(rootView, id);
+      if (tvItemDate == null) {
         break missingId;
       }
 
-      id = R.id.tv_matricule;
-      TextView tvMatricule = ViewBindings.findChildViewById(rootView, id);
-      if (tvMatricule == null) {
+      id = R.id.tv_item_entite;
+      TextView tvItemEntite = ViewBindings.findChildViewById(rootView, id);
+      if (tvItemEntite == null) {
         break missingId;
       }
 
-      id = R.id.tv_taux;
-      TextView tvTaux = ViewBindings.findChildViewById(rootView, id);
-      if (tvTaux == null) {
+      id = R.id.tv_item_matricule;
+      TextView tvItemMatricule = ViewBindings.findChildViewById(rootView, id);
+      if (tvItemMatricule == null) {
         break missingId;
       }
 
-      id = R.id.tv_theme;
-      TextView tvTheme = ViewBindings.findChildViewById(rootView, id);
-      if (tvTheme == null) {
+      id = R.id.tv_item_theme;
+      TextView tvItemTheme = ViewBindings.findChildViewById(rootView, id);
+      if (tvItemTheme == null) {
         break missingId;
       }
 
-      return new ItemEvaluationBinding((MaterialCardView) rootView, progressSatisfaction, tvDate,
-          tvFLM, tvMatricule, tvTaux, tvTheme);
+      id = R.id.tv_separator;
+      TextView tvSeparator = ViewBindings.findChildViewById(rootView, id);
+      if (tvSeparator == null) {
+        break missingId;
+      }
+
+      return new ItemEvaluationBinding((MaterialCardView) rootView, badgeEntite, cardItem,
+          layoutContent, tvItemDate, tvItemEntite, tvItemMatricule, tvItemTheme, tvSeparator);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

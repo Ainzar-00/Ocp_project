@@ -4,15 +4,19 @@ package com.ocp.evalformation.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.ocp.evalformation.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,51 +24,93 @@ import java.lang.String;
 
 public final class FragmentEvaluationsBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final CoordinatorLayout rootView;
 
   @NonNull
-  public final Button btnAppliquerFiltres;
+  public final AutoCompleteTextView autocompleteAnnee;
 
   @NonNull
-  public final Button btnExporterDetaille;
+  public final AutoCompleteTextView autocompleteEntite;
 
   @NonNull
-  public final Button btnSupprimerTout;
+  public final AutoCompleteTextView autocompleteMois;
+
+  @NonNull
+  public final AutoCompleteTextView autocompleteTheme;
+
+  @NonNull
+  public final MaterialButton btnAppliquerFiltres;
+
+  @NonNull
+  public final MaterialCardView cardFilters;
+
+  @NonNull
+  public final TextInputEditText etMatricule;
+
+  @NonNull
+  public final ExtendedFloatingActionButton fabExporter;
 
   @NonNull
   public final RecyclerView rvEvaluations;
 
   @NonNull
-  public final Spinner spinnerFilterAnnee;
+  public final TextInputLayout tilAnnee;
 
   @NonNull
-  public final Spinner spinnerFilterMois;
+  public final TextInputLayout tilEntite;
 
   @NonNull
-  public final Spinner spinnerFilterTheme;
+  public final TextInputLayout tilMatricule;
+
+  @NonNull
+  public final TextInputLayout tilMois;
+
+  @NonNull
+  public final TextInputLayout tilTheme;
 
   @NonNull
   public final TextView tvCountEval;
 
-  private FragmentEvaluationsBinding(@NonNull LinearLayout rootView,
-      @NonNull Button btnAppliquerFiltres, @NonNull Button btnExporterDetaille,
-      @NonNull Button btnSupprimerTout, @NonNull RecyclerView rvEvaluations,
-      @NonNull Spinner spinnerFilterAnnee, @NonNull Spinner spinnerFilterMois,
-      @NonNull Spinner spinnerFilterTheme, @NonNull TextView tvCountEval) {
+  @NonNull
+  public final TextView tvFilterLabel;
+
+  @NonNull
+  public final TextView tvHeaderTitle;
+
+  private FragmentEvaluationsBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull AutoCompleteTextView autocompleteAnnee,
+      @NonNull AutoCompleteTextView autocompleteEntite,
+      @NonNull AutoCompleteTextView autocompleteMois,
+      @NonNull AutoCompleteTextView autocompleteTheme, @NonNull MaterialButton btnAppliquerFiltres,
+      @NonNull MaterialCardView cardFilters, @NonNull TextInputEditText etMatricule,
+      @NonNull ExtendedFloatingActionButton fabExporter, @NonNull RecyclerView rvEvaluations,
+      @NonNull TextInputLayout tilAnnee, @NonNull TextInputLayout tilEntite,
+      @NonNull TextInputLayout tilMatricule, @NonNull TextInputLayout tilMois,
+      @NonNull TextInputLayout tilTheme, @NonNull TextView tvCountEval,
+      @NonNull TextView tvFilterLabel, @NonNull TextView tvHeaderTitle) {
     this.rootView = rootView;
+    this.autocompleteAnnee = autocompleteAnnee;
+    this.autocompleteEntite = autocompleteEntite;
+    this.autocompleteMois = autocompleteMois;
+    this.autocompleteTheme = autocompleteTheme;
     this.btnAppliquerFiltres = btnAppliquerFiltres;
-    this.btnExporterDetaille = btnExporterDetaille;
-    this.btnSupprimerTout = btnSupprimerTout;
+    this.cardFilters = cardFilters;
+    this.etMatricule = etMatricule;
+    this.fabExporter = fabExporter;
     this.rvEvaluations = rvEvaluations;
-    this.spinnerFilterAnnee = spinnerFilterAnnee;
-    this.spinnerFilterMois = spinnerFilterMois;
-    this.spinnerFilterTheme = spinnerFilterTheme;
+    this.tilAnnee = tilAnnee;
+    this.tilEntite = tilEntite;
+    this.tilMatricule = tilMatricule;
+    this.tilMois = tilMois;
+    this.tilTheme = tilTheme;
     this.tvCountEval = tvCountEval;
+    this.tvFilterLabel = tvFilterLabel;
+    this.tvHeaderTitle = tvHeaderTitle;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -89,21 +135,51 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.autocomplete_annee;
+      AutoCompleteTextView autocompleteAnnee = ViewBindings.findChildViewById(rootView, id);
+      if (autocompleteAnnee == null) {
+        break missingId;
+      }
+
+      id = R.id.autocomplete_entite;
+      AutoCompleteTextView autocompleteEntite = ViewBindings.findChildViewById(rootView, id);
+      if (autocompleteEntite == null) {
+        break missingId;
+      }
+
+      id = R.id.autocomplete_mois;
+      AutoCompleteTextView autocompleteMois = ViewBindings.findChildViewById(rootView, id);
+      if (autocompleteMois == null) {
+        break missingId;
+      }
+
+      id = R.id.autocomplete_theme;
+      AutoCompleteTextView autocompleteTheme = ViewBindings.findChildViewById(rootView, id);
+      if (autocompleteTheme == null) {
+        break missingId;
+      }
+
       id = R.id.btn_appliquer_filtres;
-      Button btnAppliquerFiltres = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton btnAppliquerFiltres = ViewBindings.findChildViewById(rootView, id);
       if (btnAppliquerFiltres == null) {
         break missingId;
       }
 
-      id = R.id.btn_exporter_detaille;
-      Button btnExporterDetaille = ViewBindings.findChildViewById(rootView, id);
-      if (btnExporterDetaille == null) {
+      id = R.id.card_filters;
+      MaterialCardView cardFilters = ViewBindings.findChildViewById(rootView, id);
+      if (cardFilters == null) {
         break missingId;
       }
 
-      id = R.id.btn_supprimer_tout;
-      Button btnSupprimerTout = ViewBindings.findChildViewById(rootView, id);
-      if (btnSupprimerTout == null) {
+      id = R.id.et_matricule;
+      TextInputEditText etMatricule = ViewBindings.findChildViewById(rootView, id);
+      if (etMatricule == null) {
+        break missingId;
+      }
+
+      id = R.id.fab_exporter;
+      ExtendedFloatingActionButton fabExporter = ViewBindings.findChildViewById(rootView, id);
+      if (fabExporter == null) {
         break missingId;
       }
 
@@ -113,21 +189,33 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.spinner_filter_annee;
-      Spinner spinnerFilterAnnee = ViewBindings.findChildViewById(rootView, id);
-      if (spinnerFilterAnnee == null) {
+      id = R.id.til_annee;
+      TextInputLayout tilAnnee = ViewBindings.findChildViewById(rootView, id);
+      if (tilAnnee == null) {
         break missingId;
       }
 
-      id = R.id.spinner_filter_mois;
-      Spinner spinnerFilterMois = ViewBindings.findChildViewById(rootView, id);
-      if (spinnerFilterMois == null) {
+      id = R.id.til_entite;
+      TextInputLayout tilEntite = ViewBindings.findChildViewById(rootView, id);
+      if (tilEntite == null) {
         break missingId;
       }
 
-      id = R.id.spinner_filter_theme;
-      Spinner spinnerFilterTheme = ViewBindings.findChildViewById(rootView, id);
-      if (spinnerFilterTheme == null) {
+      id = R.id.til_matricule;
+      TextInputLayout tilMatricule = ViewBindings.findChildViewById(rootView, id);
+      if (tilMatricule == null) {
+        break missingId;
+      }
+
+      id = R.id.til_mois;
+      TextInputLayout tilMois = ViewBindings.findChildViewById(rootView, id);
+      if (tilMois == null) {
+        break missingId;
+      }
+
+      id = R.id.til_theme;
+      TextInputLayout tilTheme = ViewBindings.findChildViewById(rootView, id);
+      if (tilTheme == null) {
         break missingId;
       }
 
@@ -137,9 +225,22 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentEvaluationsBinding((LinearLayout) rootView, btnAppliquerFiltres,
-          btnExporterDetaille, btnSupprimerTout, rvEvaluations, spinnerFilterAnnee,
-          spinnerFilterMois, spinnerFilterTheme, tvCountEval);
+      id = R.id.tv_filter_label;
+      TextView tvFilterLabel = ViewBindings.findChildViewById(rootView, id);
+      if (tvFilterLabel == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_header_title;
+      TextView tvHeaderTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvHeaderTitle == null) {
+        break missingId;
+      }
+
+      return new FragmentEvaluationsBinding((CoordinatorLayout) rootView, autocompleteAnnee,
+          autocompleteEntite, autocompleteMois, autocompleteTheme, btnAppliquerFiltres, cardFilters,
+          etMatricule, fabExporter, rvEvaluations, tilAnnee, tilEntite, tilMatricule, tilMois,
+          tilTheme, tvCountEval, tvFilterLabel, tvHeaderTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -3,6 +3,8 @@ package com.ocp.evalformation.data.local.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.ocp.evalformation.data.local.entity.*
+import kotlinx.coroutines.flow.Flow
+
 
 /* ======================================================
    THEME DAO
@@ -21,6 +23,9 @@ interface ThemeDao {
 
     @Update
     suspend fun updateAll(themes: List<ThemeEntity>)
+
+    @Query("SELECT * FROM themes WHERE id = :id LIMIT 1")
+    fun getByIdLive(id: Long): LiveData<ThemeEntity?>
 
     @Query("SELECT COUNT(*) FROM themes")
     suspend fun count(): Int
@@ -184,6 +189,10 @@ interface CollaborateurDao {
         }
         return affected
     }
+
+    // CollaborateurDao
+    @Query("SELECT COUNT(*) FROM collaborateurs")
+    fun countLive(): LiveData<Int>
 }
 
 /* ======================================================
@@ -230,6 +239,30 @@ interface FormationDao {
 
     @Query("DELETE FROM sqlite_sequence WHERE name='formations'")
     suspend fun resetIds()
+
+    // ── Dashboard queries (filtered by current year via dateAppreciation) ──────
+
+    // Distinct collaborateurs with at least one formation in current year
+    @Query("SELECT COUNT(DISTINCT collaborateurMatricule) FROM formations WHERE CAST(dateAppreciation AS INTEGER) BETWEEN :start AND :end")
+    fun countCollaborateursWithFormationByYear(start: Int, end: Int): LiveData<Int>
+
+    // Distinct themes in formations in current year
+    @Query("SELECT COUNT(DISTINCT themeId) FROM formations WHERE CAST(dateAppreciation AS INTEGER) BETWEEN :start AND :end")
+    fun countDistinctThemesByYear(start: Int, end: Int): LiveData<Int>
+
+    // Sum of JSP where presence is true in current year
+    @Query("SELECT SUM(CAST(jsp AS REAL)) FROM formations WHERE (presence = 'true' OR presence = '1' OR presence = 'Présent' OR presence = 'présent') AND CAST(dateAppreciation AS INTEGER) BETWEEN :start AND :end")
+    fun sumJspByYear(start: Int, end: Int): LiveData<Double?>
+
+    // Most recurrent theme id in current year
+    @Query("""
+        SELECT themeId FROM formations 
+        WHERE CAST(dateAppreciation AS INTEGER) BETWEEN :start AND :end
+        GROUP BY themeId 
+        ORDER BY COUNT(*) DESC 
+        LIMIT 1
+    """)
+    fun getMostRecurrentThemeIdByYear(start: Int, end: Int): LiveData<Long?>
 }
 
 /* ======================================================
@@ -267,6 +300,10 @@ interface InvitationFlmDao {
 
     @Query("SELECT COUNT(*) FROM invitations_flm")
     suspend fun count(): Int
+
+    // InvitationFlmDao — already exists as countPendingLive(), just add alias
+    @Query("SELECT COUNT(*) FROM invitations_flm WHERE statut = 'EN_ATTENTE'")
+    fun countEnAttenteLive(): LiveData<Int>
 }
 
 /* ======================================================
@@ -297,7 +334,35 @@ interface FormDao {
    ====================================================== */
 @Dao
 interface EvaluationDao {
-    // Placeholder — EvaluationEntity is not yet active
-    suspend fun deleteAll() {}
-    suspend fun getUnsynced(): List<Any> = emptyList()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(evaluation: EvaluationEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(evaluations: List<EvaluationEntity>)
+
+    @Update
+    suspend fun update(evaluation: EvaluationEntity)
+
+    @Delete
+    suspend fun delete(evaluation: EvaluationEntity)
+
+    @Query("DELETE FROM evaluations")
+    suspend fun deleteAll()
+
+    @Query("SELECT * FROM evaluations")
+    fun getAll(): Flow<List<EvaluationEntity>>
+
+    @Query("SELECT * FROM evaluations WHERE formationId = :formationId")
+    suspend fun getByFormationId(formationId: Long): EvaluationEntity?
+
+    @Query("SELECT * FROM evaluations WHERE id = :id")
+    suspend fun getById(id: Long): EvaluationEntity?
+
+    @Query("SELECT COUNT(*) FROM evaluations")
+    suspend fun count(): Int
+
+    // EvaluationDao
+    @Query("SELECT COUNT(*) FROM evaluations")
+    fun countLive(): LiveData<Int>
 }

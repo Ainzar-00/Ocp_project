@@ -32,9 +32,10 @@ class Converters {
         CollaborateurEntity::class,
         FormationEntity::class,
         InvitationFlmEntity::class,
-        Forms::class
+        Forms::class,
+        EvaluationEntity::class
     ],
-    version = 14,
+    version = 18,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

@@ -13,6 +13,9 @@ import com.ocp.evalformation.ui.rh.RhViewModel_HiltModules;
 import com.ocp.evalformation.ui.rh.charts.ChartsFragment_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.dashboard.DashboardFragment_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.dashboard.InvitationsFragment_GeneratedInjector;
+import com.ocp.evalformation.ui.rh.evaluations.EvaluationDetailFragment_GeneratedInjector;
+import com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel_HiltModules;
+import com.ocp.evalformation.ui.rh.evaluations.EvaluationsFragment_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.import_bilan.ImportBilanFragment_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.import_data.ImportBilanFcFragment_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.import_data.ImportCollaborateursFragment_GeneratedInjector;
@@ -175,6 +178,7 @@ public final class OcpApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
+          EvaluationViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           ImportViewModel_HiltModules.KeyModule.class,
@@ -220,6 +224,7 @@ public final class OcpApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
+          EvaluationViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           ImportViewModel_HiltModules.BindsModule.class,
           LoginViewModel_HiltModules.BindsModule.class,
@@ -252,6 +257,8 @@ public final class OcpApplication_HiltComponents {
   public abstract static class FragmentC implements ChartsFragment_GeneratedInjector,
       DashboardFragment_GeneratedInjector,
       InvitationsFragment_GeneratedInjector,
+      EvaluationDetailFragment_GeneratedInjector,
+      EvaluationsFragment_GeneratedInjector,
       ImportBilanFragment_GeneratedInjector,
       ImportBilanFcFragment_GeneratedInjector,
       ImportCollaborateursFragment_GeneratedInjector,

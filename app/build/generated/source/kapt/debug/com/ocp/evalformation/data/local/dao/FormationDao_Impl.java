@@ -17,6 +17,7 @@ import androidx.room.util.StringUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
 import com.ocp.evalformation.data.local.entity.FormationEntity;
 import java.lang.Class;
+import java.lang.Double;
 import java.lang.Exception;
 import java.lang.Integer;
 import java.lang.Long;
@@ -1197,6 +1198,166 @@ public final class FormationDao_Impl implements FormationDao {
         }
       }
     }, $completion);
+  }
+
+  @Override
+  public LiveData<Integer> countCollaborateursWithFormationByYear(final int start, final int end) {
+    final String _sql = "SELECT COUNT(DISTINCT collaborateurMatricule) FROM formations WHERE CAST(dateAppreciation AS INTEGER) BETWEEN ? AND ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, start);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, end);
+    return __db.getInvalidationTracker().createLiveData(new String[] {"formations"}, false, new Callable<Integer>() {
+      @Override
+      @Nullable
+      public Integer call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Integer _result;
+          if (_cursor.moveToFirst()) {
+            final Integer _tmp;
+            if (_cursor.isNull(0)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getInt(0);
+            }
+            _result = _tmp;
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public LiveData<Integer> countDistinctThemesByYear(final int start, final int end) {
+    final String _sql = "SELECT COUNT(DISTINCT themeId) FROM formations WHERE CAST(dateAppreciation AS INTEGER) BETWEEN ? AND ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, start);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, end);
+    return __db.getInvalidationTracker().createLiveData(new String[] {"formations"}, false, new Callable<Integer>() {
+      @Override
+      @Nullable
+      public Integer call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Integer _result;
+          if (_cursor.moveToFirst()) {
+            final Integer _tmp;
+            if (_cursor.isNull(0)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getInt(0);
+            }
+            _result = _tmp;
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public LiveData<Double> sumJspByYear(final int start, final int end) {
+    final String _sql = "SELECT SUM(CAST(jsp AS REAL)) FROM formations WHERE (presence = 'true' OR presence = '1' OR presence = 'Présent' OR presence = 'présent') AND CAST(dateAppreciation AS INTEGER) BETWEEN ? AND ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, start);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, end);
+    return __db.getInvalidationTracker().createLiveData(new String[] {"formations"}, false, new Callable<Double>() {
+      @Override
+      @Nullable
+      public Double call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Double _result;
+          if (_cursor.moveToFirst()) {
+            final Double _tmp;
+            if (_cursor.isNull(0)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getDouble(0);
+            }
+            _result = _tmp;
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public LiveData<Long> getMostRecurrentThemeIdByYear(final int start, final int end) {
+    final String _sql = "\n"
+            + "        SELECT themeId FROM formations \n"
+            + "        WHERE CAST(dateAppreciation AS INTEGER) BETWEEN ? AND ?\n"
+            + "        GROUP BY themeId \n"
+            + "        ORDER BY COUNT(*) DESC \n"
+            + "        LIMIT 1\n"
+            + "    ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, start);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, end);
+    return __db.getInvalidationTracker().createLiveData(new String[] {"formations"}, false, new Callable<Long>() {
+      @Override
+      @Nullable
+      public Long call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Long _result;
+          if (_cursor.moveToFirst()) {
+            if (_cursor.isNull(0)) {
+              _result = null;
+            } else {
+              _result = _cursor.getLong(0);
+            }
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 
   @Override

@@ -128,52 +128,41 @@ data class InvitationFlmEntity(
     val dateEnvoi: Long = System.currentTimeMillis(),
 ) : Parcelable
 
-//
-//// ─────────────────────────────────────────────
-//// Évaluation — complète avec tous les critères
-//// ─────────────────────────────────────────────
-//@Parcelize
-//@Entity(
-//    tableName = "evaluations",
-//    foreignKeys = [ForeignKey(
-//        entity = FormationEntity::class,
-//        parentColumns = ["id"],
-//        childColumns = ["formationId"],
-//        onDelete = ForeignKey.CASCADE
-//    )],
-//    indices = [Index("formationId")]
-//)
-//data class EvaluationEntity(
-//    @PrimaryKey(autoGenerate = true)
-//
-//    val id: Long = 0,
-//    val invitationId: Long,
-//    val dateEvaluation: String,
-//    val flmMatricule: String,
-//    val flmNom: String,
-//
-//    val moyenAppreciation: List<String>,
-//
-//    @Embedded
-//    val critieres: CritieresEvaluation,
-//
-//    val raisonsInsatisfaction: List<String>,
-//
-//    // Commentaires
-//    val propositionsAmelioration: String = "",
-//    val commentaireGeneral: String = "",
-//
-//    val competencesAcquises: List<String> = emptyList(),
-//
-//    val formationSuivante:String="",
-//
-//    val googleFormResponseId: String = "",
-//    val syncedToFirebase: Boolean = false,
-//    val createdAt: Long = System.currentTimeMillis()
-//
-//) : Parcelable {
 
-//}
+// ─────────────────────────────────────────────
+// Évaluation — complète avec tous les critères
+// ─────────────────────────────────────────────
+
+@Parcelize
+@Entity(
+    tableName = "evaluations",
+    foreignKeys = [ForeignKey(
+        entity = FormationEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["formationId"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("formationId")]
+)
+
+data class EvaluationEntity(
+    @PrimaryKey(autoGenerate = true)
+
+    val id: Long = 0,
+    val formationId: Long,
+    val intituleAction: String,
+    val maticuleCollaborateur: String,
+    val datesFormation: String,
+    val dateEvaluation: String,
+    val moyensAppreciation: List<String>,
+    @Embedded
+    val critieres: CritieresEvaluation,
+    val raisonsInsatisfaction: List<String>,
+    val competencesAcquises: List<String> = emptyList(),
+    // Commentaires
+    val Suggestions: String = ""
+
+) : Parcelable
 
 @Parcelize
 data class CritieresEvaluation(
@@ -218,4 +207,31 @@ data class FormCreationResponse(
     val entryIds: EntryIds?,
     val message: String?,
     val stack: String?
+)
+
+// Combines all data needed for list and detail display
+data class EvaluationWithContext(
+    val evaluation: EvaluationEntity,
+    val formation : FormationEntity?,
+    val flm       : FlmEntity?
+) {
+    val entite  : String get() = formation?.entite ?: ""
+    val themeNom: String get() = evaluation.intituleAction
+}
+
+// Radar chart — average score per criterion (1-4)
+data class CriteriaAverages(
+    val satisfactionBesoin      : Float,
+    val impactPerformance       : Float,
+    val applicationConnaissances: Float,
+    val satisfactionGlobale     : Float
+)
+
+// Pie chart — satisfaction vs insatisfaction
+data class SatisfactionRate(
+    val positiveCount  : Int,   // score 3 or 4
+    val negativeCount  : Int,   // score 1 or 2
+    val total          : Int,
+    val positivePercent: Float,
+    val negativePercent: Float
 )

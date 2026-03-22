@@ -28,10 +28,10 @@ class ImportDataFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val tabs = listOf(
-            "👥 Collaborateurs" to ImportCollaborateursFragment(),
-            "🧑‍💼 FLMs"          to ImportFlmFragment(),
-            "📚 Thèmes"         to ImportThemesFragment(),
-            "📋 Bilan FC"       to ImportBilanFcFragment()
+            "Collaborateurs" to ImportCollaborateursFragment(),
+            "FLMs"          to ImportFlmFragment(),
+            "Thèmes"         to ImportThemesFragment(),
+            "Bilan FC"       to ImportBilanFcFragment()
         )
 
         binding.viewpagerImport.adapter = object : FragmentStateAdapter(this) {

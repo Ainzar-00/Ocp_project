@@ -272,6 +272,59 @@ public final class ThemeDao_Impl implements ThemeDao {
   }
 
   @Override
+  public LiveData<ThemeEntity> getByIdLive(final long id) {
+    final String _sql = "SELECT * FROM themes WHERE id = ? LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    return __db.getInvalidationTracker().createLiveData(new String[] {"themes"}, false, new Callable<ThemeEntity>() {
+      @Override
+      @Nullable
+      public ThemeEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfNom = CursorUtil.getColumnIndexOrThrow(_cursor, "nom");
+          final int _cursorIndexOfObjectifPedagogique = CursorUtil.getColumnIndexOrThrow(_cursor, "objectifPedagogique");
+          final int _cursorIndexOfSyncedToFirebase = CursorUtil.getColumnIndexOrThrow(_cursor, "syncedToFirebase");
+          final ThemeEntity _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpNom;
+            if (_cursor.isNull(_cursorIndexOfNom)) {
+              _tmpNom = null;
+            } else {
+              _tmpNom = _cursor.getString(_cursorIndexOfNom);
+            }
+            final String _tmpObjectifPedagogique;
+            if (_cursor.isNull(_cursorIndexOfObjectifPedagogique)) {
+              _tmpObjectifPedagogique = null;
+            } else {
+              _tmpObjectifPedagogique = _cursor.getString(_cursorIndexOfObjectifPedagogique);
+            }
+            final boolean _tmpSyncedToFirebase;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfSyncedToFirebase);
+            _tmpSyncedToFirebase = _tmp != 0;
+            _result = new ThemeEntity(_tmpId,_tmpNom,_tmpObjectifPedagogique,_tmpSyncedToFirebase);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
   public Object count(final Continuation<? super Integer> $completion) {
     final String _sql = "SELECT COUNT(*) FROM themes";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);

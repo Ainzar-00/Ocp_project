@@ -28,33 +28,56 @@
             android:rowCount="3"
             android:layout_marginBottom="16dp">
 
-            <!-- Collaborateurs -->
+            <!-- Row 1: Taux de couverture (left) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="110dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 app:cardCornerRadius="12dp"
                 app:cardBackgroundColor="@color/ocp_dark_green">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:gravity="center" android:orientation="vertical" android:padding="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Taux de couverture" android:textSize="11sp" android:textColor="#CCFFFFFF"
+                        android:gravity="center" />
+                    <TextView android:id="@+id/tv_taux_couverture_pct"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—%" android:textSize="28sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+                    <TextView android:id="@+id/tv_taux_couverture_ratio"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—/—" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Row 1: Thèmes réalisés (right) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="#1565C0">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                     android:gravity="center" android:orientation="vertical">
-                    <TextView android:id="@+id/tv_total_collabs"
+                    <TextView android:id="@+id/tv_themes_realises"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
                         android:textStyle="bold" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Collaborateurs" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                        android:text="Thèmes réalisés" android:textSize="12sp" android:textColor="#CCFFFFFF" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Évaluations -->
+            <!-- Row 2: Évaluations (left) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="#1565C0">
+                app:cardBackgroundColor="#E65100">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                     android:gravity="center" android:orientation="vertical">
                     <TextView android:id="@+id/tv_total_evals"
@@ -66,26 +89,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Satisfaction -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="#E65100">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                    android:gravity="center" android:orientation="vertical">
-                    <TextView android:id="@+id/tv_moyenne_satisfaction"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="—" android:textSize="28sp" android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Satisfaction Moy." android:textSize="12sp" android:textColor="#CCFFFFFF" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Invitations en attente -->
+            <!-- Row 2: En attente FLM (right) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -104,7 +108,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Thèmes -->
+            <!-- Row 3: Thème le plus récurrent (left) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -113,17 +117,18 @@
                 app:cardCornerRadius="12dp"
                 app:cardBackgroundColor="#00695C">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                    android:gravity="center" android:orientation="vertical">
-                    <TextView android:id="@+id/tv_total_themes"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                    android:gravity="center" android:orientation="vertical" android:padding="8dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Thèmes" android:textSize="12sp" android:textColor="#CCFFFFFF" />
+                        android:text="Thème récurrent" android:textSize="11sp" android:textColor="#CCFFFFFF"
+                        android:gravity="center" />
+                    <TextView android:id="@+id/tv_theme_plus_recent"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="13sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" android:gravity="center" android:maxLines="2" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Best theme -->
+            <!-- Row 3: JSP (right) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -133,16 +138,15 @@
                 app:cardBackgroundColor="#37474F">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                     android:gravity="center" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="🏆" android:textSize="22sp" />
-                    <TextView android:id="@+id/tv_best_theme"
+                    <TextView android:id="@+id/tv_jsp"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="—" android:textSize="11sp" android:textColor="@android:color/white"
-                        android:gravity="center" android:maxLines="2" />
+                        android:text="—" android:textSize="32sp" android:textColor="@android:color/white"
+                        android:textStyle="bold" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Meilleur thème" android:textSize="11sp" android:textColor="#CCFFFFFF" />
+                        android:text="JSP" android:textSize="12sp" android:textColor="#CCFFFFFF" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
         </GridLayout>
 
     </LinearLayout>

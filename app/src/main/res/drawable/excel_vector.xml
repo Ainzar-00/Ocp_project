@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Dark green background rectangle (right part) -->
+    <path
+        android:fillColor="#1D6F42"
+        android:pathData="M21.17,3.25Q21.5,3.25 21.76,3.5 22,3.74 22,4.08V19.92Q22,20.26 21.76,20.5 21.5,20.75 21.17,20.75H7.83Q7.5,20.75 7.24,20.5 7,20.26 7,19.92V4.08Q7,3.74 7.24,3.5 7.5,3.25 7.83,3.25Z"/>
+
+    <!-- Lighter green staggered stripes -->
+    <path
+        android:fillColor="#21A366"
+        android:pathData="M14,3.25H21.17Q21.5,3.25 21.76,3.5 22,3.74 22,4.08V8H14Z"/>
+
+    <path
+        android:fillColor="#107C41"
+        android:pathData="M14,8H22V12H14Z"/>
+
+    <path
+        android:fillColor="#21A366"
+        android:pathData="M14,12H22V16H14Z"/>
+
+    <path
+        android:fillColor="#107C41"
+        android:pathData="M14,16H22V19.92Q22,20.26 21.76,20.5 21.5,20.75 21.17,20.75H14Z"/>
+
+    <!-- White X on dark green overlay -->
+    <path
+        android:fillColor="#1D6F42"
+        android:pathData="M2.83,7H7V17H2.83Q2.5,17 2.24,16.76 2,16.5 2,16.17V7.83Q2,7.5 2.24,7.24 2.5,7 2.83,7Z"/>
+
+    <!-- X letter in white -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M7,13.06L8.18,15.28H9.97L8,12.06L9.97,8.72H8.18L7,10.94L6,8.72H4.16L6.05,12.06L4.16,15.28H6Z"/>
+
+</vector>

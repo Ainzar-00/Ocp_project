@@ -21,62 +21,6 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-//@HiltAndroidApp
-//class OcpApplication : MultiDexApplication() {
-//    override fun onCreate() {
-//        super.onCreate()
-//        createNotificationChannel()
-//        scheduleAppreciationWorker()
-//        StrictMode.setThreadPolicy(
-//            StrictMode.ThreadPolicy.Builder().permitAll().build()
-//        )
-//
-//        }
-//
-//    private fun getDelayUntilNineAM(): Long {
-//        val now   = Calendar.getInstance()
-//        val nineAM = Calendar.getInstance().apply {
-//            set(Calendar.HOUR_OF_DAY, 9)
-//            set(Calendar.MINUTE, 0)
-//            set(Calendar.SECOND, 0)
-//            set(Calendar.MILLISECOND, 0)
-//        }
-//        if (now.after(nineAM)) nineAM.add(Calendar.DAY_OF_MONTH, 1)
-//        return nineAM.timeInMillis - now.timeInMillis
-//    }
-//
-//    private fun createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val channel = NotificationChannel(
-//                "appreciation_channel",
-//                "Dates d'appréciation",
-//                NotificationManager.IMPORTANCE_HIGH
-//            ).apply {
-//                description = "Notifications pour les dates d'évaluation"
-//            }
-//            getSystemService(NotificationManager::class.java)
-//                .createNotificationChannel(channel)
-//        }
-//    }
-//
-//
-//    private fun scheduleAppreciationWorker() {
-//        val request = PeriodicWorkRequestBuilder<AppreciationDateWorker>(1, TimeUnit.DAYS)
-//            .setInitialDelay(getDelayUntilNineAM(), TimeUnit.MILLISECONDS)
-//            .build()
-//
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "appreciation_check",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            request
-//        )
-//    }
-//
-//
-//}
-
-
-
 @HiltAndroidApp
 class OcpApplication : Application(), Configuration.Provider {
 
@@ -87,8 +31,6 @@ class OcpApplication : Application(), Configuration.Provider {
         super.onCreate()
         createNotificationChannel()
     }
-
-
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

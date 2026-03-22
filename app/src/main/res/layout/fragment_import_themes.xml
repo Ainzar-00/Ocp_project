@@ -67,7 +67,7 @@
                     android:id="@+id/btn_add_theme"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:text="✅ AJOUTER"
+                    android:text="AJOUTER"
                     app:backgroundTint="@color/ocp_dark_green" />
 
                 <ProgressBar

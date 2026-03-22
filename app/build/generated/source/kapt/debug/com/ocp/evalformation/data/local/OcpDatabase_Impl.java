@@ -58,7 +58,7 @@ public final class OcpDatabase_Impl extends OcpDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(14) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(18) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `themes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nom` TEXT NOT NULL, `objectifPedagogique` TEXT NOT NULL, `syncedToFirebase` INTEGER NOT NULL)");
@@ -70,8 +70,10 @@ public final class OcpDatabase_Impl extends OcpDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_formations_themeId` ON `formations` (`themeId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `invitations_flm` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `formationId` INTEGER NOT NULL, `datesFormation` TEXT NOT NULL, `formateur` TEXT NOT NULL, `matriculeCollaborateur` TEXT NOT NULL, `nomCompletCollaborateur` TEXT NOT NULL, `service` TEXT NOT NULL, `themeNom` TEXT NOT NULL, `themeObjectives` TEXT NOT NULL, `emailFlm` TEXT NOT NULL, `nomFlm` TEXT NOT NULL, `statut` TEXT NOT NULL, `dateEnvoi` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `forms` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `themeId` INTEGER NOT NULL, `formUrl` TEXT NOT NULL, `formationId` INTEGER NOT NULL, `intituleAction` INTEGER NOT NULL, `nomPrenom` INTEGER NOT NULL, `matricule` INTEGER NOT NULL, `service` INTEGER NOT NULL, `formateur` INTEGER NOT NULL, `dates` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `evaluations` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `formationId` INTEGER NOT NULL, `intituleAction` TEXT NOT NULL, `maticuleCollaborateur` TEXT NOT NULL, `datesFormation` TEXT NOT NULL, `dateEvaluation` TEXT NOT NULL, `moyensAppreciation` TEXT NOT NULL, `raisonsInsatisfaction` TEXT NOT NULL, `competencesAcquises` TEXT NOT NULL, `Suggestions` TEXT NOT NULL, `satisfactionBesoin` INTEGER NOT NULL, `impactPerformance` INTEGER NOT NULL, `applicationConnaissances` INTEGER NOT NULL, `satisfactionGlobale` INTEGER NOT NULL, FOREIGN KEY(`formationId`) REFERENCES `formations`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_evaluations_formationId` ON `evaluations` (`formationId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ac09a9d5387dac86db157b845517ed28')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '62c960fb5b9ce9e5ea5b4ac6ff49ec95')");
       }
 
       @Override
@@ -82,6 +84,7 @@ public final class OcpDatabase_Impl extends OcpDatabase {
         db.execSQL("DROP TABLE IF EXISTS `formations`");
         db.execSQL("DROP TABLE IF EXISTS `invitations_flm`");
         db.execSQL("DROP TABLE IF EXISTS `forms`");
+        db.execSQL("DROP TABLE IF EXISTS `evaluations`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -248,9 +251,35 @@ public final class OcpDatabase_Impl extends OcpDatabase {
                   + " Expected:\n" + _infoForms + "\n"
                   + " Found:\n" + _existingForms);
         }
+        final HashMap<String, TableInfo.Column> _columnsEvaluations = new HashMap<String, TableInfo.Column>(14);
+        _columnsEvaluations.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("formationId", new TableInfo.Column("formationId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("intituleAction", new TableInfo.Column("intituleAction", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("maticuleCollaborateur", new TableInfo.Column("maticuleCollaborateur", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("datesFormation", new TableInfo.Column("datesFormation", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("dateEvaluation", new TableInfo.Column("dateEvaluation", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("moyensAppreciation", new TableInfo.Column("moyensAppreciation", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("raisonsInsatisfaction", new TableInfo.Column("raisonsInsatisfaction", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("competencesAcquises", new TableInfo.Column("competencesAcquises", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("Suggestions", new TableInfo.Column("Suggestions", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("satisfactionBesoin", new TableInfo.Column("satisfactionBesoin", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("impactPerformance", new TableInfo.Column("impactPerformance", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("applicationConnaissances", new TableInfo.Column("applicationConnaissances", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsEvaluations.put("satisfactionGlobale", new TableInfo.Column("satisfactionGlobale", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysEvaluations = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysEvaluations.add(new TableInfo.ForeignKey("formations", "CASCADE", "NO ACTION", Arrays.asList("formationId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesEvaluations = new HashSet<TableInfo.Index>(1);
+        _indicesEvaluations.add(new TableInfo.Index("index_evaluations_formationId", false, Arrays.asList("formationId"), Arrays.asList("ASC")));
+        final TableInfo _infoEvaluations = new TableInfo("evaluations", _columnsEvaluations, _foreignKeysEvaluations, _indicesEvaluations);
+        final TableInfo _existingEvaluations = TableInfo.read(db, "evaluations");
+        if (!_infoEvaluations.equals(_existingEvaluations)) {
+          return new RoomOpenHelper.ValidationResult(false, "evaluations(com.ocp.evalformation.data.local.entity.EvaluationEntity).\n"
+                  + " Expected:\n" + _infoEvaluations + "\n"
+                  + " Found:\n" + _existingEvaluations);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "ac09a9d5387dac86db157b845517ed28", "0d2b49d5134f732e18eb1afd4a42cb6a");
+    }, "62c960fb5b9ce9e5ea5b4ac6ff49ec95", "f724a404f13faa2505fda4f40992db82");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -261,7 +290,7 @@ public final class OcpDatabase_Impl extends OcpDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "themes","flms","collaborateurs","formations","invitations_flm","forms");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "themes","flms","collaborateurs","formations","invitations_flm","forms","evaluations");
   }
 
   @Override
@@ -283,6 +312,7 @@ public final class OcpDatabase_Impl extends OcpDatabase {
       _db.execSQL("DELETE FROM `formations`");
       _db.execSQL("DELETE FROM `invitations_flm`");
       _db.execSQL("DELETE FROM `forms`");
+      _db.execSQL("DELETE FROM `evaluations`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();

@@ -22,7 +22,17 @@
     <fragment
         android:id="@+id/evaluationsFragment"
         android:name="com.ocp.evalformation.ui.rh.evaluations.EvaluationsFragment"
-        android:label="Évaluations" />
+        android:label="Évaluations">
+
+        <action
+            android:id="@+id/action_evaluationsFragment_to_evaluationDetailFragment"
+            app:destination="@id/evaluationDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/evaluationDetailFragment"
+        android:name="com.ocp.evalformation.ui.rh.evaluations.EvaluationDetailFragment"
+        android:label="Rapport d'Évaluation" />
 
     <fragment
         android:id="@+id/invitationsFragment"

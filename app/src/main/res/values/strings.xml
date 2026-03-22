@@ -14,4 +14,6 @@
     <string name="default_web_client_id">
     899703699179-klnboj2j81cec8cjc9nn1gckcdmsm85e.apps.googleusercontent.com
     </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

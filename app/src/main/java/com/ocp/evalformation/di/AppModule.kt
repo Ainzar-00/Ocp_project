@@ -6,9 +6,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.firestoreSettings
 import com.ocp.evalformation.data.local.OcpDatabase
+import com.ocp.evalformation.data.local.dao.CollaborateurDao
+import com.ocp.evalformation.data.local.dao.EvaluationDao
+import com.ocp.evalformation.data.local.dao.FlmDao
 import com.ocp.evalformation.data.local.dao.FormationDao
+import com.ocp.evalformation.data.local.dao.InvitationFlmDao
 import com.ocp.evalformation.data.local.dao.ThemeDao
 import com.ocp.evalformation.data.remote.FirebaseRepository
+import com.ocp.evalformation.data.repository.EvaluationRepository
 import com.ocp.evalformation.data.repository.MainRepository
 import dagger.Module
 import dagger.Provides
@@ -61,6 +66,19 @@ object AppModule {
         firebase: FirebaseRepository
     ) = MainRepository(db, firebase)
 
+    @Provides
+    @Singleton
+    fun provideEvaluationRepository(
+        firestore       : FirebaseFirestore,
+        evaluationDao   : EvaluationDao,
+        invitationDao   : InvitationFlmDao,
+        formationDao    : FormationDao,
+        collaborateurDao: CollaborateurDao,
+        flmDao          : FlmDao
+    ): EvaluationRepository = EvaluationRepository(
+        firestore, evaluationDao, invitationDao, formationDao, collaborateurDao, flmDao
+    )
+
     // ── DAOs ──────────────────────────────────────
 
     @Provides
@@ -80,5 +98,8 @@ object AppModule {
 
     @Provides
     fun provideForms(db: OcpDatabase) = db.formDao()
+
+    @Provides
+    fun provideEvaluationDao(db: OcpDatabase) = db.evaluationDao()
 
 }
