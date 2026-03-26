@@ -80,7 +80,7 @@ public final class FormDao_Impl implements FormDao {
   }
 
   @Override
-  public Object insert(final Forms form, final Continuation<? super Long> $completion) {
+  public Object insert(final Forms form, final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -94,11 +94,11 @@ public final class FormDao_Impl implements FormDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object deleteByThemeId(final long themeId, final Continuation<? super Unit> $completion) {
+  public Object deleteByThemeId(final long themeId, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -119,7 +119,7 @@ public final class FormDao_Impl implements FormDao {
           __preparedStmtOfDeleteByThemeId.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
@@ -188,7 +188,7 @@ public final class FormDao_Impl implements FormDao {
   }
 
   @Override
-  public Object getByThemeId(final long themeId, final Continuation<? super Forms> $completion) {
+  public Object getByThemeId(final long themeId, final Continuation<? super Forms> arg1) {
     final String _sql = "SELECT * FROM forms WHERE themeId = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -248,11 +248,11 @@ public final class FormDao_Impl implements FormDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> $completion) {
+  public Object count(final Continuation<? super Integer> arg0) {
     final String _sql = "SELECT COUNT(*) FROM FORMS";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -280,7 +280,7 @@ public final class FormDao_Impl implements FormDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @NonNull

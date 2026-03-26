@@ -41,6 +41,9 @@ id bottom_label
 id bottom_nav_rh
 id btnEnvoyer
 id btnEnvoyerAutre
+id btnExportAllThemes
+id btnExportGlobale
+id btnExportOneTheme
 id btnSendAll
 id btnSendAllAppreciation
 id btnTestWorker
@@ -111,6 +114,7 @@ id invitationsFragment
 id iv_expand_icon
 id iv_sync_status
 id layoutLegend
+id layoutThemeExportOptions
 id layout_competences
 id layout_content
 id layout_header_manual_add
@@ -136,6 +140,7 @@ id radarChart
 id recycler_themes
 id rvInvitations
 id rv_evaluations
+id spinnerThemeFilter
 id spinnerYearFilter
 id tab_layout_import
 id til_annee
@@ -227,6 +232,9 @@ layout item_evaluation
 layout item_invitation
 layout item_theme
 menu menu_rh_nav
+mipmap ic_launcher
+mipmap ic_launcher_foreground
+mipmap ic_launcher_round
 navigation nav_graph_rh
 string app_name
 string btn_login

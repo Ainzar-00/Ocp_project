@@ -18,8 +18,14 @@ object EmailHelper {
     // ── Config ─────────────────────────────────────────────────
     private const val SMTP_HOST     = "smtp.gmail.com"
     private const val SMTP_PORT     = "587"
+
     private const val SENDER_EMAIL  = "gremin11111@gmail.com"   // ← your dedicated Gmail
     private const val SENDER_PASS   = "hbfc fpjl llsp qcim"     // ← your App Password
+
+//    private const val SENDER_EMAIL  = "mohamedbelkacim1982@gmail.com"
+//    private const val SENDER_PASS   = "adxk nftg xvbk qvry"
+
+//    adxk nftg xvbk qvry
 
     // ── Send email (must be called from coroutine) ─────────────
 

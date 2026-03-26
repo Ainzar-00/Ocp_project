@@ -3404,6 +3404,9 @@ id browser_actions_menu_items
 id browser_actions_menu_view
 id btnEnvoyer
 id btnEnvoyerAutre
+id btnExportAllThemes
+id btnExportGlobale
+id btnExportOneTheme
 id btnSendAll
 id btnSendAllAppreciation
 id btnTestWorker
@@ -3615,6 +3618,7 @@ id jumpToStart
 id labeled
 id layout
 id layoutLegend
+id layoutThemeExportOptions
 id layout_competences
 id layout_content
 id layout_header_manual_add
@@ -3832,6 +3836,7 @@ id south
 id spacer
 id special_effects_controller_view_tag
 id spinner
+id spinnerThemeFilter
 id spinnerYearFilter
 id spline
 id split_action_bar
@@ -4236,6 +4241,9 @@ layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 menu menu_rh_nav
+mipmap ic_launcher
+mipmap ic_launcher_foreground
+mipmap ic_launcher_round
 navigation nav_graph_rh
 plurals mtrl_badge_content_description
 raw firebase_common_keep

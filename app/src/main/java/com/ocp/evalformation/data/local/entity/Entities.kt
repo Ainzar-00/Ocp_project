@@ -114,6 +114,7 @@ data class FormationEntity(
 data class InvitationFlmEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val firebaseId: String = "",
     val formationId: Long,
     val datesFormation:String,
     val formateur:String,

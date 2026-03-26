@@ -30,7 +30,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="OCP — Espace RH"
+                    android:text="OCP Safi — Dev Rh"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -41,10 +41,11 @@
                     android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
-                    android:tint="@android:color/white"
-                    android:contentDescription="Déconnexion" />
+                    android:contentDescription="Déconnexion"
+                    app:tint="@android:color/white" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView

@@ -28,6 +28,7 @@ class EvaluationViewModel @Inject constructor(
     // ── List screen ───────────────────────────────────────────────
     private val _evaluations = MutableStateFlow<List<EvaluationWithContext>>(emptyList())
     val evaluations: StateFlow<List<EvaluationWithContext>> = _evaluations.asStateFlow()
+    //All Evaluations
 
     private val _filtered = MutableStateFlow<List<EvaluationWithContext>>(emptyList())
     val filtered: StateFlow<List<EvaluationWithContext>> = _filtered.asStateFlow()

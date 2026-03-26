@@ -20,128 +20,101 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.collections.map
+
 @HiltViewModel
 class RhViewModel @Inject constructor(
     val repo: MainRepository,
     private val evaluationRepo: EvaluationRepository,
-    private  val application: Application
-
+    private val application: Application
 ) : AndroidViewModel(application) {
 
     init {
-
+        // ── Single listener — insert new, update existing ──────────────
         repo.firebase.listenToInvitations(viewModelScope) { invitations ->
             viewModelScope.launch {
                 invitations.forEach { invitation ->
-                    val existing = repo.invitationDao.getByFormationId(invitation.formationId)
+                    val existing = repo.invitationDao.getByFirebaseId(invitation.firebaseId)
                     if (existing != null) {
-                        // Update status if changed
                         if (existing.statut != invitation.statut) {
                             repo.invitationDao.update(existing.copy(statut = invitation.statut))
                         }
+                    } else {
+                        repo.invitationDao.insert(invitation)
                     }
                 }
             }
         }
 
-        // ── Sync evaluations from Firestore on app start ──────────────
+        // ── Sync evaluations from Firestore on app start ───────────────
         viewModelScope.launch {
             evaluationRepo.listenToEvaluations(
-                onAdded = { eval ->
-                    viewModelScope.launch { evaluationRepo.syncToRoom(eval) }
-                },
-                onModified = { eval ->
-                    viewModelScope.launch { evaluationRepo.syncToRoom(eval) }
-                }
+                onAdded    = { eval -> viewModelScope.launch { evaluationRepo.syncToRoom(eval) } },
+                onModified = { eval -> viewModelScope.launch { evaluationRepo.syncToRoom(eval) } }
             )
         }
-
     }
-
-
 
     // ── LiveData ───────────────────────────────────────────────────────────────
     val allThemes         = repo.themeDao.getAllLive()
     val allFlms           = repo.flmDao.getAllLive()
     val allCollaborateurs = repo.collaborateurDao.getAllLive()
     val allFormations     = repo.formationDao.getAllLive()
+
+    // ALL invitation rows — needed to group by formationId and resolve status
     val allInvitations    = repo.invitationDao.getAllLive()
-    val pendingInvitations = repo.invitationDao.getPendingLive()
-    val pendingCount       = repo.invitationDao.countPendingLive()
 
     private val yearRange = dateHelper.currentYearExcelRange()
 
-//     Total collaborateurs (all time)
     val totalCollaborateurs: LiveData<Int> =
         repo.collaborateurDao.countLive()
 
-    // Collaborateurs with at least one formation in current year
     val collaborateursWithFormation: LiveData<Int> =
         repo.formationDao.countCollaborateursWithFormationByYear(yearRange.first, yearRange.second)
 
-    // Distinct themes in formations in current year
     val distinctThemesCount: LiveData<Int> =
         repo.formationDao.countDistinctThemesByYear(yearRange.first, yearRange.second)
 
-    // Total evaluations (all time)
     val totalEvaluations: LiveData<Int> =
         repo.evaluationDao.countLive()
 
-    // En attente invitations count
-    val enAttenteCount: LiveData<Int> =
-        repo.invitationDao.countEnAttenteLive()
+    // ── En attente count — distinct formations with EN_ATTENTE but zero REPONDUE
+    val enAttenteCount: LiveData<Int> = repo.invitationDao.countEnAttenteLive()
 
-    // JSP sum where presence = true in current year
     val totalJsp: LiveData<Double?> =
         repo.formationDao.sumJspByYear(yearRange.first, yearRange.second)
 
-    // Most recurrent theme name in current year
     val mostRecurrentTheme: LiveData<String?> =
         repo.formationDao.getMostRecurrentThemeIdByYear(yearRange.first, yearRange.second)
             .switchMap { themeId ->
-                if (themeId != null) {
-                    repo.themeDao.getByIdLive(themeId).map { it?.nom }
-                } else {
-                    MutableLiveData<String?>(null)
-                }
+                if (themeId != null) repo.themeDao.getByIdLive(themeId).map { it?.nom }
+                else MutableLiveData<String?>(null)
             }
 
-    fun sendAllByFormationIds(ids: List<Long>) {
-        viewModelScope.launch {
-            _invitationState.value = InvitationState.Sending
-            val formations = ids.mapNotNull { repo.formationDao.getById(it) }
-            val result = repo.sendAllPendingInvitations(formations)
-            _invitationState.value = if (result.isSuccess)
-                InvitationState.SentAll(result.getOrNull() ?: 0)
-            else
-                InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur")
-        }
-    }
-
-    fun testAppreciationWorker() {
-        viewModelScope.launch {
-            val inputData = workDataOf("IS_TESTING" to true)
-
-            val request = OneTimeWorkRequestBuilder<AppreciationDateWorker>()
-                .setInputData(inputData)
-                .build()
-
-            WorkManager.getInstance(getApplication())
-                .enqueue(request)
-
-            Log.d("WorkerTest", "✅ OneTime worker enqueued with IS_TESTING=true")
-        }
-    }
-
     // ── FormationWithInvitation ────────────────────────────────────────────────
+    // Groups ALL invitation rows per formation so REPONDUE always wins
     val formationsWithStatus: LiveData<List<FormationWithInvitation>> =
         MediatorLiveData<List<FormationWithInvitation>>().also { mediator ->
             fun refresh() {
                 val formations  = allFormations.value  ?: return
                 val invitations = allInvitations.value ?: emptyList()
-                val invMap      = invitations.associateBy { it.formationId }
-                mediator.value  = formations.map { formation ->
-                    FormationWithInvitation(formation, invMap[formation.id])
+
+                // Group every row by formationId
+                val invGrouped = invitations.groupBy { it.formationId }
+
+                mediator.value = formations.map { formation ->
+                    val group = invGrouped[formation.id] ?: emptyList()
+
+                    // REPONDUE wins → EN_ATTENTE → NON_EXPEDIEE/null
+                    val representative = when {
+                        group.any { it.statut == InvitationStatus.REPONDUE } ->
+                            group.first { it.statut == InvitationStatus.REPONDUE }
+                        group.any { it.statut == InvitationStatus.EN_ATTENTE } ->
+                            group.first { it.statut == InvitationStatus.EN_ATTENTE }
+                        else -> group.firstOrNull()
+                    }
+
+                    FormationWithInvitation(formation, representative)
                 }
             }
             mediator.addSource(allFormations)  { refresh() }
@@ -220,7 +193,6 @@ class RhViewModel @Inject constructor(
                         val result = all.filter { item ->
                             val f = item.formation
 
-                            // ── Query ──────────────────────────────────────────
                             val matchesQuery = query.isEmpty() ||
                                     f.collaborateurMatricule.lowercase().contains(query) ||
                                     item.invitation?.nomCompletCollaborateur?.lowercase()
@@ -230,25 +202,19 @@ class RhViewModel @Inject constructor(
                                     allThemes.value?.find { it.id == f.themeId }
                                         ?.nom?.lowercase()?.contains(query) == true
 
-                            // ── Service ────────────────────────────────────────
-                            // Works for NON_EXPEDIEE (no invitation) via formation.division
                             val matchesService = service == null || run {
-                                val invService      = item.invitation?.service
+                                val invService       = item.invitation?.service
                                 val formationService = f.division
                                 invService?.equals(service, ignoreCase = true) == true ||
                                         formationService.equals(service, ignoreCase = true)
                             }
 
-                            // ── Statut ─────────────────────────────────────────
                             val matchesStatut = statut == null || item.status == statut
 
-                            // ── Theme ──────────────────────────────────────────
-                            // Works for NON_EXPEDIEE (no invitation) via allThemes lookup
                             val matchesTheme = theme == null || run {
                                 val invTheme = item.invitation?.themeNom
                                 val formationTheme = allThemes.value
-                                    ?.find { it.id == f.themeId }
-                                    ?.nom
+                                    ?.find { it.id == f.themeId }?.nom
                                 invTheme?.equals(theme, ignoreCase = true) == true ||
                                         formationTheme?.equals(theme, ignoreCase = true) == true
                             }
@@ -276,7 +242,7 @@ class RhViewModel @Inject constructor(
             mediator.addSource(_filterService)       { refresh() }
             mediator.addSource(_filterStatut)        { refresh() }
             mediator.addSource(_filterTheme)         { refresh() }
-            mediator.addSource(allThemes)            { refresh() } // ← needed for NON_EXPEDIEE theme lookup
+            mediator.addSource(allThemes)            { refresh() }
         }
 
     // ── Check & update statuses ────────────────────────────────────────────────
@@ -334,54 +300,31 @@ class RhViewModel @Inject constructor(
     private val _invitationState = MutableStateFlow<InvitationState>(InvitationState.Idle)
     val invitationState: StateFlow<InvitationState> = _invitationState
 
-    // Send single invitation from FormationWithInvitation
     fun sendFormToFlm(item: FormationWithInvitation) {
         viewModelScope.launch {
             _invitationState.value = InvitationState.Sending
-
             Log.d("SendForm", "━━━━━━━━━━ START sendFormToFlm ━━━━━━━━━━")
-
             try {
                 val formation = item.formation
-                Log.d("SendForm", "Formation ID: ${formation.id}")
-                Log.d("SendForm", "Collaborateur Matricule: ${formation.collaborateurMatricule}")
-
-                val collab = repo.collaborateurDao.getByMatricule(
-                    formation.collaborateurMatricule
-                )
+                val collab = repo.collaborateurDao.getByMatricule(formation.collaborateurMatricule)
 
                 if (collab == null) {
-                    Log.e("SendForm", "❌ Collaborateur NOT FOUND")
                     _invitationState.value = InvitationState.Error(
                         "Collaborateur introuvable : ${formation.collaborateurMatricule}"
                     )
                     return@launch
                 }
 
-                Log.d("SendForm", "✅ Collaborateur found: ${collab.prenom} ${collab.nom}")
-                Log.d("SendForm", "FLM Matricule: ${collab.flmMatricule}")
-
-                val flm = collab.flmMatricule?.let {
-                    repo.flmDao.getByMatricule(it)
-                }
+                val flm = collab.flmMatricule?.let { repo.flmDao.getByMatricule(it) }
 
                 if (flm == null) {
-                    Log.e("SendForm", "❌ FLM NOT FOUND")
                     _invitationState.value = InvitationState.Error(
                         "FLM introuvable pour : ${collab.matricule}"
                     )
                     return@launch
                 }
 
-                Log.d("SendForm", "✅ FLM found: ${flm.prenom} ${flm.nom}")
-                Log.d("SendForm", "FLM Email: ${flm.email}")
-
-                val theme = repo.themeDao.getById(formation.themeId)
-                Log.d("SendForm", "Theme ID: ${formation.themeId}")
-                Log.d("SendForm", "Theme Name: ${theme?.nom}")
-
-                Log.d("SendForm", "➡️ Sending form to FLM...")
-
+                val theme  = repo.themeDao.getById(formation.themeId)
                 val result = repo.sendEvaluationFormToFlm(
                     collaborateur = collab,
                     formation     = formation,
@@ -390,28 +333,30 @@ class RhViewModel @Inject constructor(
                     flmNom        = "${flm.prenom} ${flm.nom}"
                 )
 
-                if (result.isSuccess) {
-                    Log.d("SendForm", "✅ SUCCESS: ${result.getOrNull()}")
-                    _invitationState.value = InvitationState.Sent(result.getOrNull()!!)
-                } else {
-                    Log.e("SendForm", "❌ ERROR: ${result.exceptionOrNull()?.message}")
-                    _invitationState.value = InvitationState.Error(
-                        result.exceptionOrNull()?.message ?: "Erreur d'envoi"
-                    )
-                }
+                _invitationState.value = if (result.isSuccess)
+                    InvitationState.Sent(result.getOrNull()!!)
+                else
+                    InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur d'envoi")
 
             } catch (e: Exception) {
-                Log.e("SendForm", "🔥 EXCEPTION: ${e.message}", e)
                 _invitationState.value = InvitationState.Error(e.message ?: "Erreur")
             }
-
             Log.d("SendForm", "━━━━━━━━━━ END sendFormToFlm ━━━━━━━━━━")
         }
     }
 
+    fun sendAllByFormationIds(ids: List<Long>) {
+        viewModelScope.launch {
+            _invitationState.value = InvitationState.Sending
+            val formations = ids.mapNotNull { repo.formationDao.getById(it) }
+            val result = repo.sendAllPendingInvitations(formations)
+            _invitationState.value = if (result.isSuccess)
+                InvitationState.SentAll(result.getOrNull() ?: 0)
+            else
+                InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur")
+        }
+    }
 
-
-    // Send all pending (end-of-month)
     fun sendAllInvitations() {
         viewModelScope.launch {
             _invitationState.value = InvitationState.Sending
@@ -423,9 +368,17 @@ class RhViewModel @Inject constructor(
             _invitationState.value = if (result.isSuccess)
                 InvitationState.SentAll(result.getOrNull() ?: 0)
             else
-                InvitationState.Error(
-                    result.exceptionOrNull()?.message ?: "Erreur envoi global"
-                )
+                InvitationState.Error(result.exceptionOrNull()?.message ?: "Erreur envoi global")
+        }
+    }
+
+    fun testAppreciationWorker() {
+        viewModelScope.launch {
+            val inputData = workDataOf("IS_TESTING" to true)
+            val request   = OneTimeWorkRequestBuilder<AppreciationDateWorker>()
+                .setInputData(inputData).build()
+            WorkManager.getInstance(getApplication()).enqueue(request)
+            Log.d("WorkerTest", "✅ OneTime worker enqueued with IS_TESTING=true")
         }
     }
 
@@ -440,18 +393,13 @@ class RhViewModel @Inject constructor(
         }
     }
 
-    fun deleteAllData() {
-        viewModelScope.launch { repo.deleteAllData() }
-    }
-
-    fun syncToFirebase() {
-        viewModelScope.launch { repo.syncPendingToFirebase() }
-    }
+    fun deleteAllData()  { viewModelScope.launch { repo.deleteAllData() } }
+    fun syncToFirebase() { viewModelScope.launch { repo.syncPendingToFirebase() } }
 }
 
 // ── Join model ─────────────────────────────────────────────────────────────────
 data class FormationWithInvitation(
-    val formation: FormationEntity,
+    val formation : FormationEntity,
     val invitation: InvitationFlmEntity?
 ) {
     val status: InvitationStatus

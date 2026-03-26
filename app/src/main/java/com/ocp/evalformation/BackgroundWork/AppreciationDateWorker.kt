@@ -21,100 +21,6 @@ import dagger.assisted.AssistedInject
 import java.util.Calendar
 import java.util.jar.Manifest
 
-//@HiltWorker
-//class AppreciationDateWorker @AssistedInject constructor(
-//    @Assisted context: Context,
-//    @Assisted params: WorkerParameters,
-//    private val repo: MainRepository
-//) : CoroutineWorker(context, params) {
-//
-//    override suspend fun doWork(): Result {
-//        return try {
-//            val today = dateHelper.getTodayExcelDate()
-//
-//            // Find formations whose appreciationDate matches today or end of month
-//            val formations = repo.formationDao.getAll()
-//            val matching   = formations.filter { formation ->
-//                val appDate = formation.dateAppreciation.toDoubleOrNull()?.toLong()
-//                appDate?.toDouble() == today || isEndOfMonth()
-//            }
-//
-//            if (matching.isEmpty()) return Result.success()
-//
-//            // Show persistent notification
-//            showNotification(matching.size)
-//
-//            // Store matching formation IDs for the fragment to pick up
-//            val ids = matching.map { it.id }.joinToString(",")
-//            val prefs = applicationContext.getSharedPreferences("worker_prefs", Context.MODE_PRIVATE)
-//            prefs.edit().putString("pending_formation_ids", ids).apply()
-//
-//            Result.success()
-//        } catch (e: Exception) {
-//            Log.e("AppreciationWorker", "Error: ${e.message}", e)
-//            Result.failure()
-//        }
-//    }
-//
-//    private fun isEndOfMonth(): Boolean {
-//        val cal     = Calendar.getInstance()
-//        val today   = cal.get(Calendar.DAY_OF_MONTH)
-//        val lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-//        return today >= lastDay - 2
-//    }
-//
-//    private fun showNotification(count: Int) {
-//        val channelId = "appreciation_channel"
-//
-//        // Send All action intent
-//        val sendAllIntent = Intent(applicationContext, NotificationActionReceiver::class.java).apply {
-//            action = "ACTION_SEND_ALL"
-//        }
-//        val sendAllPendingIntent = PendingIntent.getBroadcast(
-//            applicationContext, 0, sendAllIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        )
-//
-//        // Open app intent
-//        val openAppIntent = applicationContext.packageManager
-//            .getLaunchIntentForPackage(applicationContext.packageName)
-//        val openAppPendingIntent = PendingIntent.getActivity(
-//            applicationContext, 1, openAppIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        )
-//
-//        val notification = NotificationCompat.Builder(applicationContext, channelId)
-//            .setSmallIcon(R.drawable.ic_notification)
-//            .setContentTitle("📋 Évaluations à envoyer")
-//            .setContentText("$count formation(s) arrivent à date d'appréciation.")
-//            .setStyle(NotificationCompat.BigTextStyle()
-//                .bigText("$count formation(s) arrivent à date d'appréciation. Cliquez pour envoyer les invitations aux FLMs."))
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
-//            .setOngoing(true)             // ← persisted until dismissed
-//            .setAutoCancel(false)
-//            .setContentIntent(openAppPendingIntent)
-//            .addAction(
-//                R.drawable.ic_notification,
-//                "Envoyer tout",
-//                sendAllPendingIntent       // ← action button
-//            )
-//            .build()
-//
-//        val manager = NotificationManagerCompat.from(applicationContext)
-//        if (ActivityCompat.checkSelfPermission(
-//                applicationContext,
-//                android.Manifest.permission.POST_NOTIFICATIONS
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            manager.notify(NOTIFICATION_ID, notification)
-//        }
-//    }
-//
-//    companion object {
-//        const val NOTIFICATION_ID = 1001
-//    }
-//}
-
 @HiltWorker
 class AppreciationDateWorker @AssistedInject constructor(
     @Assisted context: Context,
@@ -125,7 +31,7 @@ class AppreciationDateWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return try {
             // ── Get today as Excel serial date ────────────────────
-            val today = getTodayAsExcelDate()
+            val today = getTodayAsExcelDate()+1
             Log.d("WorkerTest", "today (excel): $today")
             Log.d("WorkerTest", "today (normal): ${java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(java.util.Date())}")
 
@@ -137,7 +43,7 @@ class AppreciationDateWorker @AssistedInject constructor(
             }
 
             val matching = formations.filter { formation ->
-                val appDate = formation.dateAppreciation.toDoubleOrNull()?.toLong()
+                val appDate = formation.dateAppreciation.toIntOrNull()?.toLong()
                 val match   = appDate == today
                 Log.d("WorkerTest", "id=${formation.id} appDate=$appDate today=$today → match=$match")
                 match
@@ -171,9 +77,9 @@ class AppreciationDateWorker @AssistedInject constructor(
     // ── Convert today's date to Excel serial number ────────────────
     private fun getTodayAsExcelDate(): Long {
         val cal = Calendar.getInstance()
+
         // Excel epoch starts Jan 1, 1900
         // Java epoch starts Jan 1, 1970
-        // Difference = 25569 days (+ Excel bug: counts 1900 as leap year, so +1)
         val todayMillis = cal.timeInMillis
         val excelEpoch  = 25569L
         val oneDayMs    = 86400000L

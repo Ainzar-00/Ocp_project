@@ -25,16 +25,31 @@ public final class FragmentChartsBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final MaterialButton btnExportAllThemes;
+
+  @NonNull
+  public final MaterialButton btnExportGlobale;
+
+  @NonNull
+  public final MaterialButton btnExportOneTheme;
+
+  @NonNull
   public final MaterialButton fabExport;
 
   @NonNull
   public final LinearLayout layoutLegend;
 
   @NonNull
+  public final LinearLayout layoutThemeExportOptions;
+
+  @NonNull
   public final PieChart pieChart;
 
   @NonNull
   public final RadarChart radarChart;
+
+  @NonNull
+  public final Spinner spinnerThemeFilter;
 
   @NonNull
   public final Spinner spinnerYearFilter;
@@ -61,17 +76,25 @@ public final class FragmentChartsBinding implements ViewBinding {
   public final TextView tvUnsatisfiedCount;
 
   private FragmentChartsBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull MaterialButton fabExport, @NonNull LinearLayout layoutLegend,
+      @NonNull MaterialButton btnExportAllThemes, @NonNull MaterialButton btnExportGlobale,
+      @NonNull MaterialButton btnExportOneTheme, @NonNull MaterialButton fabExport,
+      @NonNull LinearLayout layoutLegend, @NonNull LinearLayout layoutThemeExportOptions,
       @NonNull PieChart pieChart, @NonNull RadarChart radarChart,
-      @NonNull Spinner spinnerYearFilter, @NonNull TextView tvAnalyticsTitle,
-      @NonNull TextView tvLegendInsatisfaisant, @NonNull TextView tvLegendSatisfaisant,
-      @NonNull TextView tvPieChartTitle, @NonNull TextView tvSatisfiedCount,
-      @NonNull TextView tvSubtitle, @NonNull TextView tvUnsatisfiedCount) {
+      @NonNull Spinner spinnerThemeFilter, @NonNull Spinner spinnerYearFilter,
+      @NonNull TextView tvAnalyticsTitle, @NonNull TextView tvLegendInsatisfaisant,
+      @NonNull TextView tvLegendSatisfaisant, @NonNull TextView tvPieChartTitle,
+      @NonNull TextView tvSatisfiedCount, @NonNull TextView tvSubtitle,
+      @NonNull TextView tvUnsatisfiedCount) {
     this.rootView = rootView;
+    this.btnExportAllThemes = btnExportAllThemes;
+    this.btnExportGlobale = btnExportGlobale;
+    this.btnExportOneTheme = btnExportOneTheme;
     this.fabExport = fabExport;
     this.layoutLegend = layoutLegend;
+    this.layoutThemeExportOptions = layoutThemeExportOptions;
     this.pieChart = pieChart;
     this.radarChart = radarChart;
+    this.spinnerThemeFilter = spinnerThemeFilter;
     this.spinnerYearFilter = spinnerYearFilter;
     this.tvAnalyticsTitle = tvAnalyticsTitle;
     this.tvLegendInsatisfaisant = tvLegendInsatisfaisant;
@@ -109,6 +132,24 @@ public final class FragmentChartsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnExportAllThemes;
+      MaterialButton btnExportAllThemes = ViewBindings.findChildViewById(rootView, id);
+      if (btnExportAllThemes == null) {
+        break missingId;
+      }
+
+      id = R.id.btnExportGlobale;
+      MaterialButton btnExportGlobale = ViewBindings.findChildViewById(rootView, id);
+      if (btnExportGlobale == null) {
+        break missingId;
+      }
+
+      id = R.id.btnExportOneTheme;
+      MaterialButton btnExportOneTheme = ViewBindings.findChildViewById(rootView, id);
+      if (btnExportOneTheme == null) {
+        break missingId;
+      }
+
       id = R.id.fabExport;
       MaterialButton fabExport = ViewBindings.findChildViewById(rootView, id);
       if (fabExport == null) {
@@ -121,6 +162,12 @@ public final class FragmentChartsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.layoutThemeExportOptions;
+      LinearLayout layoutThemeExportOptions = ViewBindings.findChildViewById(rootView, id);
+      if (layoutThemeExportOptions == null) {
+        break missingId;
+      }
+
       id = R.id.pieChart;
       PieChart pieChart = ViewBindings.findChildViewById(rootView, id);
       if (pieChart == null) {
@@ -130,6 +177,12 @@ public final class FragmentChartsBinding implements ViewBinding {
       id = R.id.radarChart;
       RadarChart radarChart = ViewBindings.findChildViewById(rootView, id);
       if (radarChart == null) {
+        break missingId;
+      }
+
+      id = R.id.spinnerThemeFilter;
+      Spinner spinnerThemeFilter = ViewBindings.findChildViewById(rootView, id);
+      if (spinnerThemeFilter == null) {
         break missingId;
       }
 
@@ -181,9 +234,11 @@ public final class FragmentChartsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentChartsBinding((CoordinatorLayout) rootView, fabExport, layoutLegend,
-          pieChart, radarChart, spinnerYearFilter, tvAnalyticsTitle, tvLegendInsatisfaisant,
-          tvLegendSatisfaisant, tvPieChartTitle, tvSatisfiedCount, tvSubtitle, tvUnsatisfiedCount);
+      return new FragmentChartsBinding((CoordinatorLayout) rootView, btnExportAllThemes,
+          btnExportGlobale, btnExportOneTheme, fabExport, layoutLegend, layoutThemeExportOptions,
+          pieChart, radarChart, spinnerThemeFilter, spinnerYearFilter, tvAnalyticsTitle,
+          tvLegendInsatisfaisant, tvLegendSatisfaisant, tvPieChartTitle, tvSatisfiedCount,
+          tvSubtitle, tvUnsatisfiedCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

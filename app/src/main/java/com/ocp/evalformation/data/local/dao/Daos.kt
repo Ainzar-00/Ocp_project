@@ -301,9 +301,36 @@ interface InvitationFlmDao {
     @Query("SELECT COUNT(*) FROM invitations_flm")
     suspend fun count(): Int
 
-    // InvitationFlmDao — already exists as countPendingLive(), just add alias
-    @Query("SELECT COUNT(*) FROM invitations_flm WHERE statut = 'EN_ATTENTE'")
+
+    @Query("UPDATE invitations_flm SET firebaseId = :firebaseId WHERE id = :id")
+    suspend fun updateFirebaseId(id: Long, firebaseId: String)
+
+    // Gets the most recent invitation per formation (for display)
+    @Query("""
+    SELECT * FROM invitations_flm 
+    WHERE id IN (
+        SELECT id FROM invitations_flm 
+        GROUP BY formationId 
+        HAVING dateEnvoi = MAX(dateEnvoi)
+    )
+    ORDER BY dateEnvoi DESC
+""")
+    fun getLatestPerFormationLive(): LiveData<List<InvitationFlmEntity>>
+
+    // Counts formations that have EN_ATTENTE but ZERO REPONDUE rows
+    @Query("""
+    SELECT COUNT(DISTINCT formationId) FROM invitations_flm
+    WHERE statut = 'EN_ATTENTE'
+    AND formationId NOT IN (
+        SELECT DISTINCT formationId FROM invitations_flm 
+        WHERE statut = 'REPONDUE'
+    )
+""")
     fun countEnAttenteLive(): LiveData<Int>
+
+    @Query("SELECT * FROM invitations_flm WHERE firebaseId = :firebaseId LIMIT 1")
+    suspend fun getByFirebaseId(firebaseId: String): InvitationFlmEntity?
+
 }
 
 /* ======================================================
@@ -355,6 +382,9 @@ interface EvaluationDao {
 
     @Query("SELECT * FROM evaluations WHERE formationId = :formationId")
     suspend fun getByFormationId(formationId: Long): EvaluationEntity?
+
+    @Query("SELECT * FROM evaluations")
+    fun getAllAsList(): LiveData<List<EvaluationEntity>>
 
     @Query("SELECT * FROM evaluations WHERE id = :id")
     suspend fun getById(id: Long): EvaluationEntity?

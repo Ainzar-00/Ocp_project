@@ -678,7 +678,7 @@ class ImportViewModel @Inject constructor(
                         debut                 = debut,
                         fin                   = fin,
                         Formateur             = formateur,
-                        dateAppreciation      = dateAppreciation.toString(),
+                        dateAppreciation      = dateAppreciation.toInt().toString(),
                         entite                = entite,
                         categorie             = categorie,
                         division              = division,

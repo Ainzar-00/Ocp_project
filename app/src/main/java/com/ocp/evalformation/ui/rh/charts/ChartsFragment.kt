@@ -2,6 +2,7 @@ package com.ocp.evalformation.ui.rh.charts
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +22,8 @@ import com.ocp.evalformation.databinding.FragmentChartsBinding
 import com.ocp.evalformation.ui.rh.RhViewModel
 import com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.util.Calendar
 
@@ -41,6 +41,16 @@ class ChartsFragment : Fragment() {
 
     private val decimalFormat = DecimalFormat("#.#")
 
+    /** Tracks the currently selected theme name, null = "Tous les thèmes" */
+    private var selectedTheme: String? = null
+
+    /** Ordered list of distinct theme names (populated once evaluations load) */
+    private var themeNames: List<String> = emptyList()
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Lifecycle
+    // ─────────────────────────────────────────────────────────────────────────
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -50,18 +60,25 @@ class ChartsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupYearSpinner()
+        setupThemeSpinner()          // ← NEW
         setupRadarChart()
         setupPieChart()
         observeData()
-        setupExportButton()
+        setupExportButtons()         // ← replaces setupExportButton()
+
         viewModel.computeChartData(Calendar.getInstance().get(Calendar.YEAR))
-        binding.fabExport.bringToFront()
-        binding.fabExport.visibility = View.VISIBLE
-
-
-
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Year spinner (unchanged)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private fun setupYearSpinner() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
@@ -82,6 +99,150 @@ class ChartsFragment : Fragment() {
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Theme spinner  ← NEW
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private fun setupThemeSpinner() {
+        // Initially just the "all" placeholder; refreshed when evaluations load.
+        populateThemeSpinner(emptyList())
+    }
+
+    /**
+     * Rebuilds the theme spinner with [themes].
+     * Position 0 = "Tous les thèmes" (no theme selected).
+     */
+    private fun populateThemeSpinner(themes: List<String>) {
+        themeNames = themes
+        val items = listOf("Tous les thèmes") + themes
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            items
+        ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
+        binding.spinnerThemeFilter.adapter = adapter
+        binding.spinnerThemeFilter.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, v: View?, pos: Int, id: Long
+                ) {
+                    selectedTheme = if (pos == 0) null else themes[pos - 1]
+                    updateExportUI()
+                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Export UI toggling  ← NEW
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Shows/hides the correct export controls depending on whether a theme is
+     * selected:
+     *  - No theme  → single "Exporter Synthèse Globale" button (fabExport)
+     *  - Theme set → 3-button group (btnExportGlobale / btnExportAllThemes /
+     *                                btnExportOneTheme)
+     *
+     * Also updates the label of the per-theme button to mention the theme name.
+     */
+    private fun updateExportUI() {
+        if (selectedTheme == null) {
+            binding.fabExport.visibility            = View.VISIBLE
+            binding.layoutThemeExportOptions.visibility = View.GONE
+        } else {
+            binding.fabExport.visibility            = View.GONE
+            binding.layoutThemeExportOptions.visibility = View.VISIBLE
+            binding.btnExportOneTheme.text =
+                "Exporter Synthèse « $selectedTheme »"
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Export buttons  ← replaces setupExportButton()
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private fun setupExportButtons() {
+        // ── Helper to build shared payload ──────────────────────────────────
+        fun triggerExport(exportMode: ExportMode, theme: String? = null) {
+            Thread {
+                try {
+                    val evaluations = kotlinx.coroutines.runBlocking {
+                        viewModel.evaluations.first { it.isNotEmpty() }
+                    }
+
+                    val formations       = evaluations.mapNotNull { it.formation }
+                    val totalCollabs     = rhViewModel.totalCollaborateurs.value ?: 0
+                    val collabsWithForm  = rhViewModel.collaborateursWithFormation.value ?: 0
+                    val distinctThemes   = rhViewModel.distinctThemesCount.value ?: 0
+                    val totalJsp         = rhViewModel.totalJsp.value ?: 0.0
+                    val criteriaAverages = viewModel.criteriaAverages.value
+                    val satisfactionRate = viewModel.satisfactionRate.value
+
+                    Log.d("Export", "mode=$exportMode theme=$theme evals=${evaluations.size}")
+
+                    requireActivity().runOnUiThread {
+                        ExcelExporter.export(
+                            context          = requireContext(),
+                            formations       = formations,
+                            totalCollabs     = totalCollabs,
+                            collabsWithForm  = collabsWithForm,
+                            distinctThemes   = distinctThemes,
+                            totalJsp         = totalJsp,
+                            criteriaAverages = criteriaAverages,
+                            satisfactionRate = satisfactionRate,
+                            evaluations      = evaluations.map { it.evaluation },
+                            exportMode       = exportMode,   // ← pass mode
+                            themeFilter      = theme,        // ← pass optional theme
+                            onSuccess = { file1, file2, file3 ->
+                                Log.d("Export", "Success: ${file1.absolutePath}")
+                                Snackbar.make(binding.root, "✅ Exporté", Snackbar.LENGTH_LONG).show()
+                            },
+                            onError = { error ->
+                                Log.e("Export", "Error: $error")
+                                Snackbar.make(binding.root, "❌ $error", Snackbar.LENGTH_LONG).show()
+                            }
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("Export", "Exception: ${e.message}", e)
+                    requireActivity().runOnUiThread {
+                        Snackbar.make(binding.root, "❌ ${e.message}", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+            }.start()
+        }
+
+        // ── Button wiring ────────────────────────────────────────────────────
+
+        /** No theme selected → global export (original behaviour) */
+        binding.fabExport.setOnClickListener {
+            triggerExport(ExportMode.GLOBALE)
+        }
+
+        /** Theme selected, Option 1: same as global */
+        binding.btnExportGlobale.setOnClickListener {
+            triggerExport(ExportMode.GLOBALE)
+        }
+
+        /** Theme selected, Option 2: export synthèse for ALL themes */
+        binding.btnExportAllThemes.setOnClickListener {
+            triggerExport(ExportMode.ALL_THEMES)
+        }
+
+        /** Theme selected, Option 3: export synthèse for the selected theme only */
+        binding.btnExportOneTheme.setOnClickListener {
+            triggerExport(ExportMode.ONE_THEME, selectedTheme)
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Chart setup (unchanged)
+    // ─────────────────────────────────────────────────────────────────────────
+
     private fun setupRadarChart() {
         binding.radarChart.apply {
             description.isEnabled = false
@@ -99,10 +260,7 @@ class ChartsFragment : Fragment() {
                 xOffset        = 0f
                 yOffset        = 0f
                 valueFormatter = IndexAxisValueFormatter(listOf(
-                    "Besoin",
-                    "Impact",
-                    "Application",
-                    "Global"
+                    "Besoin", "Impact", "Application", "Global"
                 ))
             }
 
@@ -132,61 +290,26 @@ class ChartsFragment : Fragment() {
         }
     }
 
-    private fun setupExportButton() {
-        binding.fabExport.setOnClickListener {
-            android.util.Log.d("Export", "Clicked")
-            val formations       = viewModel.evaluations.value.mapNotNull { it.formation }
-            val totalCollabs     = rhViewModel.totalCollaborateurs.value ?: 0
-            val collabsWithForm  = rhViewModel.collaborateursWithFormation.value ?: 0
-            val distinctThemes   = rhViewModel.distinctThemesCount.value ?: 0
-            val totalJsp         = rhViewModel.totalJsp.value ?: 0.0
-            val criteriaAverages = viewModel.criteriaAverages.value
-            val satisfactionRate = viewModel.satisfactionRate.value
-
-            android.util.Log.d("Export", "formations=${formations.size}")
-
-            Thread {
-                try {
-                    ExcelExporter.export(
-                        context          = requireContext(),
-                        formations       = formations,
-                        totalCollabs     = totalCollabs,
-                        collabsWithForm  = collabsWithForm,
-                        distinctThemes   = distinctThemes,
-                        totalJsp         = totalJsp,
-                        criteriaAverages = criteriaAverages,
-                        satisfactionRate = satisfactionRate,
-                        onSuccess        = { file1, file2 ->
-                            android.util.Log.d("Export", "Success: ${file1.absolutePath}")
-                            requireActivity().runOnUiThread {
-                                Snackbar.make(binding.root, "✅ Exporté dans Téléchargements", Snackbar.LENGTH_LONG).show()
-                            }
-                        },
-                        onError = { error ->
-                            android.util.Log.e("Export", "Error: $error")
-                            requireActivity().runOnUiThread {
-                                Snackbar.make(binding.root, "❌ $error", Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-                    )
-                } catch (e: Exception) {
-                    android.util.Log.e("Export", "Exception: ${e.message}", e)
-                    requireActivity().runOnUiThread {
-                        Snackbar.make(binding.root, "❌ ${e.message}", Snackbar.LENGTH_LONG).show()
-                    }
-                }
-            }.start()
-        }
-    }
+    // ─────────────────────────────────────────────────────────────────────────
+    // Observe data
+    // ─────────────────────────────────────────────────────────────────────────
 
     private fun observeData() {
+        // Refresh chart data when evaluations change
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.evaluations.collect {
+            viewModel.evaluations.collect { evals ->
                 val selected = binding.spinnerYearFilter.selectedItemPosition
                 val years    = (0 until binding.spinnerYearFilter.adapter.count)
                     .map { binding.spinnerYearFilter.adapter.getItem(it).toString() }
                 val year = if (selected == 0) null else years[selected].toIntOrNull()
                 viewModel.computeChartData(year)
+
+                // ── Rebuild theme spinner with distinct theme names ── NEW
+                val themes = evals
+                    .mapNotNull { it.themeNom?.takeIf { t -> t.isNotBlank() } }
+                    .distinct()
+                    .sorted()
+                populateThemeSpinner(themes)
             }
         }
 
@@ -268,10 +391,21 @@ class ChartsFragment : Fragment() {
             }
         }
     }
+}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+// ─────────────────────────────────────────────────────────────────────────────
+// Export mode enum  ← NEW (put in its own file if you prefer)
+// ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Describes what the user wants to export:
+ *  - [GLOBALE]    → full global synthèse (original behaviour)
+ *  - [ALL_THEMES] → one sheet / section per theme
+ *  - [ONE_THEME]  → only the theme specified by [ExcelExporter.export]'s
+ *                   `themeFilter` parameter
+ */
+enum class ExportMode {
+    GLOBALE,
+    ALL_THEMES,
+    ONE_THEME
 }

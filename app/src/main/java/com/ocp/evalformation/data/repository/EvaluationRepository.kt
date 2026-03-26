@@ -55,6 +55,7 @@ class EvaluationRepository @Inject constructor(
         } else {
             evaluationDao.insert(evaluation)
         }
+        invitationDao.markAsReplied(evaluation.formationId)
     }
 
     // ── Firestore listener ────────────────────────────────────────

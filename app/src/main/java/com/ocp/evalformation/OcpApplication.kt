@@ -3,19 +3,25 @@ package com.ocp.evalformation
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 
 import android.os.Build
 import android.os.StrictMode
+import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.multidex.MultiDexApplication
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -30,7 +36,9 @@ class OcpApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+
     }
+
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

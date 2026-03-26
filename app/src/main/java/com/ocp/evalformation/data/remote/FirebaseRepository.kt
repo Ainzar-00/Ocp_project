@@ -404,7 +404,7 @@ class FirebaseRepository @Inject constructor(
                         debut                 = debut,
                         fin                   = fin,
                         Formateur             = formateur,
-                        dateAppreciation      = dateAppreciation,
+                        dateAppreciation      = dateAppreciation.toInt().toString(),
                         entite                = entite,
                         categorie             = categorie,
                         division              = division,
@@ -689,6 +689,7 @@ fun FormationEntity.toMap() = mapOf(
 //    "statut" to statut,
 //    "dateEnvoi" to dateEnvoi
 //)
+
 fun InvitationFlmEntity.toFirebaseMap(firebaseId: String) = mapOf(
     "firebaseId"             to firebaseId,
     "formationId"            to formationId,
