@@ -14,7 +14,6 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.ocp.evalformation.R;
@@ -46,9 +45,6 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
 
   @NonNull
   public final TextInputEditText etMatricule;
-
-  @NonNull
-  public final ExtendedFloatingActionButton fabExporter;
 
   @NonNull
   public final RecyclerView rvEvaluations;
@@ -83,11 +79,11 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
       @NonNull AutoCompleteTextView autocompleteMois,
       @NonNull AutoCompleteTextView autocompleteTheme, @NonNull MaterialButton btnAppliquerFiltres,
       @NonNull MaterialCardView cardFilters, @NonNull TextInputEditText etMatricule,
-      @NonNull ExtendedFloatingActionButton fabExporter, @NonNull RecyclerView rvEvaluations,
-      @NonNull TextInputLayout tilAnnee, @NonNull TextInputLayout tilEntite,
-      @NonNull TextInputLayout tilMatricule, @NonNull TextInputLayout tilMois,
-      @NonNull TextInputLayout tilTheme, @NonNull TextView tvCountEval,
-      @NonNull TextView tvFilterLabel, @NonNull TextView tvHeaderTitle) {
+      @NonNull RecyclerView rvEvaluations, @NonNull TextInputLayout tilAnnee,
+      @NonNull TextInputLayout tilEntite, @NonNull TextInputLayout tilMatricule,
+      @NonNull TextInputLayout tilMois, @NonNull TextInputLayout tilTheme,
+      @NonNull TextView tvCountEval, @NonNull TextView tvFilterLabel,
+      @NonNull TextView tvHeaderTitle) {
     this.rootView = rootView;
     this.autocompleteAnnee = autocompleteAnnee;
     this.autocompleteEntite = autocompleteEntite;
@@ -96,7 +92,6 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
     this.btnAppliquerFiltres = btnAppliquerFiltres;
     this.cardFilters = cardFilters;
     this.etMatricule = etMatricule;
-    this.fabExporter = fabExporter;
     this.rvEvaluations = rvEvaluations;
     this.tilAnnee = tilAnnee;
     this.tilEntite = tilEntite;
@@ -177,12 +172,6 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.fab_exporter;
-      ExtendedFloatingActionButton fabExporter = ViewBindings.findChildViewById(rootView, id);
-      if (fabExporter == null) {
-        break missingId;
-      }
-
       id = R.id.rv_evaluations;
       RecyclerView rvEvaluations = ViewBindings.findChildViewById(rootView, id);
       if (rvEvaluations == null) {
@@ -239,8 +228,8 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
 
       return new FragmentEvaluationsBinding((CoordinatorLayout) rootView, autocompleteAnnee,
           autocompleteEntite, autocompleteMois, autocompleteTheme, btnAppliquerFiltres, cardFilters,
-          etMatricule, fabExporter, rvEvaluations, tilAnnee, tilEntite, tilMatricule, tilMois,
-          tilTheme, tvCountEval, tvFilterLabel, tvHeaderTitle);
+          etMatricule, rvEvaluations, tilAnnee, tilEntite, tilMatricule, tilMois, tilTheme,
+          tvCountEval, tvFilterLabel, tvHeaderTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

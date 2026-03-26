@@ -46,7 +46,6 @@ id btnExportGlobale
 id btnExportOneTheme
 id btnSendAll
 id btnSendAllAppreciation
-id btnTestWorker
 id btn_add_collab
 id btn_add_flm
 id btn_add_theme
@@ -106,7 +105,6 @@ id et_theme_objectif
 id evaluationDetailFragment
 id evaluationsFragment
 id fabExport
-id fab_exporter
 id footer_separator
 id guideline_center
 id importDataFragment

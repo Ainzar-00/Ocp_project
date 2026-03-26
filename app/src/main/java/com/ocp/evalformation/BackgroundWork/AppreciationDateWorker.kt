@@ -35,6 +35,7 @@ class AppreciationDateWorker @AssistedInject constructor(
             Log.d("WorkerTest", "today (excel): $today")
             Log.d("WorkerTest", "today (normal): ${java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(java.util.Date())}")
 
+
             val formations = repo.formationDao.getAll()
             Log.d("WorkerTest", "total formations: ${formations.size}")
 

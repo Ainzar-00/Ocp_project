@@ -200,7 +200,8 @@ public final class EvaluationDao_Impl implements EvaluationDao {
   }
 
   @Override
-  public Object insert(final EvaluationEntity evaluation, final Continuation<? super Long> arg1) {
+  public Object insert(final EvaluationEntity evaluation,
+      final Continuation<? super Long> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -214,12 +215,12 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
   public Object insertAll(final List<EvaluationEntity> evaluations,
-      final Continuation<? super Unit> arg1) {
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -233,11 +234,12 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object delete(final EvaluationEntity evaluation, final Continuation<? super Unit> arg1) {
+  public Object delete(final EvaluationEntity evaluation,
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -251,11 +253,12 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object update(final EvaluationEntity evaluation, final Continuation<? super Unit> arg1) {
+  public Object update(final EvaluationEntity evaluation,
+      final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -269,11 +272,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __db.endTransaction();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object deleteAll(final Continuation<? super Unit> arg0) {
+  public Object deleteAll(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -292,7 +295,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           __preparedStmtOfDeleteAll.release(_stmt);
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override
@@ -408,7 +411,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
 
   @Override
   public Object getByFormationId(final long formationId,
-      final Continuation<? super EvaluationEntity> arg1) {
+      final Continuation<? super EvaluationEntity> $completion) {
     final String _sql = "SELECT * FROM evaluations WHERE formationId = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -514,7 +517,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
@@ -629,7 +632,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
   }
 
   @Override
-  public Object getById(final long id, final Continuation<? super EvaluationEntity> arg1) {
+  public Object getById(final long id, final Continuation<? super EvaluationEntity> $completion) {
     final String _sql = "SELECT * FROM evaluations WHERE id = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -735,11 +738,11 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, arg1);
+    }, $completion);
   }
 
   @Override
-  public Object count(final Continuation<? super Integer> arg0) {
+  public Object count(final Continuation<? super Integer> $completion) {
     final String _sql = "SELECT COUNT(*) FROM evaluations";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -767,7 +770,7 @@ public final class EvaluationDao_Impl implements EvaluationDao {
           _statement.release();
         }
       }
-    }, arg0);
+    }, $completion);
   }
 
   @Override

@@ -172,10 +172,6 @@
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\mipmap-hdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.ocp.evalformation.app-debug-5:/layout_fragment_charts.xml.flat",
-        "source": "com.ocp.evalformation.app-main-7:/layout/fragment_charts.xml"
-    },
-    {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\drawable_ic_launcher_background.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\drawable\\ic_launcher_background.xml"
     },
@@ -206,6 +202,10 @@
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\layout_activity_splash.xml.flat",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "com.ocp.evalformation.app-debug-5:/layout_fragment_evaluations.xml.flat",
+        "source": "com.ocp.evalformation.app-main-7:/layout/fragment_evaluations.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-debug-5:\\drawable_spinner_bg.xml.flat",

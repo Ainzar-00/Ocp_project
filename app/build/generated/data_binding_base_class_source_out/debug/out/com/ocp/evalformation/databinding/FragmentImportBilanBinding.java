@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.textfield.TextInputEditText;
@@ -20,7 +20,7 @@ import java.lang.String;
 
 public final class FragmentImportBilanBinding implements ViewBinding {
   @NonNull
-  private final ScrollView rootView;
+  private final NestedScrollView rootView;
 
   @NonNull
   public final Button btnCharger;
@@ -52,7 +52,7 @@ public final class FragmentImportBilanBinding implements ViewBinding {
   @NonNull
   public final TextView tvSelectedFile;
 
-  private FragmentImportBilanBinding(@NonNull ScrollView rootView, @NonNull Button btnCharger,
+  private FragmentImportBilanBinding(@NonNull NestedScrollView rootView, @NonNull Button btnCharger,
       @NonNull Button btnChoisirFichier, @NonNull Button btnNombreEnregistrements,
       @NonNull Button btnTesterReference, @NonNull TextInputEditText etMatricule,
       @NonNull ProgressBar progressImport, @NonNull TextView tvEnregistrements,
@@ -73,7 +73,7 @@ public final class FragmentImportBilanBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public ScrollView getRoot() {
+  public NestedScrollView getRoot() {
     return rootView;
   }
 
@@ -158,9 +158,9 @@ public final class FragmentImportBilanBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentImportBilanBinding((ScrollView) rootView, btnCharger, btnChoisirFichier,
-          btnNombreEnregistrements, btnTesterReference, etMatricule, progressImport,
-          tvEnregistrements, tvImportResult, tvResultatTest, tvSelectedFile);
+      return new FragmentImportBilanBinding((NestedScrollView) rootView, btnCharger,
+          btnChoisirFichier, btnNombreEnregistrements, btnTesterReference, etMatricule,
+          progressImport, tvEnregistrements, tvImportResult, tvResultatTest, tvSelectedFile);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

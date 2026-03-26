@@ -15,6 +15,7 @@ class ImportBilanFragment : Fragment() {
 
     private var _binding: FragmentImportBilanBinding? = null
     private val binding get() = _binding!!
+
     private val viewModel: RhViewModel by activityViewModels()
 
     override fun onCreateView(

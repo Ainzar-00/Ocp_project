@@ -3408,7 +3408,6 @@ int id btnExportGlobale 0x7f0802c8
 int id btnExportOneTheme 0x7f0802c9
 int id btnSendAll 0x7f080075
 int id btnSendAllAppreciation 0x7f080076
-int id btnTestWorker 0x7f080077
 int id btn_add_collab 0x7f080078
 int id btn_add_flm 0x7f080079
 int id btn_add_theme 0x7f08007a
@@ -3555,7 +3554,6 @@ int id exitUntilCollapsed 0x7f080106
 int id expand_activities_button 0x7f080107
 int id expanded_menu 0x7f080108
 int id fabExport 0x7f080109
-int id fab_exporter 0x7f08010a
 int id fade 0x7f08010b
 int id fill 0x7f08010c
 int id fill_horizontal 0x7f08010d

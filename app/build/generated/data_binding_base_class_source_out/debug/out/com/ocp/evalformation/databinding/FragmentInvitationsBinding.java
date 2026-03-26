@@ -4,7 +4,6 @@ package com.ocp.evalformation.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -31,9 +30,6 @@ public final class FragmentInvitationsBinding implements ViewBinding {
 
   @NonNull
   public final MaterialButton btnSendAllAppreciation;
-
-  @NonNull
-  public final Button btnTestWorker;
 
   @NonNull
   public final MaterialCardView cardAppreciationDate;
@@ -76,17 +72,16 @@ public final class FragmentInvitationsBinding implements ViewBinding {
 
   private FragmentInvitationsBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialButton btnSendAll, @NonNull MaterialButton btnSendAllAppreciation,
-      @NonNull Button btnTestWorker, @NonNull MaterialCardView cardAppreciationDate,
-      @NonNull MaterialCardView cardEndOfMonth, @NonNull Chip chipClearFilters,
-      @NonNull Chip chipFilterService, @NonNull Chip chipFilterStatut,
-      @NonNull Chip chipFilterTheme, @NonNull EditText etSearchMatricule,
-      @NonNull ProgressBar progressInvitation, @NonNull RecyclerView rvInvitations,
-      @NonNull TextView tvAppreciationInfo, @NonNull TextView tvEmptyState,
-      @NonNull TextView tvEndOfMonthInfo, @NonNull TextView tvPendingCount) {
+      @NonNull MaterialCardView cardAppreciationDate, @NonNull MaterialCardView cardEndOfMonth,
+      @NonNull Chip chipClearFilters, @NonNull Chip chipFilterService,
+      @NonNull Chip chipFilterStatut, @NonNull Chip chipFilterTheme,
+      @NonNull EditText etSearchMatricule, @NonNull ProgressBar progressInvitation,
+      @NonNull RecyclerView rvInvitations, @NonNull TextView tvAppreciationInfo,
+      @NonNull TextView tvEmptyState, @NonNull TextView tvEndOfMonthInfo,
+      @NonNull TextView tvPendingCount) {
     this.rootView = rootView;
     this.btnSendAll = btnSendAll;
     this.btnSendAllAppreciation = btnSendAllAppreciation;
-    this.btnTestWorker = btnTestWorker;
     this.cardAppreciationDate = cardAppreciationDate;
     this.cardEndOfMonth = cardEndOfMonth;
     this.chipClearFilters = chipClearFilters;
@@ -138,12 +133,6 @@ public final class FragmentInvitationsBinding implements ViewBinding {
       id = R.id.btnSendAllAppreciation;
       MaterialButton btnSendAllAppreciation = ViewBindings.findChildViewById(rootView, id);
       if (btnSendAllAppreciation == null) {
-        break missingId;
-      }
-
-      id = R.id.btnTestWorker;
-      Button btnTestWorker = ViewBindings.findChildViewById(rootView, id);
-      if (btnTestWorker == null) {
         break missingId;
       }
 
@@ -226,8 +215,8 @@ public final class FragmentInvitationsBinding implements ViewBinding {
       }
 
       return new FragmentInvitationsBinding((LinearLayout) rootView, btnSendAll,
-          btnSendAllAppreciation, btnTestWorker, cardAppreciationDate, cardEndOfMonth,
-          chipClearFilters, chipFilterService, chipFilterStatut, chipFilterTheme, etSearchMatricule,
+          btnSendAllAppreciation, cardAppreciationDate, cardEndOfMonth, chipClearFilters,
+          chipFilterService, chipFilterStatut, chipFilterTheme, etSearchMatricule,
           progressInvitation, rvInvitations, tvAppreciationInfo, tvEmptyState, tvEndOfMonthInfo,
           tvPendingCount);
     }

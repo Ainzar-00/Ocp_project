@@ -234,17 +234,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- FAB stays pinned at bottom-end, outside the scroll -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_exporter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
-        android:text="Exporter"
-        android:textColor="#FFFFFF"
-        app:iconTint="#FFFFFF"
-        app:backgroundTint="@color/ocp_dark_green"
-        app:elevation="6dp" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

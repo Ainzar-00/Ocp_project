@@ -7,14 +7,14 @@
     android:background="#F8F9FA"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnTestWorker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click to test"
-        android:background="@color/black"
-        android:textColor="@color/white"
-        />
+<!--    <Button-->
+<!--        android:id="@+id/btnTestWorker"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Click to test"-->
+<!--        android:background="@color/black"-->
+<!--        android:textColor="@color/white"-->
+<!--        />-->
 
     <!-- Search + Filter row -->
     <LinearLayout

@@ -57,7 +57,6 @@ class RhActivity : AppCompatActivity() {
 
         initializeWorker()
 
-
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -80,7 +79,6 @@ class RhActivity : AppCompatActivity() {
             1,
             TimeUnit.DAYS
         )
-            .setInitialDelay(2, TimeUnit.MINUTES)
             .addTag("APPRECIATION_WORKER")
             .build()
 

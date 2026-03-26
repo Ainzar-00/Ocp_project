@@ -82,10 +82,10 @@ class InvitationsFragment : Fragment() {
         binding.cardEndOfMonth.visibility =
             if (viewModel.isEndOfMonth) View.VISIBLE else View.GONE
 
-        binding.btnTestWorker.setOnClickListener {
-            viewModel.testAppreciationWorker()
-            Toast.makeText(requireContext(), "Worker lancé — vérifiez Logcat", Toast.LENGTH_SHORT).show()
-        }
+//        binding.btnTestWorker.setOnClickListener {
+//            viewModel.testAppreciationWorker()
+//            Toast.makeText(requireContext(), "Worker lancé — vérifiez Logcat", Toast.LENGTH_SHORT).show()
+//        }
 
         // ── Observe filtered formations ────────────────────────────────────────
         viewModel.filteredFormations.observe(viewLifecycleOwner) { list ->

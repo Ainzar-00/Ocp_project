@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,6 @@ import com.ocp.evalformation.R
 import com.ocp.evalformation.databinding.FragmentEvaluationsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 @AndroidEntryPoint
 class EvaluationsFragment : Fragment() {
@@ -27,11 +27,27 @@ class EvaluationsFragment : Fragment() {
     private var _binding: FragmentEvaluationsBinding? = null
     private val binding get() = _binding!!
 
-
     private lateinit var adapter: EvaluationAdapter
 
+    private val monthMap = mapOf(
+        "Janvier" to 1,
+        "Février" to 2,
+        "Mars" to 3,
+        "Avril" to 4,
+        "Mai" to 5,
+        "Juin" to 6,
+        "Juillet" to 7,
+        "Août" to 8,
+        "Septembre" to 9,
+        "Octobre" to 10,
+        "Novembre" to 11,
+        "Décembre" to 12
+    )
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEvaluationsBinding.inflate(inflater, container, false)
         return binding.root
@@ -39,10 +55,12 @@ class EvaluationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupRecyclerView()
         setupDropdowns()
-        setupSearch()
         observeData()
+        setupSearch()
+
     }
 
     private fun setupRecyclerView() {
@@ -52,72 +70,139 @@ class EvaluationsFragment : Fragment() {
                 R.id.action_evaluationsFragment_to_evaluationDetailFragment
             )
         }
+
         adapter.formatDateFn = viewModel::formatDate
         binding.rvEvaluations.layoutManager = LinearLayoutManager(requireContext())
         binding.rvEvaluations.adapter = adapter
     }
 
     private fun setupDropdowns() {
+
+        binding.autocompleteMois.isSaveEnabled = false
+        binding.autocompleteAnnee.isSaveEnabled = false
+        binding.autocompleteEntite.isSaveEnabled = false
+        binding.autocompleteTheme.isSaveEnabled = false
+
         val moisList = listOf(
             "Tous", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
             "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
         )
+
         binding.autocompleteMois.setAdapter(
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, moisList)
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                moisList
+            )
         )
 
         val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
-        val anneeList   = listOf("Toutes") + (currentYear downTo currentYear - 4).map { it.toString() }
+        val anneeList = listOf("Toutes") + (currentYear downTo currentYear - 4).map { it.toString() }
+
         binding.autocompleteAnnee.setAdapter(
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, anneeList)
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                anneeList
+            )
         )
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.evaluations.collect { list ->
-                val entites = listOf("Toutes") + list.map { it.entite }
-                    .filter { it.isNotBlank() }.distinct().sorted()
-                binding.autocompleteEntite.setAdapter(
-                    ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, entites)
-                )
-                val themes = listOf("Tous") + list.map { it.themeNom }.distinct().sorted()
-                binding.autocompleteTheme.setAdapter(
-                    ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, themes)
-                )
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.evaluations.collect { list ->
+                    val entites = listOf("Toutes") +
+                            list.map { it.entite }
+                                .filter { it.isNotBlank() }
+                                .distinct()
+                                .sorted()
+
+                    val themes = listOf("Tous") +
+                            list.map { it.themeNom }
+                                .filter { it.isNotBlank() }
+                                .distinct()
+                                .sorted()
+
+                    binding.autocompleteEntite.setAdapter(
+                        ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            entites
+                        )
+                    )
+
+                    binding.autocompleteTheme.setAdapter(
+                        ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            themes
+                        )
+                    )
+                }
             }
         }
     }
 
     private fun setupSearch() {
         binding.btnAppliquerFiltres.setOnClickListener {
-            val matricule = binding.etMatricule.text?.toString()?.trim() ?: ""
-            val entite    = binding.autocompleteEntite.text?.toString()?.trim()
-                .takeIf { it != "Toutes" } ?: ""
-            val theme     = binding.autocompleteTheme.text?.toString()?.trim()
-                .takeIf { it != "Tous" } ?: ""
-            val moisStr   = binding.autocompleteMois.text?.toString()?.trim()
-            val anneeStr  = binding.autocompleteAnnee.text?.toString()?.trim()
+            val matricule = binding.etMatricule.text?.toString()?.trim().orEmpty()
 
-            val moisIndex = listOf(
-                "Tous", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-            ).indexOf(moisStr).takeIf { it > 0 }
+            val entite = binding.autocompleteEntite.text?.toString()?.trim()
+                .takeIf { !it.isNullOrBlank() && it != "Toutes" }
+                .orEmpty()
 
-            val annee = anneeStr?.toIntOrNull()
-            viewModel.search(matricule, entite, theme, moisIndex, annee)
+            val theme = binding.autocompleteTheme.text?.toString()?.trim()
+                .takeIf { !it.isNullOrBlank() && it != "Tous" }
+                .orEmpty()
+
+            val moisText = binding.autocompleteMois.text?.toString()?.trim().orEmpty()
+            val mois = monthMap[moisText]
+
+            val anneeText = binding.autocompleteAnnee.text?.toString()?.trim().orEmpty()
+            val annee = anneeText.toIntOrNull()?.takeIf { it > 1900 }
+
+            viewModel.search(
+                matricule = matricule,
+                entite = entite,
+                theme = theme,
+                mois = mois,
+                annee = annee
+            )
         }
     }
 
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.filtered.collect { list ->
-                adapter.submitList(list)
-                binding.tvCountEval.text = "${list.size} résultats trouvés"
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.filtered.collect { list ->
+                    adapter.submitList(list)
+                    binding.tvCountEval.text = "${list.size} résultats trouvés"
+                }
             }
         }
+    }
+
+    private fun resetFiltersUI() {
+        binding.etMatricule.setText("")
+
+        binding.autocompleteEntite.setText("Toutes", false)
+        binding.autocompleteTheme.setText("Tous", false)
+        binding.autocompleteMois.setText("Tous", false)
+        binding.autocompleteAnnee.setText("Toutes", false)
+
+        binding.autocompleteEntite.clearFocus()
+        binding.autocompleteTheme.clearFocus()
+        binding.autocompleteMois.clearFocus()
+        binding.autocompleteAnnee.clearFocus()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onResume() {
+        super.onResume()
+        resetFiltersUI()
+    }
+
 }

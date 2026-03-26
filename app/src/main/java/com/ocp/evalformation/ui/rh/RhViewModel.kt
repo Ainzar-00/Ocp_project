@@ -89,7 +89,7 @@ class RhViewModel @Inject constructor(
             .switchMap { themeId ->
                 if (themeId != null) repo.themeDao.getByIdLive(themeId).map { it?.nom }
                 else MutableLiveData<String?>(null)
-            }
+        }
 
     // ── FormationWithInvitation ────────────────────────────────────────────────
     // Groups ALL invitation rows per formation so REPONDUE always wins

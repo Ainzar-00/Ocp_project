@@ -154,26 +154,36 @@ class EvaluationViewModel @Inject constructor(
 
     fun search(
         matricule: String = "",
-        entite   : String = "",
-        theme    : String = "",
-        mois     : Int?   = null,
-        annee    : Int?   = null
+        entite: String = "",
+        theme: String = "",
+        mois: Int? = null,
+        annee: Int? = null
     ) {
         _filtered.value = _evaluations.value.filter { item ->
             val eval = item.evaluation
-            val matchMatricule = matricule.isBlank() ||
-                    eval.maticuleCollaborateur.contains(matricule, ignoreCase = true)
-            val matchEntite = entite.isBlank() ||
-                    item.entite.contains(entite, ignoreCase = true)
-            val matchTheme = theme.isBlank() ||
-                    item.themeNom.contains(theme, ignoreCase = true)
-            // Extract month number directly from ISO date "2026-03-20T..." → 3
-            val matchMois = mois == null || extractMonth(eval.dateEvaluation) == mois
-            // Extract year directly from ISO date "2026-03-20T..." → 2026
-            val matchAnnee = annee == null || extractYear(eval.dateEvaluation) == annee
+
+            val matchMatricule =
+                matricule.isBlank() ||
+                        eval.maticuleCollaborateur.contains(matricule, ignoreCase = true)
+
+            val matchEntite =
+                entite.isBlank() ||
+                        item.entite.contains(entite, ignoreCase = true)
+
+            val matchTheme =
+                theme.isBlank() ||
+                        item.themeNom.contains(theme, ignoreCase = true)
+
+            val itemMonth = extractMonth(eval.dateEvaluation)
+            val itemYear = extractYear(eval.dateEvaluation)
+
+            val matchMois = mois == null || itemMonth == mois
+            val matchAnnee = annee == null || itemYear == annee
+
             matchMatricule && matchEntite && matchTheme && matchMois && matchAnnee
         }
     }
+
 
     // Parses "21/03/2026" → "21 mars 2026"
     fun formatDate(date: String): String {
@@ -186,18 +196,32 @@ class EvaluationViewModel @Inject constructor(
         }
     }
 
-    // Extracts month number from "21/03/2026" → 3
-    private fun extractMonth(date: String): Int {
+    private fun extractMonth(date: String?): Int? {
+        if (date.isNullOrBlank()) return null
+
         return try {
-            date.split("/")[1].toInt()
-        } catch (e: Exception) { -1 }
+            when {
+                date.contains("/") -> date.split("/").getOrNull(1)?.toIntOrNull()
+                date.contains("-") -> date.take(7).split("-").getOrNull(1)?.toIntOrNull()
+                else -> null
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 
-    // Extracts year from "21/03/2026" → 2026
-    private fun extractYear(date: String): Int {
+    private fun extractYear(date: String?): Int? {
+        if (date.isNullOrBlank()) return null
+
         return try {
-            date.split("/")[2].toInt()
-        } catch (e: Exception) { -1 }
+            when {
+                date.contains("/") -> date.split("/").getOrNull(2)?.toIntOrNull()
+                date.contains("-") -> date.take(4).toIntOrNull()
+                else -> null
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 
 
