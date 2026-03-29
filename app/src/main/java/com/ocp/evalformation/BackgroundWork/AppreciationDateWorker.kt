@@ -45,7 +45,7 @@ class AppreciationDateWorker @AssistedInject constructor(
 
             val matching = formations.filter { formation ->
                 val appDate = formation.dateAppreciation.toIntOrNull()?.toLong()
-                val match   = appDate == today
+                val match   = appDate!! <= today
                 Log.d("WorkerTest", "id=${formation.id} appDate=$appDate today=$today → match=$match")
                 match
             }

@@ -1,5 +1,6 @@
 package com.ocp.evalformation.com.ocp.evalformation.data.GoogleScriptApiService
 
+import android.util.Log
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import com.ocp.evalformation.data.GoogleScriptApiService.GoogleScriptApiService
@@ -18,15 +19,32 @@ object RetrofitInstance {
 
     private const val BASE_URL = "https://evaluationformserver-production.up.railway.app/"
 
+//    private const val BASE_URL ="http://localhost:8080/"
+
     val api: GoogleScriptApiService by lazy {
 
         val gson = GsonBuilder()
             .setLenient()
             .registerTypeAdapter(Long::class.java, JsonDeserializer { json, _, _ ->
-                json.asDouble.toLong()
+                try {
+                    json.asDouble.toLong()
+                } catch (e: Exception) {
+                    json.asString.toLongOrNull() ?: 0L
+                }
             })
             .registerTypeAdapter(Int::class.java, JsonDeserializer { json, _, _ ->
-                json.asDouble.toInt()
+                try {
+                    json.asDouble.toInt()
+                } catch (e: Exception) {
+                    json.asString.toIntOrNull() ?: 0
+                }
+            })
+            // ✅ NEW: Handle Google Forms entry IDs as strings
+            .registerTypeAdapter(String::class.java, JsonDeserializer { json, _, _ ->
+                // Let Gson handle strings normally, but log for debugging
+                val value = json.asString
+                Log.d("GsonDebug", "Deserializing string: $value")
+                value
             })
             .create()
 

@@ -62,9 +62,10 @@ object AppModule {
 
     @Provides @Singleton
     fun provideMainRepo(
+        @ApplicationContext context: Context,
         db: OcpDatabase,
         firebase: FirebaseRepository
-    ) = MainRepository(db, firebase)
+    ) = MainRepository(context,db, firebase)
 
     @Provides
     @Singleton

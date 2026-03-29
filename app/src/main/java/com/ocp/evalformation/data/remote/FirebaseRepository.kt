@@ -568,13 +568,13 @@ class FirebaseRepository @Inject constructor(
                             themeId = doc.getLong("themeId") ?: 0L,
                             formUrl = doc.getString("formUrl") ?: "",
                             entryIds = EntryIds(
-                                formationId    = (entryIdsMap?.get("formationId") as? Long)    ?: 0L,
-                                intituleAction = (entryIdsMap?.get("intituleAction") as? Long) ?: 0L,
-                                nomPrenom      = (entryIdsMap?.get("nomPrenom") as? Long)      ?: 0L,
-                                matricule      = (entryIdsMap?.get("matricule") as? Long)      ?: 0L,
-                                service        = (entryIdsMap?.get("service") as? Long)        ?: 0L,
-                                formateur      = (entryIdsMap?.get("formateur") as? Long)      ?: 0L,
-                                dates          = (entryIdsMap?.get("dates") as? Long)          ?: 0L
+                                formationId    = ((entryIdsMap?.get("formationId"))    ?: "") as String,
+                                intituleAction = ((entryIdsMap?.get("intituleAction") ) ?: "") as String,
+                                nomPrenom      = (entryIdsMap?.get("nomPrenom") ?: "") as String,
+                                matricule      = (entryIdsMap?.get("matricule") ?: "") as String,
+                                service        = (entryIdsMap?.get("service") ?: "") as String,
+                                formateur      = (entryIdsMap?.get("formateur") ?: "") as String,
+                                dates          = (entryIdsMap?.get("dates") ?: "") as String,
                             )
                         )
                     } catch (e: Exception) {

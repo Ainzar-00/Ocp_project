@@ -58,7 +58,7 @@ public final class OcpDatabase_Impl extends OcpDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(20) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(21) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `themes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nom` TEXT NOT NULL, `objectifPedagogique` TEXT NOT NULL, `syncedToFirebase` INTEGER NOT NULL)");
@@ -69,11 +69,11 @@ public final class OcpDatabase_Impl extends OcpDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_formations_collaborateurMatricule` ON `formations` (`collaborateurMatricule`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_formations_themeId` ON `formations` (`themeId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `invitations_flm` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `firebaseId` TEXT NOT NULL, `formationId` INTEGER NOT NULL, `datesFormation` TEXT NOT NULL, `formateur` TEXT NOT NULL, `matriculeCollaborateur` TEXT NOT NULL, `nomCompletCollaborateur` TEXT NOT NULL, `service` TEXT NOT NULL, `themeNom` TEXT NOT NULL, `themeObjectives` TEXT NOT NULL, `emailFlm` TEXT NOT NULL, `nomFlm` TEXT NOT NULL, `statut` TEXT NOT NULL, `dateEnvoi` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `forms` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `themeId` INTEGER NOT NULL, `formUrl` TEXT NOT NULL, `formationId` INTEGER NOT NULL, `intituleAction` INTEGER NOT NULL, `nomPrenom` INTEGER NOT NULL, `matricule` INTEGER NOT NULL, `service` INTEGER NOT NULL, `formateur` INTEGER NOT NULL, `dates` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `forms` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `themeId` INTEGER NOT NULL, `formUrl` TEXT NOT NULL, `formationId` TEXT NOT NULL, `intituleAction` TEXT NOT NULL, `nomPrenom` TEXT NOT NULL, `matricule` TEXT NOT NULL, `service` TEXT NOT NULL, `formateur` TEXT NOT NULL, `dates` TEXT NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `evaluations` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `formationId` INTEGER NOT NULL, `intituleAction` TEXT NOT NULL, `maticuleCollaborateur` TEXT NOT NULL, `datesFormation` TEXT NOT NULL, `dateEvaluation` TEXT NOT NULL, `moyensAppreciation` TEXT NOT NULL, `raisonsInsatisfaction` TEXT NOT NULL, `competencesAcquises` TEXT NOT NULL, `Suggestions` TEXT NOT NULL, `satisfactionBesoin` INTEGER NOT NULL, `impactPerformance` INTEGER NOT NULL, `applicationConnaissances` INTEGER NOT NULL, `satisfactionGlobale` INTEGER NOT NULL, FOREIGN KEY(`formationId`) REFERENCES `formations`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_evaluations_formationId` ON `evaluations` (`formationId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e1aa1996e6a14d3a7e9e2ee3c82105dd')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '054d158ea5b451ae36a908177ffe3775')");
       }
 
       @Override
@@ -236,13 +236,13 @@ public final class OcpDatabase_Impl extends OcpDatabase {
         _columnsForms.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsForms.put("themeId", new TableInfo.Column("themeId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsForms.put("formUrl", new TableInfo.Column("formUrl", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("formationId", new TableInfo.Column("formationId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("intituleAction", new TableInfo.Column("intituleAction", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("nomPrenom", new TableInfo.Column("nomPrenom", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("matricule", new TableInfo.Column("matricule", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("service", new TableInfo.Column("service", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("formateur", new TableInfo.Column("formateur", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsForms.put("dates", new TableInfo.Column("dates", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("formationId", new TableInfo.Column("formationId", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("intituleAction", new TableInfo.Column("intituleAction", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("nomPrenom", new TableInfo.Column("nomPrenom", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("matricule", new TableInfo.Column("matricule", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("service", new TableInfo.Column("service", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("formateur", new TableInfo.Column("formateur", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsForms.put("dates", new TableInfo.Column("dates", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysForms = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesForms = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoForms = new TableInfo("forms", _columnsForms, _foreignKeysForms, _indicesForms);
@@ -280,7 +280,7 @@ public final class OcpDatabase_Impl extends OcpDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "e1aa1996e6a14d3a7e9e2ee3c82105dd", "be201d983cfc11a2a2116000ed42128d");
+    }, "054d158ea5b451ae36a908177ffe3775", "e0ae74afef4c0aefc7139b0b4fa251df");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

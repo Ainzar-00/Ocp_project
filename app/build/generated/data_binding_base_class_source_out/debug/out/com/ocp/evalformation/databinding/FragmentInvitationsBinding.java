@@ -26,16 +26,10 @@ public final class FragmentInvitationsBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final MaterialButton btnSendAll;
-
-  @NonNull
   public final MaterialButton btnSendAllAppreciation;
 
   @NonNull
   public final MaterialCardView cardAppreciationDate;
-
-  @NonNull
-  public final MaterialCardView cardEndOfMonth;
 
   @NonNull
   public final Chip chipClearFilters;
@@ -65,25 +59,19 @@ public final class FragmentInvitationsBinding implements ViewBinding {
   public final TextView tvEmptyState;
 
   @NonNull
-  public final TextView tvEndOfMonthInfo;
-
-  @NonNull
   public final TextView tvPendingCount;
 
   private FragmentInvitationsBinding(@NonNull LinearLayout rootView,
-      @NonNull MaterialButton btnSendAll, @NonNull MaterialButton btnSendAllAppreciation,
-      @NonNull MaterialCardView cardAppreciationDate, @NonNull MaterialCardView cardEndOfMonth,
-      @NonNull Chip chipClearFilters, @NonNull Chip chipFilterService,
-      @NonNull Chip chipFilterStatut, @NonNull Chip chipFilterTheme,
-      @NonNull EditText etSearchMatricule, @NonNull ProgressBar progressInvitation,
-      @NonNull RecyclerView rvInvitations, @NonNull TextView tvAppreciationInfo,
-      @NonNull TextView tvEmptyState, @NonNull TextView tvEndOfMonthInfo,
+      @NonNull MaterialButton btnSendAllAppreciation,
+      @NonNull MaterialCardView cardAppreciationDate, @NonNull Chip chipClearFilters,
+      @NonNull Chip chipFilterService, @NonNull Chip chipFilterStatut,
+      @NonNull Chip chipFilterTheme, @NonNull EditText etSearchMatricule,
+      @NonNull ProgressBar progressInvitation, @NonNull RecyclerView rvInvitations,
+      @NonNull TextView tvAppreciationInfo, @NonNull TextView tvEmptyState,
       @NonNull TextView tvPendingCount) {
     this.rootView = rootView;
-    this.btnSendAll = btnSendAll;
     this.btnSendAllAppreciation = btnSendAllAppreciation;
     this.cardAppreciationDate = cardAppreciationDate;
-    this.cardEndOfMonth = cardEndOfMonth;
     this.chipClearFilters = chipClearFilters;
     this.chipFilterService = chipFilterService;
     this.chipFilterStatut = chipFilterStatut;
@@ -93,7 +81,6 @@ public final class FragmentInvitationsBinding implements ViewBinding {
     this.rvInvitations = rvInvitations;
     this.tvAppreciationInfo = tvAppreciationInfo;
     this.tvEmptyState = tvEmptyState;
-    this.tvEndOfMonthInfo = tvEndOfMonthInfo;
     this.tvPendingCount = tvPendingCount;
   }
 
@@ -124,12 +111,6 @@ public final class FragmentInvitationsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btnSendAll;
-      MaterialButton btnSendAll = ViewBindings.findChildViewById(rootView, id);
-      if (btnSendAll == null) {
-        break missingId;
-      }
-
       id = R.id.btnSendAllAppreciation;
       MaterialButton btnSendAllAppreciation = ViewBindings.findChildViewById(rootView, id);
       if (btnSendAllAppreciation == null) {
@@ -139,12 +120,6 @@ public final class FragmentInvitationsBinding implements ViewBinding {
       id = R.id.cardAppreciationDate;
       MaterialCardView cardAppreciationDate = ViewBindings.findChildViewById(rootView, id);
       if (cardAppreciationDate == null) {
-        break missingId;
-      }
-
-      id = R.id.cardEndOfMonth;
-      MaterialCardView cardEndOfMonth = ViewBindings.findChildViewById(rootView, id);
-      if (cardEndOfMonth == null) {
         break missingId;
       }
 
@@ -202,23 +177,16 @@ public final class FragmentInvitationsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tvEndOfMonthInfo;
-      TextView tvEndOfMonthInfo = ViewBindings.findChildViewById(rootView, id);
-      if (tvEndOfMonthInfo == null) {
-        break missingId;
-      }
-
       id = R.id.tvPendingCount;
       TextView tvPendingCount = ViewBindings.findChildViewById(rootView, id);
       if (tvPendingCount == null) {
         break missingId;
       }
 
-      return new FragmentInvitationsBinding((LinearLayout) rootView, btnSendAll,
-          btnSendAllAppreciation, cardAppreciationDate, cardEndOfMonth, chipClearFilters,
-          chipFilterService, chipFilterStatut, chipFilterTheme, etSearchMatricule,
-          progressInvitation, rvInvitations, tvAppreciationInfo, tvEmptyState, tvEndOfMonthInfo,
-          tvPendingCount);
+      return new FragmentInvitationsBinding((LinearLayout) rootView, btnSendAllAppreciation,
+          cardAppreciationDate, chipClearFilters, chipFilterService, chipFilterStatut,
+          chipFilterTheme, etSearchMatricule, progressInvitation, rvInvitations, tvAppreciationInfo,
+          tvEmptyState, tvPendingCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

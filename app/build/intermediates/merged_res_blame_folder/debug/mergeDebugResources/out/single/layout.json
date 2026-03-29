@@ -36,6 +36,10 @@
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\dialog_add_theme.xml"
     },
     {
+        "merged": "com.ocp.evalformation.app-mergeDebugResources-4:/layout/fragment_invitations.xml",
+        "source": "com.ocp.evalformation.app-main-7:/layout/fragment_invitations.xml"
+    },
+    {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-mergeDebugResources-4:\\layout\\fragment_import_flm.xml",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\fragment_import_flm.xml"
     },
@@ -54,10 +58,6 @@
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-mergeDebugResources-4:\\layout\\activity_splash.xml",
         "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-main-7:\\layout\\activity_splash.xml"
-    },
-    {
-        "merged": "com.ocp.evalformation.app-mergeDebugResources-4:/layout/fragment_evaluations.xml",
-        "source": "com.ocp.evalformation.app-main-7:/layout/fragment_evaluations.xml"
     },
     {
         "merged": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\daemon\\8.6\\com.ocp.evalformation.app-mergeDebugResources-4:\\layout\\fragment_themes.xml",

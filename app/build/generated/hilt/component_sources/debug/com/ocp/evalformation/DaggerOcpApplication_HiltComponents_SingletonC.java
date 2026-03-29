@@ -516,30 +516,30 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
-
-      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
-
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
-
-      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
 
-      @KeepFieldType
-      EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
+      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
 
-      @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+      static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
+
+      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
 
       @KeepFieldType
-      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
+      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
 
       @KeepFieldType
-      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+
+      @KeepFieldType
+      EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
+
+      @KeepFieldType
+      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
     }
   }
 
@@ -592,30 +592,30 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
-
-      static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
+      static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
 
       static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
 
+      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
+
       static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
-      static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
+      static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
 
       @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
-
-      @KeepFieldType
-      EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
+      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
 
       @KeepFieldType
       RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
 
       @KeepFieldType
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+
+      @KeepFieldType
       ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
 
       @KeepFieldType
-      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
+      EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -867,7 +867,7 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
           };
 
           case 1: // com.ocp.evalformation.data.repository.MainRepository 
-          return (T) AppModule_ProvideMainRepoFactory.provideMainRepo(singletonCImpl.provideDatabaseProvider.get(), singletonCImpl.provideFirebaseRepoProvider.get());
+          return (T) AppModule_ProvideMainRepoFactory.provideMainRepo(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideDatabaseProvider.get(), singletonCImpl.provideFirebaseRepoProvider.get());
 
           case 2: // com.ocp.evalformation.data.local.OcpDatabase 
           return (T) AppModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));

@@ -1,6 +1,9 @@
 package com.ocp.evalformation.data.repository
 
+import android.content.Context
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.edit
 import com.ocp.evalformation.com.ocp.evalformation.data.GoogleScriptApiService.RetrofitInstance
 import com.ocp.evalformation.data.local.OcpDatabase
 import com.ocp.evalformation.data.local.entity.*
@@ -8,6 +11,7 @@ import com.ocp.evalformation.data.remote.FirebaseRepository
 import com.ocp.evalformation.data.local.dao.FormDao
 import com.ocp.evalformation.utils.EmailHelper
 import com.ocp.evalformation.utils.dateHelper
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,6 +21,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MainRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val db: OcpDatabase,
     val firebase: FirebaseRepository
 ) {
@@ -246,7 +251,27 @@ class MainRepository @Inject constructor(
             }
 
             Log.d("Repo", "━━━━━━━━━━ SUCCESS sendEvaluationFormToFlm ━━━━━━━━━━")
+
+            val prefs= context.getSharedPreferences("worker_prefs", Context.MODE_PRIVATE)
+
+            val idsString = prefs.getString("pending_formation_ids", "") ?: ""
+
+            val idsList = idsString
+                .split(",")
+                .filter { it.isNotBlank() }
+                .toMutableList()
+
+            idsList.remove(formation.id.toString())
+
+            val updated = idsList.joinToString(",")
+
+            prefs.edit()
+                .putString("pending_formation_ids", updated)
+                .apply()
+
             Result.success(saved.copy(firebaseId = firebaseId))
+
+
 
         } catch (e: Exception) {
             Log.e("Repo", "🔥 MAIN ERROR: ${e.message}", e)
@@ -296,6 +321,7 @@ class MainRepository @Inject constructor(
                     val existing = invitationDao.getByFormationId(formation.id)
                     existing == null || existing.statut == InvitationStatus.NON_EXPEDIEE
                 }
+
                 if (toSend.isEmpty()) return@forEach
 
                 val collab = collaborateurDao.getByMatricule(matricule) ?: return@forEach

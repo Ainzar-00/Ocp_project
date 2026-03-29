@@ -3407,7 +3407,6 @@ id btnEnvoyerAutre
 id btnExportAllThemes
 id btnExportGlobale
 id btnExportOneTheme
-id btnSendAll
 id btnSendAllAppreciation
 id btn_add_collab
 id btn_add_flm
@@ -3430,7 +3429,6 @@ id cache_measures
 id callMeasure
 id cancel_button
 id cardAppreciationDate
-id cardEndOfMonth
 id card_filters
 id card_header
 id card_item
@@ -3919,7 +3917,6 @@ id triangle
 id tvAnalyticsTitle
 id tvAppreciationInfo
 id tvEmptyState
-id tvEndOfMonthInfo
 id tvLegendInsatisfaisant
 id tvLegendSatisfaisant
 id tvMatricule

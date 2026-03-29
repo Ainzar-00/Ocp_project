@@ -1,6 +1,8 @@
 package com.ocp.evalformation.ui.rh
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
@@ -30,6 +32,7 @@ class RhViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     init {
+
         // ── Single listener — insert new, update existing ──────────────
         repo.firebase.listenToInvitations(viewModelScope) { invitations ->
             viewModelScope.launch {
@@ -57,8 +60,8 @@ class RhViewModel @Inject constructor(
 
     // ── LiveData ───────────────────────────────────────────────────────────────
     val allThemes         = repo.themeDao.getAllLive()
-    val allFlms           = repo.flmDao.getAllLive()
     val allCollaborateurs = repo.collaborateurDao.getAllLive()
+
     val allFormations     = repo.formationDao.getAllLive()
 
     // ALL invitation rows — needed to group by formationId and resolve status
@@ -71,6 +74,10 @@ class RhViewModel @Inject constructor(
 
     val collaborateursWithFormation: LiveData<Int> =
         repo.formationDao.countCollaborateursWithFormationByYear(yearRange.first, yearRange.second)
+
+    private val _pendingIds = MutableLiveData<List<Long>>()
+
+    val pendingIds: LiveData<List<Long>> = _pendingIds
 
     val distinctThemesCount: LiveData<Int> =
         repo.formationDao.countDistinctThemesByYear(yearRange.first, yearRange.second)
@@ -178,11 +185,6 @@ class RhViewModel @Inject constructor(
                 Log.d("InvFilter", "eom      : $isEndOfMonth")
 
                 mediator.value = when {
-                    isEndOfMonth -> {
-                        val result = all.filter { it.status != InvitationStatus.REPONDUE }
-                        Log.d("InvFilter", "END_OF_MONTH → ${result.size}")
-                        result
-                    }
 
                     filtersEmpty -> {
                         Log.d("InvFilter", "EMPTY → 0")
@@ -244,6 +246,15 @@ class RhViewModel @Inject constructor(
             mediator.addSource(_filterTheme)         { refresh() }
             mediator.addSource(allThemes)            { refresh() }
         }
+
+    fun refreshPendingIds(prefs: SharedPreferences) {
+        val ids = prefs.getString("pending_formation_ids", "")
+            ?.split(",")
+            ?.mapNotNull { it.toLongOrNull() }
+            ?: emptyList()
+
+        _pendingIds.value = ids
+    }
 
     // ── Check & update statuses ────────────────────────────────────────────────
     fun checkAndUpdateInvitationStatuses() {

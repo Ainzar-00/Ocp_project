@@ -185,13 +185,13 @@ data class Forms(
 )
 
 data class EntryIds(
-    val formationId    : Long = 0,
-    val intituleAction : Long = 0,
-    val nomPrenom      : Long = 0,
-    val matricule      : Long = 0,
-    val service        : Long = 0,
-    val formateur      : Long = 0,
-    val dates          : Long = 0
+    val formationId    : String = "",
+    val intituleAction : String = "",
+    val nomPrenom      : String = "",
+    val matricule      : String = "",
+    val service        : String = "",
+    val formateur      : String = "",
+    val dates          : String = ""
 )
 
 

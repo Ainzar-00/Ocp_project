@@ -1,9 +1,11 @@
 package com.ocp.evalformation.ui.rh.dashboard
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +26,17 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class InvitationsFragment : Fragment() {
 
+    private lateinit var prefs: SharedPreferences
+
     private var _binding: FragmentInvitationsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: RhViewModel by activityViewModels()
+
+    private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPrefs, key ->
+        if (key == "pending_formation_ids") {
+            viewModel.refreshPendingIds(sharedPrefs)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,27 +51,25 @@ class InvitationsFragment : Fragment() {
 
         viewModel.checkAndUpdateInvitationStatuses()
 
-        // Observe pending formation IDs from worker
-        val prefs = requireContext().getSharedPreferences("worker_prefs", Context.MODE_PRIVATE)
-        val pendingIds = prefs.getString("pending_formation_ids", "")
-            ?.split(",")?.mapNotNull { it.toLongOrNull() } ?: emptyList()
+        prefs=context?.getSharedPreferences("worker_prefs", Context.MODE_PRIVATE)!!
 
-        if (pendingIds.isNotEmpty()) {
-            binding.cardAppreciationDate.visibility = View.VISIBLE
-            binding.tvAppreciationInfo.text =
-                "📋 ${pendingIds.size} formation(s) arrivent à date d'appréciation aujourd'hui."
+        viewModel.refreshPendingIds(prefs)
 
-            binding.btnSendAllAppreciation.setOnClickListener {
-                viewModel.sendAllByFormationIds(pendingIds)
-                // Dismiss notification
-                NotificationManagerCompat.from(requireContext())
-                    .cancel(AppreciationDateWorker.NOTIFICATION_ID)
-                // Clear stored IDs
-                prefs.edit().remove("pending_formation_ids").apply()
+        viewModel.pendingIds.observe(viewLifecycleOwner) { pendingIds ->
+            if (pendingIds.isNotEmpty()) {
+                binding.cardAppreciationDate.visibility = View.VISIBLE
+                binding.tvAppreciationInfo.text =
+                    "📋 ${pendingIds.size} formation(s) arrivent à date d'appréciation aujourd'hui."
+
+                binding.btnSendAllAppreciation.setOnClickListener {
+                    viewModel.sendAllByFormationIds(pendingIds)
+                    NotificationManagerCompat.from(requireContext())
+                        .cancel(AppreciationDateWorker.NOTIFICATION_ID)
+                    prefs.edit().remove("pending_formation_ids").apply()
+                }
+            } else {
                 binding.cardAppreciationDate.visibility = View.GONE
             }
-        } else {
-            binding.cardAppreciationDate.visibility = View.GONE
         }
 
 
@@ -78,14 +86,7 @@ class InvitationsFragment : Fragment() {
             invAdapter.submitThemes(themes.associate { it.id to it.nom })
         }
 
-        // ── End-of-month banner ────────────────────────────────────────────────
-        binding.cardEndOfMonth.visibility =
-            if (viewModel.isEndOfMonth) View.VISIBLE else View.GONE
 
-//        binding.btnTestWorker.setOnClickListener {
-//            viewModel.testAppreciationWorker()
-//            Toast.makeText(requireContext(), "Worker lancé — vérifiez Logcat", Toast.LENGTH_SHORT).show()
-//        }
 
         // ── Observe filtered formations ────────────────────────────────────────
         viewModel.filteredFormations.observe(viewLifecycleOwner) { list ->
@@ -134,21 +135,7 @@ class InvitationsFragment : Fragment() {
             binding.chipFilterService.isChecked = service != null
         }
 
-        // ── Send All button ────────────────────────────────────────────────────
-        binding.btnSendAll.setOnClickListener {
-            val count = viewModel.filteredFormations.value
-                ?.count { it.status == InvitationStatus.NON_EXPEDIEE } ?: 0
-            if (count == 0) {
-                Toast.makeText(requireContext(), "Aucune invitation à envoyer.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            AlertDialog.Builder(requireContext())
-                .setTitle("Envoi global")
-                .setMessage("Envoyer $count invitation(s) non expédiée(s) ?")
-                .setPositiveButton("Envoyer") { _, _ -> viewModel.sendAllInvitations() }
-                .setNegativeButton("Annuler", null)
-                .show()
-        }
+
 
         // ── Invitation state ───────────────────────────────────────────────────
         lifecycleScope.launch {
@@ -195,6 +182,30 @@ class InvitationsFragment : Fragment() {
             .show()
     }
 
+    private fun updatePendingFormationCard(prefs: SharedPreferences) {
+        val pendingIds = prefs.getString("pending_formation_ids", "")
+            ?.split(",")
+            ?.mapNotNull { it.toLongOrNull() }
+            ?: emptyList()
+
+        if (pendingIds.isNotEmpty()) {
+            binding.cardAppreciationDate.visibility = View.VISIBLE
+            binding.tvAppreciationInfo.text =
+                "📋 ${pendingIds.size} formation(s) arrivent à date d'appréciation aujourd'hui."
+
+            binding.btnSendAllAppreciation.setOnClickListener {
+                viewModel.sendAllByFormationIds(pendingIds)
+
+                NotificationManagerCompat.from(requireContext())
+                    .cancel(AppreciationDateWorker.NOTIFICATION_ID)
+
+                prefs.edit().remove("pending_formation_ids").apply()
+            }
+        } else {
+            binding.cardAppreciationDate.visibility = View.GONE
+        }
+    }
+
     // ── Theme dialog ───────────────────────────────────────────────────────────
     private fun showThemeDialog() {
         val themes = viewModel.allThemes.value
@@ -217,27 +228,47 @@ class InvitationsFragment : Fragment() {
             .show()
     }
 
+    override fun onStart() {
+        super.onStart()
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
+    }
+
     // ── Service dialog ─────────────────────────────────────────────────────────
     private fun showServiceDialog() {
-        val services = viewModel.allCollaborateurs.value
-            ?.mapNotNull { it.service }
-            ?.distinct()
-            ?.sorted()
-            ?.toTypedArray()
-            ?: arrayOf()
+        Log.d("Collab Service0",viewModel.allCollaborateurs.value.toString())
+        viewModel.allCollaborateurs.observe(viewLifecycleOwner){collaborateurEntities->
+            val services = collaborateurEntities
+                ?.mapNotNull { it.service }
+                ?.distinct()
+                ?.sorted()
+                ?.toTypedArray()
+                ?: arrayOf()
 
-        if (services.isEmpty()) {
-            Toast.makeText(requireContext(), "Aucun service disponible.", Toast.LENGTH_SHORT).show()
-            return
+            Log.d("Collab Service1",viewModel.allCollaborateurs.value.toString())
+
+            if (services.isEmpty()) {
+                Toast.makeText(requireContext(), "Aucun service disponible.", Toast.LENGTH_SHORT).show()
+                return@observe
+            }
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("Filtrer par service")
+                .setItems(services) { _, which ->
+                    viewModel.setFilterService(services[which])
+                }
+                .setNegativeButton("Annuler", null)
+                .show()
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle("Filtrer par service")
-            .setItems(services) { _, which ->
-                viewModel.setFilterService(services[which])
-            }
-            .setNegativeButton("Annuler", null)
-            .show()
+
+
+
+
     }
 
     // ── Reset chips ────────────────────────────────────────────────────────────

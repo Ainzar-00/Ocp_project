@@ -60,13 +60,41 @@ public final class FormDao_Impl implements FormDao {
           statement.bindString(3, entity.getFormUrl());
         }
         final EntryIds _tmpEntryIds = entity.getEntryIds();
-        statement.bindLong(4, _tmpEntryIds.getFormationId());
-        statement.bindLong(5, _tmpEntryIds.getIntituleAction());
-        statement.bindLong(6, _tmpEntryIds.getNomPrenom());
-        statement.bindLong(7, _tmpEntryIds.getMatricule());
-        statement.bindLong(8, _tmpEntryIds.getService());
-        statement.bindLong(9, _tmpEntryIds.getFormateur());
-        statement.bindLong(10, _tmpEntryIds.getDates());
+        if (_tmpEntryIds.getFormationId() == null) {
+          statement.bindNull(4);
+        } else {
+          statement.bindString(4, _tmpEntryIds.getFormationId());
+        }
+        if (_tmpEntryIds.getIntituleAction() == null) {
+          statement.bindNull(5);
+        } else {
+          statement.bindString(5, _tmpEntryIds.getIntituleAction());
+        }
+        if (_tmpEntryIds.getNomPrenom() == null) {
+          statement.bindNull(6);
+        } else {
+          statement.bindString(6, _tmpEntryIds.getNomPrenom());
+        }
+        if (_tmpEntryIds.getMatricule() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindString(7, _tmpEntryIds.getMatricule());
+        }
+        if (_tmpEntryIds.getService() == null) {
+          statement.bindNull(8);
+        } else {
+          statement.bindString(8, _tmpEntryIds.getService());
+        }
+        if (_tmpEntryIds.getFormateur() == null) {
+          statement.bindNull(9);
+        } else {
+          statement.bindString(9, _tmpEntryIds.getFormateur());
+        }
+        if (_tmpEntryIds.getDates() == null) {
+          statement.bindNull(10);
+        } else {
+          statement.bindString(10, _tmpEntryIds.getDates());
+        }
       }
     };
     this.__preparedStmtOfDeleteByThemeId = new SharedSQLiteStatement(__db) {
@@ -156,20 +184,48 @@ public final class FormDao_Impl implements FormDao {
               _tmpFormUrl = _cursor.getString(_cursorIndexOfFormUrl);
             }
             final EntryIds _tmpEntryIds;
-            final long _tmpFormationId;
-            _tmpFormationId = _cursor.getLong(_cursorIndexOfFormationId);
-            final long _tmpIntituleAction;
-            _tmpIntituleAction = _cursor.getLong(_cursorIndexOfIntituleAction);
-            final long _tmpNomPrenom;
-            _tmpNomPrenom = _cursor.getLong(_cursorIndexOfNomPrenom);
-            final long _tmpMatricule;
-            _tmpMatricule = _cursor.getLong(_cursorIndexOfMatricule);
-            final long _tmpService;
-            _tmpService = _cursor.getLong(_cursorIndexOfService);
-            final long _tmpFormateur;
-            _tmpFormateur = _cursor.getLong(_cursorIndexOfFormateur);
-            final long _tmpDates;
-            _tmpDates = _cursor.getLong(_cursorIndexOfDates);
+            final String _tmpFormationId;
+            if (_cursor.isNull(_cursorIndexOfFormationId)) {
+              _tmpFormationId = null;
+            } else {
+              _tmpFormationId = _cursor.getString(_cursorIndexOfFormationId);
+            }
+            final String _tmpIntituleAction;
+            if (_cursor.isNull(_cursorIndexOfIntituleAction)) {
+              _tmpIntituleAction = null;
+            } else {
+              _tmpIntituleAction = _cursor.getString(_cursorIndexOfIntituleAction);
+            }
+            final String _tmpNomPrenom;
+            if (_cursor.isNull(_cursorIndexOfNomPrenom)) {
+              _tmpNomPrenom = null;
+            } else {
+              _tmpNomPrenom = _cursor.getString(_cursorIndexOfNomPrenom);
+            }
+            final String _tmpMatricule;
+            if (_cursor.isNull(_cursorIndexOfMatricule)) {
+              _tmpMatricule = null;
+            } else {
+              _tmpMatricule = _cursor.getString(_cursorIndexOfMatricule);
+            }
+            final String _tmpService;
+            if (_cursor.isNull(_cursorIndexOfService)) {
+              _tmpService = null;
+            } else {
+              _tmpService = _cursor.getString(_cursorIndexOfService);
+            }
+            final String _tmpFormateur;
+            if (_cursor.isNull(_cursorIndexOfFormateur)) {
+              _tmpFormateur = null;
+            } else {
+              _tmpFormateur = _cursor.getString(_cursorIndexOfFormateur);
+            }
+            final String _tmpDates;
+            if (_cursor.isNull(_cursorIndexOfDates)) {
+              _tmpDates = null;
+            } else {
+              _tmpDates = _cursor.getString(_cursorIndexOfDates);
+            }
             _tmpEntryIds = new EntryIds(_tmpFormationId,_tmpIntituleAction,_tmpNomPrenom,_tmpMatricule,_tmpService,_tmpFormateur,_tmpDates);
             _item = new Forms(_tmpId,_tmpThemeId,_tmpFormUrl,_tmpEntryIds);
             _result.add(_item);
@@ -223,20 +279,48 @@ public final class FormDao_Impl implements FormDao {
               _tmpFormUrl = _cursor.getString(_cursorIndexOfFormUrl);
             }
             final EntryIds _tmpEntryIds;
-            final long _tmpFormationId;
-            _tmpFormationId = _cursor.getLong(_cursorIndexOfFormationId);
-            final long _tmpIntituleAction;
-            _tmpIntituleAction = _cursor.getLong(_cursorIndexOfIntituleAction);
-            final long _tmpNomPrenom;
-            _tmpNomPrenom = _cursor.getLong(_cursorIndexOfNomPrenom);
-            final long _tmpMatricule;
-            _tmpMatricule = _cursor.getLong(_cursorIndexOfMatricule);
-            final long _tmpService;
-            _tmpService = _cursor.getLong(_cursorIndexOfService);
-            final long _tmpFormateur;
-            _tmpFormateur = _cursor.getLong(_cursorIndexOfFormateur);
-            final long _tmpDates;
-            _tmpDates = _cursor.getLong(_cursorIndexOfDates);
+            final String _tmpFormationId;
+            if (_cursor.isNull(_cursorIndexOfFormationId)) {
+              _tmpFormationId = null;
+            } else {
+              _tmpFormationId = _cursor.getString(_cursorIndexOfFormationId);
+            }
+            final String _tmpIntituleAction;
+            if (_cursor.isNull(_cursorIndexOfIntituleAction)) {
+              _tmpIntituleAction = null;
+            } else {
+              _tmpIntituleAction = _cursor.getString(_cursorIndexOfIntituleAction);
+            }
+            final String _tmpNomPrenom;
+            if (_cursor.isNull(_cursorIndexOfNomPrenom)) {
+              _tmpNomPrenom = null;
+            } else {
+              _tmpNomPrenom = _cursor.getString(_cursorIndexOfNomPrenom);
+            }
+            final String _tmpMatricule;
+            if (_cursor.isNull(_cursorIndexOfMatricule)) {
+              _tmpMatricule = null;
+            } else {
+              _tmpMatricule = _cursor.getString(_cursorIndexOfMatricule);
+            }
+            final String _tmpService;
+            if (_cursor.isNull(_cursorIndexOfService)) {
+              _tmpService = null;
+            } else {
+              _tmpService = _cursor.getString(_cursorIndexOfService);
+            }
+            final String _tmpFormateur;
+            if (_cursor.isNull(_cursorIndexOfFormateur)) {
+              _tmpFormateur = null;
+            } else {
+              _tmpFormateur = _cursor.getString(_cursorIndexOfFormateur);
+            }
+            final String _tmpDates;
+            if (_cursor.isNull(_cursorIndexOfDates)) {
+              _tmpDates = null;
+            } else {
+              _tmpDates = _cursor.getString(_cursorIndexOfDates);
+            }
             _tmpEntryIds = new EntryIds(_tmpFormationId,_tmpIntituleAction,_tmpNomPrenom,_tmpMatricule,_tmpService,_tmpFormateur,_tmpDates);
             _result = new Forms(_tmpId,_tmpThemeId,_tmpFormUrl,_tmpEntryIds);
           } else {

@@ -292,12 +292,12 @@ app/src/main/java/com/ocp/evalformation/
 │   │   ├── import_bilan/ImportBilanFragment.kt
 │   │   ├── charts/ChartsFragment.kt
 │   │   └── evaluations/EvaluationsFragment.kt
-│   └── flm/FlmActivity.kt
 └── utils/
     ├── EmailHelper.kt               ← Email intent builder
     ├── ExcelHelper.kt               ← Apache POI import/export
     ├── GoogleFormHelper.kt          ← Pre-filled form URL builder
     └── OcpFirebaseMessagingService.kt
+    
 ```
 
 ---

@@ -39,6 +39,7 @@ class ImportViewModel @Inject constructor(
     val allThemes = repo.themeDao.getAllLive()
     val allFormations = repo.formationDao.getAllLive()
 
+
     private val _collabState = MutableStateFlow<ImportState>(ImportState.Idle)
     val collabState: StateFlow<ImportState> = _collabState
 
@@ -264,6 +265,7 @@ class ImportViewModel @Inject constructor(
                     return@launch
                 }
 
+                val colId=   col(headers,"ID")!!
                 val colNom = col(headers, "NOM", "THEME", "INTITULE")!!
                 val colObj = col(headers, "OBJECTIFPEDAGOGIQUE", "OBJECTIF", "OBJ")
 
@@ -273,7 +275,7 @@ class ImportViewModel @Inject constructor(
                 }
 
                 // required fields map: display name -> column index
-                val requiredFields = mapOf("Nom" to colNom, "ObjectifPedagogique" to colObj)
+                val requiredFields = mapOf("Id" to colId,"Nom" to colNom, "ObjectifPedagogique" to colObj)
 
                 val list = mutableListOf<ThemeEntity>()
                 val rowErrors = mutableListOf<String>()
@@ -288,8 +290,9 @@ class ImportViewModel @Inject constructor(
                         rowErrors.add("Ligne ${i + 1} : champ(s) manquant(s) → ${missing.joinToString(", ")}")
                         continue
                     }
-
+                    Log.d("Col Failure",cellStr(row,colId).toLongOrNull()!!.toString())
                     list.add(ThemeEntity(
+                        id                  = cellStr(row,colId).toLongOrNull()!!,
                         nom                 = cellStr(row, colNom),
                         objectifPedagogique = cellStr(row, colObj)
                     ))

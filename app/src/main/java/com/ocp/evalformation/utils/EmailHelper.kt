@@ -35,11 +35,15 @@ object EmailHelper {
         formations   : List<Pair<String, String>> // themeNom to formUrl
     ): String {
         val formationsBlock = formations.joinToString("\n\n") { (theme, url) ->
-            """  Thème : $theme
+            """ 
+                ───────────────────────────────────────────────────────────────────
+                 Thème : $theme
+                 ──────────────────────────────────────────────────────────────────
             Lien  : $url"""
         }
 
         return """
+            
         Bonjour $flmNom,
 
         Vous êtes invité(e) à évaluer votre collaborateur suite aux formations suivies.
@@ -50,12 +54,12 @@ object EmailHelper {
 
         Veuillez remplir les formulaires d'évaluation via les liens ci-dessous :
 
-$formationsBlock
+        $formationsBlock
 
         Merci de bien vouloir compléter ces formulaires dans les plus brefs délais.
 
         Cordialement,
-        Service RH — OCP
+        Service DEV RH — OCP
     """.trimIndent()
     }
 
@@ -119,7 +123,7 @@ $formationsBlock
             Merci de bien vouloir compléter ce formulaire dans les plus brefs délais.
 
             Cordialement,
-            Service RH — OCP
+            Service DEV RH — OCP
         """.trimIndent()
     }
 }
