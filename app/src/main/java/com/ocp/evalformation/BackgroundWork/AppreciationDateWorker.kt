@@ -1,4 +1,4 @@
-package com.ocp.evalformation.com.ocp.evalformation.BackgroundWork
+package com.ocp.evalformation
 
 import android.app.PendingIntent
 import android.content.Context
@@ -12,6 +12,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.ocp.evalformation.R
+import com.ocp.evalformation.data.local.entity.InvitationFlmEntity
 import com.ocp.evalformation.data.repository.MainRepository
 import com.ocp.evalformation.ui.auth.LoginActivity
 import com.ocp.evalformation.ui.rh.RhActivity
@@ -36,7 +37,13 @@ class AppreciationDateWorker @AssistedInject constructor(
             Log.d("WorkerTest", "today (normal): ${java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(java.util.Date())}")
 
 
+
+            val invitations= repo.invitationDao.getAll().map { it.formationId }
             val formations = repo.formationDao.getAll()
+                .filter {
+                !invitations.contains(it.id)
+            }
+
             Log.d("WorkerTest", "total formations: ${formations.size}")
 
             formations.forEach { f ->
@@ -60,6 +67,7 @@ class AppreciationDateWorker @AssistedInject constructor(
             showNotification(matching.size)
 
             val ids = matching.map { it.id }.joinToString(",")
+
             applicationContext
                 .getSharedPreferences("worker_prefs", Context.MODE_PRIVATE)
                 .edit()
@@ -87,13 +95,6 @@ class AppreciationDateWorker @AssistedInject constructor(
         return (todayMillis / oneDayMs) + excelEpoch
     }
 
-
-    private fun isEndOfMonth(): Boolean {
-        val cal     = Calendar.getInstance()
-        val today   = cal.get(Calendar.DAY_OF_MONTH)
-        val lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-        return today >= lastDay - 2
-    }
 
     private fun showNotification(count: Int) {
         val channelId = "appreciation_channel"

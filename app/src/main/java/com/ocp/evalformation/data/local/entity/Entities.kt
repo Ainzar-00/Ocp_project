@@ -218,6 +218,7 @@ data class EvaluationWithContext(
 ) {
     val entite  : String get() = formation?.entite ?: ""
     val themeNom: String get() = evaluation.intituleAction
+    val services:String get() =formation?.division ?:""
 }
 
 // Radar chart — average score per criterion (1-4)

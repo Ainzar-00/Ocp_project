@@ -15,7 +15,7 @@
     <color name="text_primary">#1A1A2E</color>
     <color name="text_secondary">#6C757D</color>
     <color name="white">#FFFFFF</color>
-    <string name="app_name">OCP Évaluation Formations</string>
+    <string name="app_name">Site Safi</string>
     <string name="btn_login">Se connecter</string>
     <string name="default_web_client_id" translatable="false">899703699179-klnboj2j81cec8cjc9nn1gckcdmsm85e.apps.googleusercontent.com</string>
     <string name="error_fill_all">Veuillez remplir tous les champs</string>
@@ -34,6 +34,7 @@
     <string name="nav_invitations">Invitations</string>
     <string name="nav_themes">Thèmes</string>
     <string name="project_id" translatable="false">ocp-formations-db</string>
+    <string name="title_activity_help">Help_Activity</string>
     <style name="Theme.App.Splash" parent="Theme.OCPEvalFormation">
         
         <item name="android:windowBackground">@drawable/splash_background</item>

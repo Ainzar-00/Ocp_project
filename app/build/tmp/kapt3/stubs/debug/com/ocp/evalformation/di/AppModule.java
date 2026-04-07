@@ -1,5 +1,26 @@
 package com.ocp.evalformation.di;
 
+import android.content.Context;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.ocp.evalformation.data.local.OcpDatabase;
+import com.ocp.evalformation.data.local.dao.CollaborateurDao;
+import com.ocp.evalformation.data.local.dao.EvaluationDao;
+import com.ocp.evalformation.data.local.dao.FlmDao;
+import com.ocp.evalformation.data.local.dao.FormationDao;
+import com.ocp.evalformation.data.local.dao.InvitationFlmDao;
+import com.ocp.evalformation.data.local.dao.ThemeDao;
+import com.ocp.evalformation.data.remote.FirebaseRepository;
+import com.ocp.evalformation.data.repository.EvaluationRepository;
+import com.ocp.evalformation.data.repository.MainRepository;
+import dagger.Module;
+import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+import javax.inject.Singleton;
+
 @dagger.Module()
 @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000n\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\b\u00c7\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\u0010\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u0012\u0010\u0007\u001a\u00020\u00062\b\b\u0001\u0010\b\u001a\u00020\tH\u0007J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J8\u0010\f\u001a\u00020\r2\u0006\u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u000b2\u0006\u0010\u0011\u001a\u00020\u00122\u0006\u0010\u0013\u001a\u00020\u00142\u0006\u0010\u0015\u001a\u00020\u00042\u0006\u0010\u0016\u001a\u00020\u0017H\u0007J\b\u0010\u0018\u001a\u00020\u0019H\u0007J(\u0010\u001a\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u00192\u0006\u0010\u001d\u001a\u00020\u000f2\u0006\u0010\u001e\u001a\u00020\u001f2\u0006\u0010\u0013\u001a\u00020\u0014H\u0007J\b\u0010 \u001a\u00020\u000fH\u0007J\u0010\u0010!\u001a\u00020\u00172\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u0010\u0010\"\u001a\u00020\u00142\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u0010\u0010#\u001a\u00020$2\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\u0010\u0010%\u001a\u00020\u00122\u0006\u0010\u0005\u001a\u00020\u0006H\u0007J\"\u0010&\u001a\u00020\'2\b\b\u0001\u0010(\u001a\u00020\t2\u0006\u0010\u0005\u001a\u00020\u00062\u0006\u0010)\u001a\u00020\u001bH\u0007J\u0010\u0010*\u001a\u00020\u001f2\u0006\u0010\u0005\u001a\u00020\u0006H\u0007\u00a8\u0006+"}, d2 = {"Lcom/ocp/evalformation/di/AppModule;", "", "()V", "provideCollaborateurDao", "Lcom/ocp/evalformation/data/local/dao/CollaborateurDao;", "db", "Lcom/ocp/evalformation/data/local/OcpDatabase;", "provideDatabase", "ctx", "Landroid/content/Context;", "provideEvaluationDao", "Lcom/ocp/evalformation/data/local/dao/EvaluationDao;", "provideEvaluationRepository", "Lcom/ocp/evalformation/data/repository/EvaluationRepository;", "firestore", "Lcom/google/firebase/firestore/FirebaseFirestore;", "evaluationDao", "invitationDao", "Lcom/ocp/evalformation/data/local/dao/InvitationFlmDao;", "formationDao", "Lcom/ocp/evalformation/data/local/dao/FormationDao;", "collaborateurDao", "flmDao", "Lcom/ocp/evalformation/data/local/dao/FlmDao;", "provideFirebaseAuth", "Lcom/google/firebase/auth/FirebaseAuth;", "provideFirebaseRepo", "Lcom/ocp/evalformation/data/remote/FirebaseRepository;", "auth", "fs", "themeDao", "Lcom/ocp/evalformation/data/local/dao/ThemeDao;", "provideFirestore", "provideFlmDao", "provideFormationDao", "provideForms", "Lcom/ocp/evalformation/data/local/dao/FormDao;", "provideInvitationFlmDao", "provideMainRepo", "Lcom/ocp/evalformation/data/repository/MainRepository;", "context", "firebase", "provideThemeDao", "app_debug"})
 @dagger.hilt.InstallIn(value = {dagger.hilt.components.SingletonComponent.class})

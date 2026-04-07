@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker
+import com.ocp.evalformation.AppreciationDateWorker
 import com.ocp.evalformation.data.local.entity.InvitationStatus
 import com.ocp.evalformation.databinding.FragmentInvitationsBinding
 import com.ocp.evalformation.ui.rh.RhViewModel

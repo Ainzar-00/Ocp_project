@@ -1,7 +1,7 @@
 package com.ocp.evalformation.utils
 
-import android.content.Context
 import android.util.Log
+import com.ocp.evalformation.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Properties
@@ -12,20 +12,15 @@ import javax.mail.Session
 import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
-
 object EmailHelper {
 
     // ── Config ─────────────────────────────────────────────────
     private const val SMTP_HOST     = "smtp.gmail.com"
     private const val SMTP_PORT     = "587"
 
-    private const val SENDER_EMAIL  = "gremin11111@gmail.com"   // ← your dedicated Gmail
-    private const val SENDER_PASS   = "hbfc fpjl llsp qcim"     // ← your App Password
-
-//    private const val SENDER_EMAIL  = "mohamedbelkacim1982@gmail.com"
-//    private const val SENDER_PASS   = "adxk nftg xvbk qvry"
-
-//    adxk nftg xvbk qvry
+    private const val SENDER_EMAIL  = BuildConfig.SENDER_EMAIL
+    private const val SENDER_PASS   = BuildConfig.SENDER_PASS
+    
 
     // ── Send email (must be called from coroutine) ─────────────
 
@@ -36,55 +31,70 @@ object EmailHelper {
     ): String {
         val formationsBlock = formations.joinToString("\n\n") { (theme, url) ->
             """ 
-                ───────────────────────────────────────────────────────────────────
+                ──────────────────────────────────────────────────────────────────
                  Thème : $theme
-                 ──────────────────────────────────────────────────────────────────
-            Lien  : $url"""
+                ──────────────────────────────────────────────────────────────────
+                 Lien  : $url"""
         }
 
         return """
             
-        Bonjour $flmNom,
+        Bonjour M. $flmNom;
 
-        Vous êtes invité(e) à évaluer votre collaborateur suite aux formations suivies.
-
+        Dans le cadre de l’évaluation des formations dispensées à vos collaborateurs, nous vous remercions par avance de bien vouloir renseigner le(s) formulaire(s) ci-dessous.
+        
+       
+        
         ─────────────────────────────
-        Collaborateur : $collaborateur
+        Collaborateur Concerné(es): $collaborateur
         ─────────────────────────────
 
-        Veuillez remplir les formulaires d'évaluation via les liens ci-dessous :
+
 
         $formationsBlock
 
-        Merci de bien vouloir compléter ces formulaires dans les plus brefs délais.
+        
 
-        Cordialement,
-        Service DEV RH — OCP
+        Meilleures Salutations,
+
+        BELKACIM Mohamed
+
+        Chargé de développement RH OE/TAMCA Safi
+
+        0 661 690 470
+        
     """.trimIndent()
     }
 
     suspend fun sendEmail(
-        to      : String,
-        subject : String,
-        body    : String
+        to: String,
+        cc: String? = "m.belkacim@ocpgroup.ma",
+        subject: String,
+        body: String
     ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val props = Properties().apply {
-                put("mail.smtp.auth",            "true")
+                put("mail.smtp.auth", "true")
                 put("mail.smtp.starttls.enable", "true")
-                put("mail.smtp.host",             SMTP_HOST)
-                put("mail.smtp.port",             SMTP_PORT)
-                put("mail.smtp.ssl.trust",        SMTP_HOST)
+                put("mail.smtp.host", SMTP_HOST)
+                put("mail.smtp.port", SMTP_PORT)
+                put("mail.smtp.ssl.trust", SMTP_HOST)
             }
 
             val session = Session.getInstance(props, object : Authenticator() {
-                override fun getPasswordAuthentication() =
-                    PasswordAuthentication(SENDER_EMAIL, SENDER_PASS)
+                override fun getPasswordAuthentication(): PasswordAuthentication {
+                    return PasswordAuthentication(SENDER_EMAIL, SENDER_PASS)
+                }
             })
 
             val message = MimeMessage(session).apply {
                 setFrom(InternetAddress(SENDER_EMAIL, "OCP Évaluation Formation"))
                 setRecipients(Message.RecipientType.TO, InternetAddress.parse(to))
+
+                if (!cc.isNullOrBlank()) {
+                    setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc))
+                }
+
                 setSubject(subject, "UTF-8")
                 setText(body, "UTF-8")
             }
@@ -92,7 +102,6 @@ object EmailHelper {
             Transport.send(message)
             Log.i("EmailHelper", "✅ Email sent to $to")
             Result.success(Unit)
-
         } catch (e: Exception) {
             Log.e("EmailHelper", "❌ Email failed: ${e.message}", e)
             Result.failure(e)
@@ -107,23 +116,30 @@ object EmailHelper {
         formUrl     : String
     ): String {
         return """
-            Bonjour $flmNom,
+            Bonjour M. $flmNom;
 
-            Vous êtes invité(e) à évaluer votre collaborateur suite à la formation suivie.
+            Dans le cadre de l’évaluation des formations dispensées à vos collaborateurs, nous vous remercions par avance de bien vouloir renseigner le(s) formulaire(s) ci-dessous.
 
-            ─────────────────────────────
-            Collaborateur : $collaborateur
+
+            ────────────────────────────────────────────
+            Collaborateur Concerné(es): $collaborateur
             Thème         : $themeNom
-            ─────────────────────────────
+            ────────────────────────────────────────────
 
-            Veuillez remplir le formulaire d'évaluation via le lien ci-dessous :
+
 
             👉 $formUrl
 
-            Merci de bien vouloir compléter ce formulaire dans les plus brefs délais.
 
-            Cordialement,
-            Service DEV RH — OCP
+
+            
+            Meilleures Salutations,
+
+            BELKACIM Mohamed
+
+            Chargé de développement RH OE/TAMCA Safi
+
+            0 661 690 470
         """.trimIndent()
     }
 }

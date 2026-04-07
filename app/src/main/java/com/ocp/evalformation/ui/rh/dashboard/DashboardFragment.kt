@@ -1,5 +1,6 @@
 package com.ocp.evalformation.ui.rh.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.lifecycleScope
 import com.ocp.evalformation.databinding.FragmentDashboardBinding
+import com.ocp.evalformation.ui.info_Activity
 import com.ocp.evalformation.ui.rh.RhViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -62,6 +64,9 @@ class DashboardFragment : Fragment() {
             }
         }
 
+        binding.btnInfo.setOnClickListener {
+            startActivity(Intent(requireContext(), info_Activity::class.java))
+        }
 
         // ── Taux de couverture ────────────────────────────────────
         val tauxMediator = MediatorLiveData<Pair<Int, Int>>()

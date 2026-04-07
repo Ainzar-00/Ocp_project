@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.ocp.evalformation.app-mergeDebugResources-3:/values-sw360dp-v13/values-sw360dp-v13.xml",
+            "outputFile": "com.ocp.evalformation.app-mergeDebugResources-89:/values-sw360dp-v13/values-sw360dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Younes\\Downloads\\gradle-9.0.0\\caches\\transforms-4\\d40862f15f33d3ed8c31a99e4499ba05\\transformed\\preference-1.2.1\\res\\values-sw360dp-v13\\values-sw360dp-v13.xml",
+                    "source": "C:\\Users\\Younes\\.gradle\\caches\\transforms-4\\3406a4f2f0bfdfb0e72c93871bad5cc0\\transformed\\preference-1.2.1\\res\\values-sw360dp-v13\\values-sw360dp-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

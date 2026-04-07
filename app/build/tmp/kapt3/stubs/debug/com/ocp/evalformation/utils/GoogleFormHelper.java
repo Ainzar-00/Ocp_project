@@ -1,5 +1,7 @@
 package com.ocp.evalformation.utils;
 
+import android.util.Log;
+
 /**
  * GoogleFormHelper — placeholder for Google Form integration
  */

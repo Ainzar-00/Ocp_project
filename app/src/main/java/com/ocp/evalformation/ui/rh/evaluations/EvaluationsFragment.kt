@@ -82,6 +82,7 @@ class EvaluationsFragment : Fragment() {
         binding.autocompleteAnnee.isSaveEnabled = false
         binding.autocompleteEntite.isSaveEnabled = false
         binding.autocompleteTheme.isSaveEnabled = false
+        binding.autocompleteService.isSaveEnabled=false
 
         val moisList = listOf(
             "Tous", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -110,6 +111,13 @@ class EvaluationsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.evaluations.collect { list ->
+
+                    val services=listOf("Toutes")+
+                                 list.map { it.services }
+                                 .filter { it.isNotBlank() }
+                                 .distinct()
+                                 .sorted()
+
                     val entites = listOf("Toutes") +
                             list.map { it.entite }
                                 .filter { it.isNotBlank() }
@@ -121,6 +129,13 @@ class EvaluationsFragment : Fragment() {
                                 .filter { it.isNotBlank() }
                                 .distinct()
                                 .sorted()
+
+                    binding.autocompleteService.setAdapter(
+                               ArrayAdapter(
+                               requireContext(),
+                                        android.R.layout.simple_dropdown_item_1line,
+                                        services
+                                        ))
 
                     binding.autocompleteEntite.setAdapter(
                         ArrayAdapter(
@@ -150,6 +165,10 @@ class EvaluationsFragment : Fragment() {
                 .takeIf { !it.isNullOrBlank() && it != "Toutes" }
                 .orEmpty()
 
+            val service = binding.autocompleteService.text?.toString()?.trim()
+                                        .takeIf { !it.isNullOrBlank() && it != "Toutes" }
+                                        .orEmpty()
+
             val theme = binding.autocompleteTheme.text?.toString()?.trim()
                 .takeIf { !it.isNullOrBlank() && it != "Tous" }
                 .orEmpty()
@@ -162,11 +181,27 @@ class EvaluationsFragment : Fragment() {
 
             viewModel.search(
                 matricule = matricule,
+                service = service,
                 entite = entite,
                 theme = theme,
                 mois = mois,
                 annee = annee
             )
+
+            binding.rvEvaluations.post {
+                val startY = binding.nestedScrollView.scrollY
+                val endY = binding.rvEvaluations.top
+
+                android.animation.ValueAnimator.ofInt(startY, endY).apply {
+                    duration = 500 // ms — tweak this (300 = snappy, 500 = smooth)
+                    interpolator = android.view.animation.DecelerateInterpolator()
+                    addUpdateListener {
+                        binding.nestedScrollView.scrollTo(0, it.animatedValue as Int)
+                    }
+                    start()
+                }
+            }
+
         }
     }
 
@@ -188,11 +223,13 @@ class EvaluationsFragment : Fragment() {
         binding.autocompleteTheme.setText("Tous", false)
         binding.autocompleteMois.setText("Tous", false)
         binding.autocompleteAnnee.setText("Toutes", false)
+        binding.autocompleteService.setText("Toutes", false)
 
         binding.autocompleteEntite.clearFocus()
         binding.autocompleteTheme.clearFocus()
         binding.autocompleteMois.clearFocus()
         binding.autocompleteAnnee.clearFocus()
+        binding.tilService.clearFocus()
     }
 
     override fun onDestroyView() {

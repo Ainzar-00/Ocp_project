@@ -1,13 +1,12 @@
 package com.ocp.evalformation;
 
 import androidx.hilt.work.HiltWrapper_WorkerFactoryModule;
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker_HiltModule;
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver_GeneratedInjector;
 import com.ocp.evalformation.di.AppModule;
 import com.ocp.evalformation.ui.SplashActivity_GeneratedInjector;
 import com.ocp.evalformation.ui.SplashViewModel_HiltModules;
 import com.ocp.evalformation.ui.auth.LoginActivity_GeneratedInjector;
 import com.ocp.evalformation.ui.auth.LoginViewModel_HiltModules;
+import com.ocp.evalformation.ui.info_Activity_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.RhActivity_GeneratedInjector;
 import com.ocp.evalformation.ui.rh.RhViewModel_HiltModules;
 import com.ocp.evalformation.ui.rh.charts.ChartsFragment_GeneratedInjector;
@@ -158,8 +157,8 @@ public final class OcpApplication_HiltComponents {
       }
   )
   @Singleton
-  public abstract static class SingletonC implements OcpApplication_GeneratedInjector,
-      NotificationActionReceiver_GeneratedInjector,
+  public abstract static class SingletonC implements NotificationActionReceiver_GeneratedInjector,
+      OcpApplication_GeneratedInjector,
       FragmentGetContextFix.FragmentGetContextFixEntryPoint,
       HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedComponentBuilderEntryPoint,
       ServiceComponentManager.ServiceComponentBuilderEntryPoint,
@@ -210,6 +209,7 @@ public final class OcpApplication_HiltComponents {
   @ActivityScoped
   public abstract static class ActivityC implements SplashActivity_GeneratedInjector,
       LoginActivity_GeneratedInjector,
+      info_Activity_GeneratedInjector,
       RhActivity_GeneratedInjector,
       ActivityComponent,
       DefaultViewModelFactories.ActivityEntryPoint,

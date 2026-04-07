@@ -17,10 +17,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker;
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker_AssistedFactory;
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver;
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.NotificationActionReceiver_MembersInjector;
 import com.ocp.evalformation.data.local.OcpDatabase;
 import com.ocp.evalformation.data.local.dao.CollaborateurDao;
 import com.ocp.evalformation.data.local.dao.EvaluationDao;
@@ -52,6 +48,7 @@ import com.ocp.evalformation.ui.SplashViewModel_HiltModules;
 import com.ocp.evalformation.ui.auth.LoginActivity;
 import com.ocp.evalformation.ui.auth.LoginViewModel;
 import com.ocp.evalformation.ui.auth.LoginViewModel_HiltModules;
+import com.ocp.evalformation.ui.info_Activity;
 import com.ocp.evalformation.ui.rh.RhActivity;
 import com.ocp.evalformation.ui.rh.RhActivity_MembersInjector;
 import com.ocp.evalformation.ui.rh.RhViewModel;
@@ -479,6 +476,10 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     }
 
     @Override
+    public void injectinfo_Activity(info_Activity info_Activity) {
+    }
+
+    @Override
     public void injectRhActivity(RhActivity rhActivity) {
       injectRhActivity2(rhActivity);
     }
@@ -516,30 +517,30 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
-
       static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
-
-      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
-
-      static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
 
       static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
-      @KeepFieldType
-      RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
+      static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
+
+      static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
+
+      static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
 
       @KeepFieldType
       SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
 
       @KeepFieldType
-      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
+      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
+
+      @KeepFieldType
+      RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
 
       @KeepFieldType
       EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
 
       @KeepFieldType
-      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
+      LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
     }
   }
 
@@ -592,30 +593,30 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
-
-      static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
-
       static String com_ocp_evalformation_ui_auth_LoginViewModel = "com.ocp.evalformation.ui.auth.LoginViewModel";
-
-      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       static String com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel = "com.ocp.evalformation.ui.rh.evaluations.EvaluationViewModel";
 
-      @KeepFieldType
-      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
+      static String com_ocp_evalformation_ui_rh_RhViewModel = "com.ocp.evalformation.ui.rh.RhViewModel";
 
-      @KeepFieldType
-      RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
+      static String com_ocp_evalformation_ui_SplashViewModel = "com.ocp.evalformation.ui.SplashViewModel";
+
+      static String com_ocp_evalformation_ui_rh_import_data_ImportViewModel = "com.ocp.evalformation.ui.rh.import_data.ImportViewModel";
 
       @KeepFieldType
       LoginViewModel com_ocp_evalformation_ui_auth_LoginViewModel2;
 
       @KeepFieldType
-      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
+      EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
 
       @KeepFieldType
-      EvaluationViewModel com_ocp_evalformation_ui_rh_evaluations_EvaluationViewModel2;
+      RhViewModel com_ocp_evalformation_ui_rh_RhViewModel2;
+
+      @KeepFieldType
+      SplashViewModel com_ocp_evalformation_ui_SplashViewModel2;
+
+      @KeepFieldType
+      ImportViewModel com_ocp_evalformation_ui_rh_import_data_ImportViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -766,7 +767,7 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     private Map<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>> mapOfStringAndProviderOfWorkerAssistedFactoryOf(
         ) {
-      return ImmutableMap.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>of("com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker", ((Provider) appreciationDateWorker_AssistedFactoryProvider));
+      return ImmutableMap.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>of("com.ocp.evalformation.AppreciationDateWorker", ((Provider) appreciationDateWorker_AssistedFactoryProvider));
     }
 
     private HiltWorkerFactory hiltWorkerFactory() {
@@ -795,25 +796,25 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
 
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
-      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<OcpDatabase>(singletonCImpl, 2));
-      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 4));
-      this.provideFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 5));
-      this.provideFirebaseRepoProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseRepository>(singletonCImpl, 3));
-      this.provideMainRepoProvider = DoubleCheck.provider(new SwitchingProvider<MainRepository>(singletonCImpl, 1));
-      this.appreciationDateWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<AppreciationDateWorker_AssistedFactory>(singletonCImpl, 0));
+      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<OcpDatabase>(singletonCImpl, 1));
+      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 3));
+      this.provideFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 4));
+      this.provideFirebaseRepoProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseRepository>(singletonCImpl, 2));
+      this.provideMainRepoProvider = DoubleCheck.provider(new SwitchingProvider<MainRepository>(singletonCImpl, 0));
+      this.appreciationDateWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<AppreciationDateWorker_AssistedFactory>(singletonCImpl, 5));
       this.provideEvaluationRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<EvaluationRepository>(singletonCImpl, 6));
       this.syncRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<syncRepository>(singletonCImpl, 7));
-    }
-
-    @Override
-    public void injectOcpApplication(OcpApplication ocpApplication) {
-      injectOcpApplication2(ocpApplication);
     }
 
     @Override
     public void injectNotificationActionReceiver(
         NotificationActionReceiver notificationActionReceiver) {
       injectNotificationActionReceiver2(notificationActionReceiver);
+    }
+
+    @Override
+    public void injectOcpApplication(OcpApplication ocpApplication) {
+      injectOcpApplication2(ocpApplication);
     }
 
     @Override
@@ -832,15 +833,15 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
     }
 
     @CanIgnoreReturnValue
-    private OcpApplication injectOcpApplication2(OcpApplication instance) {
-      OcpApplication_MembersInjector.injectWorkerFactory(instance, hiltWorkerFactory());
+    private NotificationActionReceiver injectNotificationActionReceiver2(
+        NotificationActionReceiver instance) {
+      NotificationActionReceiver_MembersInjector.injectRepo(instance, provideMainRepoProvider.get());
       return instance;
     }
 
     @CanIgnoreReturnValue
-    private NotificationActionReceiver injectNotificationActionReceiver2(
-        NotificationActionReceiver instance) {
-      NotificationActionReceiver_MembersInjector.injectRepo(instance, provideMainRepoProvider.get());
+    private OcpApplication injectOcpApplication2(OcpApplication instance) {
+      OcpApplication_MembersInjector.injectWorkerFactory(instance, hiltWorkerFactory());
       return instance;
     }
 
@@ -858,28 +859,28 @@ public final class DaggerOcpApplication_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker_AssistedFactory 
+          case 0: // com.ocp.evalformation.data.repository.MainRepository 
+          return (T) AppModule_ProvideMainRepoFactory.provideMainRepo(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideDatabaseProvider.get(), singletonCImpl.provideFirebaseRepoProvider.get());
+
+          case 1: // com.ocp.evalformation.data.local.OcpDatabase 
+          return (T) AppModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 2: // com.ocp.evalformation.data.remote.FirebaseRepository 
+          return (T) AppModule_ProvideFirebaseRepoFactory.provideFirebaseRepo(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirestoreProvider.get(), singletonCImpl.themeDao(), singletonCImpl.formationDao());
+
+          case 3: // com.google.firebase.auth.FirebaseAuth 
+          return (T) AppModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
+
+          case 4: // com.google.firebase.firestore.FirebaseFirestore 
+          return (T) AppModule_ProvideFirestoreFactory.provideFirestore();
+
+          case 5: // com.ocp.evalformation.AppreciationDateWorker_AssistedFactory 
           return (T) new AppreciationDateWorker_AssistedFactory() {
             @Override
             public AppreciationDateWorker create(Context context, WorkerParameters params) {
               return new AppreciationDateWorker(context, params, singletonCImpl.provideMainRepoProvider.get());
             }
           };
-
-          case 1: // com.ocp.evalformation.data.repository.MainRepository 
-          return (T) AppModule_ProvideMainRepoFactory.provideMainRepo(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideDatabaseProvider.get(), singletonCImpl.provideFirebaseRepoProvider.get());
-
-          case 2: // com.ocp.evalformation.data.local.OcpDatabase 
-          return (T) AppModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
-
-          case 3: // com.ocp.evalformation.data.remote.FirebaseRepository 
-          return (T) AppModule_ProvideFirebaseRepoFactory.provideFirebaseRepo(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirestoreProvider.get(), singletonCImpl.themeDao(), singletonCImpl.formationDao());
-
-          case 4: // com.google.firebase.auth.FirebaseAuth 
-          return (T) AppModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
-
-          case 5: // com.google.firebase.firestore.FirebaseFirestore 
-          return (T) AppModule_ProvideFirestoreFactory.provideFirestore();
 
           case 6: // com.ocp.evalformation.data.repository.EvaluationRepository 
           return (T) AppModule_ProvideEvaluationRepositoryFactory.provideEvaluationRepository(singletonCImpl.provideFirestoreProvider.get(), singletonCImpl.evaluationDao(), singletonCImpl.invitationFlmDao(), singletonCImpl.formationDao(), singletonCImpl.collaborateurDao(), singletonCImpl.flmDao());

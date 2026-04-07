@@ -154,6 +154,7 @@ class EvaluationViewModel @Inject constructor(
 
     fun search(
         matricule: String = "",
+        service:String ="",
         entite: String = "",
         theme: String = "",
         mois: Int? = null,
@@ -170,6 +171,8 @@ class EvaluationViewModel @Inject constructor(
                 entite.isBlank() ||
                         item.entite.contains(entite, ignoreCase = true)
 
+            val matchService=service.isBlank() || item.services.contains(service, ignoreCase = true)
+
             val matchTheme =
                 theme.isBlank() ||
                         item.themeNom.contains(theme, ignoreCase = true)
@@ -180,7 +183,7 @@ class EvaluationViewModel @Inject constructor(
             val matchMois = mois == null || itemMonth == mois
             val matchAnnee = annee == null || itemYear == annee
 
-            matchMatricule && matchEntite && matchTheme && matchMois && matchAnnee
+            matchMatricule && matchService && matchEntite && matchTheme && matchMois && matchAnnee
         }
     }
 

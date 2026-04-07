@@ -11,9 +11,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -315,17 +318,22 @@ class ImportViewModel @Inject constructor(
 
                     // ── Auto-create Google Form for this theme (ignore failure) ──
                     // Use this — 10 at a time:
-                    syncedThemes.chunked(10).forEach { chunk ->
-                        chunk.map { theme ->
-                            async {
+                    val semaphore = Semaphore(2)
+
+                    val jobs = syncedThemes.map { theme ->
+                        async {
+                            semaphore.withPermit {
                                 try {
                                     repo.createFormForTheme(theme)
+                                    delay(600)
                                 } catch (e: Exception) {
-                                    // silently ignored
+                                    Log.e("FORM_ERROR", "Theme ${theme.id}", e)
                                 }
                             }
-                        }.awaitAll()
+                        }
                     }
+
+                    jobs.awaitAll()
 
                     _themeState.value = ImportState.Success("✅ ${syncedThemes.size} thème(s) importé(s).")
                 } else {

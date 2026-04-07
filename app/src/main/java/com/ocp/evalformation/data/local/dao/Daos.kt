@@ -277,6 +277,9 @@ interface InvitationFlmDao {
     @Update
     suspend fun update(invitation: InvitationFlmEntity)
 
+    @Query("SELECT * FROM INVITATIONS_FLM")
+    fun getAll():List<InvitationFlmEntity>
+
     @Query("SELECT * FROM invitations_flm ORDER BY dateEnvoi DESC")
     fun getAllLive(): LiveData<List<InvitationFlmEntity>>
 

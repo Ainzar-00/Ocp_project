@@ -35,7 +35,7 @@ class Converters {
         Forms::class,
         EvaluationEntity::class
     ],
-    version = 21,
+    version = 22,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

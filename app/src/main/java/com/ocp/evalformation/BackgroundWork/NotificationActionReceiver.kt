@@ -1,4 +1,4 @@
-package com.ocp.evalformation.com.ocp.evalformation.BackgroundWork
+package com.ocp.evalformation
 
 import android.content.BroadcastReceiver
 import android.content.Context

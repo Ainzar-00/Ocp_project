@@ -18,9 +18,9 @@ import dagger.hilt.processor.internal.definecomponent.codegen._dagger_hilt_andro
 import dagger.hilt.processor.internal.definecomponent.codegen._dagger_hilt_android_internal_builders_ViewWithFragmentComponentBuilder;
 import dagger.hilt.processor.internal.definecomponent.codegen._dagger_hilt_components_SingletonComponent;
 import hilt_aggregated_deps._androidx_hilt_work_HiltWrapper_WorkerFactoryModule;
+import hilt_aggregated_deps._com_ocp_evalformation_AppreciationDateWorker_HiltModule;
+import hilt_aggregated_deps._com_ocp_evalformation_NotificationActionReceiver_GeneratedInjector;
 import hilt_aggregated_deps._com_ocp_evalformation_OcpApplication_GeneratedInjector;
-import hilt_aggregated_deps._com_ocp_evalformation_com_ocp_evalformation_BackgroundWork_AppreciationDateWorker_HiltModule;
-import hilt_aggregated_deps._com_ocp_evalformation_com_ocp_evalformation_BackgroundWork_NotificationActionReceiver_GeneratedInjector;
 import hilt_aggregated_deps._com_ocp_evalformation_di_AppModule;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_SplashActivity_GeneratedInjector;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_SplashViewModel_HiltModules_BindsModule;
@@ -28,6 +28,7 @@ import hilt_aggregated_deps._com_ocp_evalformation_ui_SplashViewModel_HiltModule
 import hilt_aggregated_deps._com_ocp_evalformation_ui_auth_LoginActivity_GeneratedInjector;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_auth_LoginViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_auth_LoginViewModel_HiltModules_KeyModule;
+import hilt_aggregated_deps._com_ocp_evalformation_ui_info_Activity_GeneratedInjector;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_rh_RhActivity_GeneratedInjector;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_rh_RhViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_ocp_evalformation_ui_rh_RhViewModel_HiltModules_KeyModule;
@@ -88,9 +89,9 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
     },
     aggregatedDeps = {
         _androidx_hilt_work_HiltWrapper_WorkerFactoryModule.class,
+        _com_ocp_evalformation_AppreciationDateWorker_HiltModule.class,
+        _com_ocp_evalformation_NotificationActionReceiver_GeneratedInjector.class,
         _com_ocp_evalformation_OcpApplication_GeneratedInjector.class,
-        _com_ocp_evalformation_com_ocp_evalformation_BackgroundWork_AppreciationDateWorker_HiltModule.class,
-        _com_ocp_evalformation_com_ocp_evalformation_BackgroundWork_NotificationActionReceiver_GeneratedInjector.class,
         _com_ocp_evalformation_di_AppModule.class,
         _com_ocp_evalformation_ui_SplashActivity_GeneratedInjector.class,
         _com_ocp_evalformation_ui_SplashViewModel_HiltModules_BindsModule.class,
@@ -98,6 +99,7 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_ocp_evalformation_ui_auth_LoginActivity_GeneratedInjector.class,
         _com_ocp_evalformation_ui_auth_LoginViewModel_HiltModules_BindsModule.class,
         _com_ocp_evalformation_ui_auth_LoginViewModel_HiltModules_KeyModule.class,
+        _com_ocp_evalformation_ui_info_Activity_GeneratedInjector.class,
         _com_ocp_evalformation_ui_rh_RhActivity_GeneratedInjector.class,
         _com_ocp_evalformation_ui_rh_RhViewModel_HiltModules_BindsModule.class,
         _com_ocp_evalformation_ui_rh_RhViewModel_HiltModules_KeyModule.class,

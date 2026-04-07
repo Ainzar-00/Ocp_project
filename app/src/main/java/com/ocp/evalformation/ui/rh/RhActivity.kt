@@ -13,7 +13,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
 import com.ocp.evalformation.R
-import com.ocp.evalformation.com.ocp.evalformation.BackgroundWork.AppreciationDateWorker
+import com.ocp.evalformation.AppreciationDateWorker
 import com.ocp.evalformation.databinding.ActivityRhBinding
 import com.ocp.evalformation.ui.auth.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint

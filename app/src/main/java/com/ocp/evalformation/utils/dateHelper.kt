@@ -14,7 +14,7 @@ object dateHelper {
         return DateUtil.getExcelDate(calendar.time)
     }
 
-    fun getDateAppreciation(excelDate: Double): Double {
+    fun getDateAppreciation(excelDate: Double): Int {
         return try {
             val date     = org.apache.poi.ss.usermodel.DateUtil.getJavaDate(excelDate, false)
             val calendar = java.util.Calendar.getInstance().apply {
@@ -22,9 +22,9 @@ object dateHelper {
                 add(java.util.Calendar.MONTH, 1)                         // go to next month
                 set(java.util.Calendar.DAY_OF_MONTH, getActualMaximum(java.util.Calendar.DAY_OF_MONTH)) // last day
             }
-            org.apache.poi.ss.usermodel.DateUtil.getExcelDate(calendar.time, false)
+            org.apache.poi.ss.usermodel.DateUtil.getExcelDate(calendar.time, false).toInt()
         } catch (e: Exception) {
-            0.0
+            0
         }
     }
 

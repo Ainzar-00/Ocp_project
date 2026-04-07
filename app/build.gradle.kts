@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,9 +10,18 @@ plugins {
     alias(libs.plugins.navigation.safeargs)
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 android {
     namespace = "com.ocp.evalformation"
     compileSdk = 34
+
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }
 
     defaultConfig {
         applicationId = "com.ocp.evalformation"
@@ -20,6 +31,17 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
+
+        val props = Properties()
+        rootProject.file("local.properties").inputStream().use { props.load(it) }
+
+        val senderEmail = props.getProperty("SENDER_EMAIL", "")
+        val senderPass  = props.getProperty("SENDER_PASS", "")
+
+        buildConfigField("String", "SENDER_EMAIL", "\"$senderEmail\"")
+        buildConfigField("String", "SENDER_PASS", "\"$senderPass\"")
+
+
     }
 
 
@@ -50,6 +72,8 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        compose = true
+        buildConfig = true  // <-- THIS IS REQUIRED
     }
 
     compileOptions {
@@ -100,6 +124,18 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.activity)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     kapt(libs.room.compiler)
 
     // Firebase (BOM manages all versions)

@@ -35,6 +35,7 @@ id appBarLayout
 id autocomplete_annee
 id autocomplete_entite
 id autocomplete_mois
+id autocomplete_service
 id autocomplete_theme
 id badge_entite
 id bottom_label
@@ -49,6 +50,7 @@ id btn_add_collab
 id btn_add_flm
 id btn_add_theme
 id btn_appliquer_filtres
+id btn_back
 id btn_charger
 id btn_charger_bilan
 id btn_choisir_bilan
@@ -56,6 +58,7 @@ id btn_choisir_fichier
 id btn_import_collab_excel
 id btn_import_flm_excel
 id btn_import_themes_excel
+id btn_info
 id btn_login
 id btn_logout_rh
 id btn_nombre_enregistrements
@@ -117,8 +120,10 @@ id layout_header_manual_add
 id layout_manual_form
 id layout_methodologie
 id layout_raisons
+id main
 id nav_graph_rh
 id nav_host_fragment_rh
+id nested_scroll_view
 id pb_score_appli
 id pb_score_besoin
 id pb_score_global
@@ -143,9 +148,11 @@ id til_annee
 id til_entite
 id til_matricule
 id til_mois
+id til_service
 id til_theme
 id toolbar
 id toolbar_rh
+id top_background
 id tvAnalyticsTitle
 id tvAppreciationInfo
 id tvEmptyState
@@ -184,6 +191,8 @@ id tv_item_theme
 id tv_jsp
 id tv_logo
 id tv_matricule
+id tv_page_subtitle
+id tv_page_title
 id tv_pending_invitations
 id tv_resultat_test
 id tv_score_appli
@@ -206,6 +215,7 @@ id tv_themes_realises
 id tv_title
 id tv_total_evals
 id viewpager_import
+layout activity_info
 layout activity_login
 layout activity_rh
 layout activity_splash
@@ -250,6 +260,7 @@ string nav_evals
 string nav_invitations
 string nav_themes
 string project_id
+string title_activity_help
 style Theme.App.Splash
 style Theme.OCPEvalFormation
 xml backup_rules

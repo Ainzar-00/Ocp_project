@@ -70,6 +70,8 @@ class MainRepository @Inject constructor(
 
             // ── Step 2: Build request ──────────────────────────────
             val competences = theme.objectifPedagogique
+                .replace("\n", " ")
+                .replace("\r", " ")
                 .split("•")
                 .map { it.trim() }
                 .filter { it.isNotBlank() }
@@ -233,7 +235,7 @@ class MainRepository @Inject constructor(
             CoroutineScope(Dispatchers.IO).launch {
                 Log.d("Repo", "🚀 Background email task START")
                 try {
-                    val subject = "Évaluation Formation — ${theme?.nom ?: ""}"
+                    val subject = "Évaluation de la Formation continue — ${theme?.nom ?: ""}"
                     val body    = EmailHelper.buildInvitationBody(
                         flmNom        = flmNom,
                         themeNom      = theme?.nom ?: "—",
@@ -381,7 +383,7 @@ class MainRepository @Inject constructor(
                 }
 
                 // ── Send ONE grouped email with all links ──────────
-                val subject = "Évaluation Formation — ${collab.prenom} ${collab.nom}"
+                val subject = "Évaluation  Formation — ${collab.prenom} ${collab.nom}"
                 val body    = EmailHelper.buildGroupedInvitationBody(
                     flmNom        = "${flm.prenom} ${flm.nom}",
                     collaborateur = "${collab.prenom} ${collab.nom}",

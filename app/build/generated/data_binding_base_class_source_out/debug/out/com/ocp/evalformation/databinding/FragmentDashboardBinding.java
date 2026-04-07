@@ -4,6 +4,7 @@ package com.ocp.evalformation.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -18,6 +19,9 @@ import java.lang.String;
 public final class FragmentDashboardBinding implements ViewBinding {
   @NonNull
   private final ScrollView rootView;
+
+  @NonNull
+  public final ImageButton btnInfo;
 
   @NonNull
   public final TextView tvJsp;
@@ -40,11 +44,13 @@ public final class FragmentDashboardBinding implements ViewBinding {
   @NonNull
   public final TextView tvTotalEvals;
 
-  private FragmentDashboardBinding(@NonNull ScrollView rootView, @NonNull TextView tvJsp,
-      @NonNull TextView tvPendingInvitations, @NonNull TextView tvTauxCouverturePct,
-      @NonNull TextView tvTauxCouvertureRatio, @NonNull TextView tvThemePlusRecent,
-      @NonNull TextView tvThemesRealises, @NonNull TextView tvTotalEvals) {
+  private FragmentDashboardBinding(@NonNull ScrollView rootView, @NonNull ImageButton btnInfo,
+      @NonNull TextView tvJsp, @NonNull TextView tvPendingInvitations,
+      @NonNull TextView tvTauxCouverturePct, @NonNull TextView tvTauxCouvertureRatio,
+      @NonNull TextView tvThemePlusRecent, @NonNull TextView tvThemesRealises,
+      @NonNull TextView tvTotalEvals) {
     this.rootView = rootView;
+    this.btnInfo = btnInfo;
     this.tvJsp = tvJsp;
     this.tvPendingInvitations = tvPendingInvitations;
     this.tvTauxCouverturePct = tvTauxCouverturePct;
@@ -81,6 +87,12 @@ public final class FragmentDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_info;
+      ImageButton btnInfo = ViewBindings.findChildViewById(rootView, id);
+      if (btnInfo == null) {
+        break missingId;
+      }
+
       id = R.id.tv_jsp;
       TextView tvJsp = ViewBindings.findChildViewById(rootView, id);
       if (tvJsp == null) {
@@ -123,9 +135,9 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentDashboardBinding((ScrollView) rootView, tvJsp, tvPendingInvitations,
-          tvTauxCouverturePct, tvTauxCouvertureRatio, tvThemePlusRecent, tvThemesRealises,
-          tvTotalEvals);
+      return new FragmentDashboardBinding((ScrollView) rootView, btnInfo, tvJsp,
+          tvPendingInvitations, tvTauxCouverturePct, tvTauxCouvertureRatio, tvThemePlusRecent,
+          tvThemesRealises, tvTotalEvals);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

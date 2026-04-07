@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -35,6 +36,9 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
   public final AutoCompleteTextView autocompleteMois;
 
   @NonNull
+  public final AutoCompleteTextView autocompleteService;
+
+  @NonNull
   public final AutoCompleteTextView autocompleteTheme;
 
   @NonNull
@@ -45,6 +49,9 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
 
   @NonNull
   public final TextInputEditText etMatricule;
+
+  @NonNull
+  public final NestedScrollView nestedScrollView;
 
   @NonNull
   public final RecyclerView rvEvaluations;
@@ -62,6 +69,9 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
   public final TextInputLayout tilMois;
 
   @NonNull
+  public final TextInputLayout tilService;
+
+  @NonNull
   public final TextInputLayout tilTheme;
 
   @NonNull
@@ -77,26 +87,31 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
       @NonNull AutoCompleteTextView autocompleteAnnee,
       @NonNull AutoCompleteTextView autocompleteEntite,
       @NonNull AutoCompleteTextView autocompleteMois,
+      @NonNull AutoCompleteTextView autocompleteService,
       @NonNull AutoCompleteTextView autocompleteTheme, @NonNull MaterialButton btnAppliquerFiltres,
       @NonNull MaterialCardView cardFilters, @NonNull TextInputEditText etMatricule,
-      @NonNull RecyclerView rvEvaluations, @NonNull TextInputLayout tilAnnee,
-      @NonNull TextInputLayout tilEntite, @NonNull TextInputLayout tilMatricule,
-      @NonNull TextInputLayout tilMois, @NonNull TextInputLayout tilTheme,
+      @NonNull NestedScrollView nestedScrollView, @NonNull RecyclerView rvEvaluations,
+      @NonNull TextInputLayout tilAnnee, @NonNull TextInputLayout tilEntite,
+      @NonNull TextInputLayout tilMatricule, @NonNull TextInputLayout tilMois,
+      @NonNull TextInputLayout tilService, @NonNull TextInputLayout tilTheme,
       @NonNull TextView tvCountEval, @NonNull TextView tvFilterLabel,
       @NonNull TextView tvHeaderTitle) {
     this.rootView = rootView;
     this.autocompleteAnnee = autocompleteAnnee;
     this.autocompleteEntite = autocompleteEntite;
     this.autocompleteMois = autocompleteMois;
+    this.autocompleteService = autocompleteService;
     this.autocompleteTheme = autocompleteTheme;
     this.btnAppliquerFiltres = btnAppliquerFiltres;
     this.cardFilters = cardFilters;
     this.etMatricule = etMatricule;
+    this.nestedScrollView = nestedScrollView;
     this.rvEvaluations = rvEvaluations;
     this.tilAnnee = tilAnnee;
     this.tilEntite = tilEntite;
     this.tilMatricule = tilMatricule;
     this.tilMois = tilMois;
+    this.tilService = tilService;
     this.tilTheme = tilTheme;
     this.tvCountEval = tvCountEval;
     this.tvFilterLabel = tvFilterLabel;
@@ -148,6 +163,12 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.autocomplete_service;
+      AutoCompleteTextView autocompleteService = ViewBindings.findChildViewById(rootView, id);
+      if (autocompleteService == null) {
+        break missingId;
+      }
+
       id = R.id.autocomplete_theme;
       AutoCompleteTextView autocompleteTheme = ViewBindings.findChildViewById(rootView, id);
       if (autocompleteTheme == null) {
@@ -169,6 +190,12 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
       id = R.id.et_matricule;
       TextInputEditText etMatricule = ViewBindings.findChildViewById(rootView, id);
       if (etMatricule == null) {
+        break missingId;
+      }
+
+      id = R.id.nested_scroll_view;
+      NestedScrollView nestedScrollView = ViewBindings.findChildViewById(rootView, id);
+      if (nestedScrollView == null) {
         break missingId;
       }
 
@@ -202,6 +229,12 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.til_service;
+      TextInputLayout tilService = ViewBindings.findChildViewById(rootView, id);
+      if (tilService == null) {
+        break missingId;
+      }
+
       id = R.id.til_theme;
       TextInputLayout tilTheme = ViewBindings.findChildViewById(rootView, id);
       if (tilTheme == null) {
@@ -227,9 +260,10 @@ public final class FragmentEvaluationsBinding implements ViewBinding {
       }
 
       return new FragmentEvaluationsBinding((CoordinatorLayout) rootView, autocompleteAnnee,
-          autocompleteEntite, autocompleteMois, autocompleteTheme, btnAppliquerFiltres, cardFilters,
-          etMatricule, rvEvaluations, tilAnnee, tilEntite, tilMatricule, tilMois, tilTheme,
-          tvCountEval, tvFilterLabel, tvHeaderTitle);
+          autocompleteEntite, autocompleteMois, autocompleteService, autocompleteTheme,
+          btnAppliquerFiltres, cardFilters, etMatricule, nestedScrollView, rvEvaluations, tilAnnee,
+          tilEntite, tilMatricule, tilMois, tilService, tilTheme, tvCountEval, tvFilterLabel,
+          tvHeaderTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
