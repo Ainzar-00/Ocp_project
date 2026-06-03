@@ -2,6 +2,7 @@ package com.ocp.evalformation.utils
 
 import android.util.Log
 import com.ocp.evalformation.BuildConfig
+import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Properties
@@ -12,15 +13,16 @@ import javax.mail.Session
 import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
-object EmailHelper {
 
+
+object EmailHelper {
+    val dotenv = dotenv()
     // ── Config ─────────────────────────────────────────────────
     private const val SMTP_HOST     = "smtp.gmail.com"
     private const val SMTP_PORT     = "587"
 
-    private const val SENDER_EMAIL  = BuildConfig.SENDER_EMAIL
-    private const val SENDER_PASS   = BuildConfig.SENDER_PASS
-    
+    private val SENDER_EMAIL  = dotenv["SENDER_EMAIL"]
+    private val SENDER_PASS   = dotenv["SENDER_PASS"]
 
     // ── Send email (must be called from coroutine) ─────────────
 
@@ -68,7 +70,7 @@ object EmailHelper {
 
     suspend fun sendEmail(
         to: String,
-        cc: String? = "m.belkacim@ocpgroup.ma",
+        cc: String? = null,
         subject: String,
         body: String
     ): Result<Unit> = withContext(Dispatchers.IO) {
@@ -83,6 +85,7 @@ object EmailHelper {
 
             val session = Session.getInstance(props, object : Authenticator() {
                 override fun getPasswordAuthentication(): PasswordAuthentication {
+                    Log.d("sender",SENDER_EMAIL)
                     return PasswordAuthentication(SENDER_EMAIL, SENDER_PASS)
                 }
             })

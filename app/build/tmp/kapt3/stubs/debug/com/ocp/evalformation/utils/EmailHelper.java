@@ -1,7 +1,7 @@
 package com.ocp.evalformation.utils;
 
 import android.util.Log;
-import androidx.multidex.BuildConfig;
+import com.ocp.evalformation.BuildConfig;
 import kotlinx.coroutines.Dispatchers;
 import java.util.Properties;
 import javax.mail.Authenticator;
@@ -19,9 +19,9 @@ public final class EmailHelper {
     @org.jetbrains.annotations.NotNull()
     private static final java.lang.String SMTP_PORT = "587";
     @org.jetbrains.annotations.NotNull()
-    private static final java.lang.String SENDER_EMAIL = "com.ocp.evalformation.BuildConfig.";
+    private static final java.lang.String SENDER_EMAIL = "gremin11111@gmail.com";
     @org.jetbrains.annotations.NotNull()
-    private static final java.lang.String SENDER_PASS = "adxk nftg xvbk qvry";
+    private static final java.lang.String SENDER_PASS = "apjt qfxn scas cklc";
     @org.jetbrains.annotations.NotNull()
     public static final com.ocp.evalformation.utils.EmailHelper INSTANCE = null;
     
