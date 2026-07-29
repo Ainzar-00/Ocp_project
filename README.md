@@ -42,33 +42,28 @@
 * **Network & External Services:** Retrofit2, OkHttp, Google Apps Script Web API, JavaMail API
 * **File Handling:** Apache POI (Excel `.xlsx` reader/writer)
 
----
+## 📐 System Architecture
 
-+-------------------------------------------------------+
-|                         VIEW                          |
-|        (Activities / Fragments / XML Layouts)         |
-+--------------------------+----------------------------+
-                           |
-                           | (Observes LiveData / Flow)
-                           v
-+-------------------------------------------------------+
-|                      VIEWMODEL                        |
-|        (Prepares UI data & handles UI Logic)          |
-+--------------------------+----------------------------+
-                           |
-                           | (Data Stream)
-                           v
-+-------------------------------------------------------+
-|                      REPOSITORY                       |
-+----------------------------+--------------------------+
-                             |
-             +---------------+---------------+
-             |                               |
-             v                               v
-+------------------------+      +------------------------+
-|   Local Data Source    |      |   Remote Data Source   |
-|    (Room Database)     |      |    (Cloud Firestore)   |
-+------------------------+      +------------------------+
+```mermaid
+graph TD
+    subgraph UI [" UI Layer "]
+        View["VIEW<br/>(Activities / Fragments / XML Layouts)"]
+    end
+
+    subgraph Architecture [" Architecture Core "]
+        ViewModel["VIEWMODEL<br/>(Prepares UI data & handles UI Logic)"]
+        Repository["REPOSITORY"]
+    end
+
+    subgraph Data [" Data Layer "]
+        LocalDS["Local Data Source<br/>(Room Database)"]
+        RemoteDS["Remote Data Source<br/>(Cloud Firestore)"]
+    end
+
+    View -->|Observes LiveData/Flow| ViewModel
+    ViewModel -->|Data Stream| Repository
+    Repository --> LocalDS
+    Repository --> RemoteDS
 
 ## 🚀 Getting Started
 
