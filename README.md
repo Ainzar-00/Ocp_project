@@ -42,58 +42,27 @@
 * **Network & External Services:** Retrofit2, OkHttp, Google Apps Script Web API, JavaMail API
 * **File Handling:** Apache POI (Excel `.xlsx` reader/writer)
 
+---
+
 ## 📐 System Architecture
 
 ```mermaid
 graph TD
-    subgraph UI [" UI Layer "]
-        View["VIEW<br/>(Activities / Fragments / XML Layouts)"]
+    subgraph UI ["UI Layer"]
+        View["VIEW - Activities / Fragments / XML Layouts"]
     end
 
-    subgraph Architecture [" Architecture Core "]
-        ViewModel["VIEWMODEL<br/>(Prepares UI data & handles UI Logic)"]
+    subgraph Architecture ["Architecture Core"]
+        ViewModel["VIEWMODEL - Prepares UI Data & Handles Logic"]
         Repository["REPOSITORY"]
     end
 
-    subgraph Data [" Data Layer "]
-        LocalDS["Local Data Source<br/>(Room Database)"]
-        RemoteDS["Remote Data Source<br/>(Cloud Firestore)"]
+    subgraph Data ["Data Layer"]
+        LocalDS["Local Data Source - Room DB"]
+        RemoteDS["Remote Data Source - Cloud Firestore"]
     end
 
     View -->|Observes LiveData/Flow| ViewModel
     ViewModel -->|Data Stream| Repository
     Repository --> LocalDS
     Repository --> RemoteDS
-
-## 🚀 Getting Started
-
-### Prerequisites
-* **Android Studio** Jellyfish / Ladybug or newer
-* **JDK:** 11 or higher
-* **Android SDK:** Min SDK 24 / Target SDK 34+
-* A configured **Firebase Project** with Authentication & Firestore enabled.
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/your-username/ocp-evaluation-formation.git](https://github.com/your-username/ocp-evaluation-formation.git)
-   cd ocp-evaluation-formation
-Add Firebase configuration:
-
-Download google-services.json from your Firebase Console.
-
-Place the file in the app/ directory:
-
-ocp-evaluation-formation/app/google-services.json
-Build & Run:
-
-Open the project in Android Studio.
-
-Sync Gradle files and run the application on an emulator or physical device.
-
-👤 Author
-Mohamed LAMAFER — Digital Development - Mobile Applications Option (OFPPT ISTA NTIC Safi)
-
-📄 License & Acknowledgments
-Developed as part of an end-of-study internship project at Groupe OCP (Complex Maroc Phosphore Safi).
