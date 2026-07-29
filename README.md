@@ -66,3 +66,38 @@ graph TD
     ViewModel -->|Data Stream| Repository
     Repository --> LocalDS
     Repository --> RemoteDS
+```
+🚀 Getting Started
+Prerequisites
+Android Studio Jellyfish / Ladybug or newer
+
+JDK: 11 or higher
+
+Android SDK: Min SDK 24 / Target SDK 34+
+
+A configured Firebase Project with Authentication & Firestore enabled.
+
+Installation
+Clone the repository:
+
+Bash
+git clone [https://github.com/your-username/ocp-evaluation-formation.git](https://github.com/your-username/ocp-evaluation-formation.git)
+cd ocp-evaluation-formation
+Add Firebase configuration:
+
+Download google-services.json from your Firebase Console.
+
+Place the file in the app/ directory:
+
+ocp-evaluation-formation/app/google-services.json
+Build & Run:
+
+Open the project in Android Studio.
+
+Sync Gradle files and run the application on an emulator or physical device.
+
+👤 Author
+Mohamed LAMAFER — Digital Development - Mobile Applications Option (OFPPT ISTA NTIC Safi)
+
+📄 License & Acknowledgments
+Developed as part of an end-of-study internship project at Groupe OCP (Complex Maroc Phosphore Safi).
