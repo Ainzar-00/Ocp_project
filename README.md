@@ -1,1 +1,103 @@
+# 📱 OCP Evaluation Formation — Android Application
 
+![Android](https://img.shields.io/badge/Platform-Android-green?logo=android)
+![Kotlin](https://img.shields.io/badge/Language-Kotlin-purple?logo=kotlin)
+![Architecture](https://img.shields.io/badge/Architecture-MVVM-orange)
+![Database](https://img.shields.io/badge/Local%20DB-Room-blue)
+![Backend](https://img.shields.io/badge/Cloud-Firebase%20%2F%20Apps%20Script-yellow?logo=firebase)
+
+> **OCP Evaluation Formation** is a native Android application designed to digitize, automate, and manage training evaluation processes within the industrial complex **OCP Maroc Phosphore (Safi)**. Built aligned with OCP's **"Digital Era"** vision to transition from paper-based workflows to fully digital, real-time analytics.
+
+---
+
+## 📌 Features
+
+### 🏢 HR Dashboard & Analytics
+* **Real-time Key Performance Indicators (KPIs):** Track coverage rates, total evaluations, pending FLM requests, and completed themes at a glance.
+* **Data Visualization:** Interactive charts using **Radar Charts** (evaluating Need, Impact, Application, and Overall satisfaction) and **Donut Charts** (Satisfaction distribution).
+
+### 📑 Evaluation & Entity Management
+* **Offline-First Capabilities:** Data is stored locally using **Room Database** and automatically synced to **Firebase Cloud Firestore** once connected.
+* **Mass Data Import:** Import employees, trainers, FLM managers, and training catalogs directly via Excel files (`.xlsx`) powered by **Apache POI**.
+* **Automation:** Google Apps Script integration to generate Google Forms links directly for instant evaluations.
+
+### ✉️ Communication & Reporting
+* **Invitation Tracking:** Monitor invitation statuses (`Pending`, `Sent`, `Not Sent`) with dynamic search and filtering tools.
+* **Email Integration:** Send automated invitation emails and reports directly via **JavaMail (SMTP)**.
+* **Excel Exporting:** Export aggregated evaluation summaries into structured Excel spreadsheets for HR archives.
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+### **Architecture Pattern**
+* **MVVM (Model-View-ViewModel)** for strict separation of concerns, testability, and UI responsiveness.
+
+### **Core Technologies**
+* **Language:** Kotlin
+* **UI Components:** Jetpack Views, LiveData, ViewModel, Navigation Component, Material Design
+* **Local Storage:** Room Persistence Library (SQLite abstraction)
+* **Cloud Backend & Sync:** Firebase Authentication, Cloud Firestore, Firebase Cloud Messaging (FCM)
+* **Background Tasks:** WorkManager (for robust data synchronization)
+* **Network & External Services:** Retrofit2, OkHttp, Google Apps Script Web API, JavaMail API
+* **File Handling:** Apache POI (Excel `.xlsx` reader/writer)
+
+---
+
+## 📐 System Architecture
+
+┌──────────────────────────────────────────────────────────┐
+│                         VIEW                             │
+│         (Activities / Fragments / XML Layouts)           │
+└───────────────────────────▲──────────────────────────────┘
+│ (Observes LiveData/Flow)
+┌───────────────────────────┴──────────────────────────────┐
+│                      VIEWMODEL                           │
+│        (Prepares UI data & handles UI Logic)             │
+└───────────────────────────▲──────────────────────────────┘
+│ (Data Stream)
+┌───────────────────────────┴──────────────────────────────┐
+│                      REPOSITORY                          │
+└─────────────┬──────────────────────────────┬─────────────┘
+│                              │
+▼                              ▼
+┌───────────────────┐          ┌───────────────────┐
+│ Local Data Source │          │ Remote Data Source│
+│  (Room Database)  │          │ (Cloud Firestore) │
+└───────────────────┘          └───────────────────┘
+
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+* **Android Studio** Jellyfish / Ladybug or newer
+* **JDK:** 11 or higher
+* **Android SDK:** Min SDK 24 / Target SDK 34+
+* A configured **Firebase Project** with Authentication & Firestore enabled.
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/your-username/ocp-evaluation-formation.git](https://github.com/your-username/ocp-evaluation-formation.git)
+   cd ocp-evaluation-formation
+Add Firebase configuration:
+
+Download google-services.json from your Firebase Console.
+
+Place the file in the app/ directory:
+
+ocp-evaluation-formation/app/google-services.json
+Build & Run:
+
+Open the project in Android Studio.
+
+Sync Gradle files and run the application on an emulator or physical device.
+
+👤 Author
+Mohamed LAMAFER — Digital Development - Mobile Applications Option (OFPPT ISTA NTIC Safi)
+
+📄 License & Acknowledgments
+Developed as part of an end-of-study internship project at Groupe OCP (Complex Maroc Phosphore Safi).
